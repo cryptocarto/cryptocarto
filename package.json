@@ -1,0 +1,25 @@
+{
+  "name": "cryptocarto",
+  "version": "1.0.0",
+  "description": "cryptocarto",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cryptocarto/cryptocarto.git"
+  },
+  "author": "CryptoCarto",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cryptocarto/cryptocarto/issues"
+  },
+  "homepage": "https://github.com/cryptocarto/cryptocarto#readme",
+  "dependencies": {
+    "truffle-hdwallet-provider-klaytn": "^1.0.13-a"
+  }
+}
