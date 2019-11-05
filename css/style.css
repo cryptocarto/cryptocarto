@@ -1,0 +1,7 @@
+
+html{height:100%}
+body{height:100%}
+#map{width:70%;height:85%;float:left}
+#board{width:28%;height:85%;float:left;padding-left:10px;overflow-y:scroll}
+#infos{width:100%;height:15%}
+.spacer{clear:both}

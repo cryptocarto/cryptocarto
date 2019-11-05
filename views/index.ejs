@@ -1,0 +1,45 @@
+<%- include('top') -%>
+<div id="map"></div>
+
+<div id="board">
+<% if (tokenIds.length) { %>
+    <h2>All pins</h2>
+    <div id="tokens">
+    <% for(var i=0; i < tokenIds.length; i++) { %>
+        <p class="token">
+            Pin #<span id="token-<%= i %>-id"><%= allTokensData[tokenIds[i]][0] %></span><br />
+            Owned by <span id="token-<%= i %>-owner"><a target="_blank" href="https://scope.klaytn.com/account/<%= allTokensData[tokenIds[i]][1] %>"><%= allTokensData[tokenIds[i]][1] %></a></span><br />
+            Longitude: <span id="token-<%= i %>-longitude"><%= allTokensData[tokenIds[i]][2] / 10000 %></span>
+            / Latitude: <span id="token-<%= i %>-latitude"><%= allTokensData[tokenIds[i]][3] / 10000 %></span><br />
+            Message: <span id="token-<%= i %>-message"><%= allTokensData[tokenIds[i]][4] %></span><br />
+            Timestamp: <span id="token-<%= i %>-timestamp"><%= allTokensData[tokenIds[i]][5] %></span><br />
+        </p>
+    <% } %>
+    </div>
+<% } %>
+</div>
+
+<script>
+    var map = L.map('map').setView([43.7331,7.420],18);
+    L.tileLayer('http://ec2-3-8-117-251.eu-west-2.compute.amazonaws.com/osm/{z}/{x}/{y}.png',{maxZoom:18}).addTo(map);
+
+    var nbTokens = parseInt(jQuery('.token').length);
+
+    for (i = 0; i< nbTokens; i++) {
+        lng = parseFloat(jQuery('#token-'+i+'-longitude').text());
+        lat = parseFloat(jQuery('#token-'+i+'-latitude').text());
+
+        date = new Date(parseInt(jQuery('#token-'+i+'-timestamp').text()) * 1000);
+        dateText = date.toISOString();
+
+        popUpContent = 'Pin #' + jQuery('#token-'+i+'-id').text() + '<br/>' +
+					   'Owned by ' + jQuery('#token-'+i+'-owner').html() + '<br/>' +
+					   'Longitude: ' + lng + ' / Latitude: ' + lat + '<br/>' +
+					   'Message: ' + jQuery('#token-'+i+'-message').text() + '<br/>' +
+					   'Created at ' + dateText + '';
+
+        L.marker([lng,lat]).addTo(map).bindPopup(popUpContent);
+    }
+</script>
+
+<%- include('bottom') -%>
