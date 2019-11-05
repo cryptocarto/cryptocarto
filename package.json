@@ -27,5 +27,9 @@
     "jquery": "^3.4.1",
     "semver": "^6.3.0",
     "truffle-hdwallet-provider-klaytn": "^1.0.13-a"
+  },
+  "engines": {
+    "node": "11.6.0",
+    "npm": "6.5.x"
   }
 }
