@@ -2,6 +2,26 @@
 <div id="map"></div>
 
 <div id="board">
+    <h2>Your info</h2>
+    <div id="user-info">
+            <div>
+                <p>New address and private key are generated and saved in session if not already existing.</p>
+                <label for="address">Address:</label><br />
+                <input type="text" disabled="disabled" class="form-control" placeholder="..." name="address" id="address" 
+                value="<% if (typeof address != 'undefined' && address) { %><%= address %><% } %>" />
+                <br />
+                <label for="privatekey">PrivateKey:</label><br />
+                <input type="password" disabled="disabled" class="form-control" placeholder="..." name="privatekey" id="privatekey" 
+                value="<% if (typeof privatekey != 'undefined' && privatekey) { %><%= privatekey %><% } %>" />
+                <br />
+                <button onclick="$('#privatekey').attr('type', 'text')">Show</button>
+                <button onclick="$('#privatekey').attr('type', 'password')">Hide</button>
+                <br /><br />
+            </div>
+    </div>
+
+    <%- include('new-transaction') -%>
+
 <% if (tokenIds.length) { %>
     <h2>All pins</h2>
     <div id="tokens">
@@ -38,8 +58,16 @@
 					   'Message: ' + jQuery('#token-'+i+'-message').text() + '<br/>' +
 					   'Created at ' + dateText + '';
 
-        L.marker([lng,lat]).addTo(map).bindPopup(popUpContent);
+        L.marker([lat,lng]).addTo(map).bindPopup(popUpContent);
     }
+
+    function onMapClick(e) {
+        $('#longitude').val(Math.round(e.latlng.lng * 10000)/10000);
+        $('#latitude').val(Math.round(e.latlng.lat * 10000)/10000);
+    }
+
+    map.on('click', onMapClick);
+
 </script>
 
 <%- include('bottom') -%>
