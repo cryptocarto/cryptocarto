@@ -40,8 +40,8 @@
 </div>
 
 <script>
-    var map = L.map('map').setView([43.7331,7.420],18);
-    L.tileLayer('http://ec2-3-8-117-251.eu-west-2.compute.amazonaws.com/osm/{z}/{x}/{y}.png',{maxZoom:18}).addTo(map);
+    var map = L.map('map').setView([48.8722,2.3321],16);
+    L.tileLayer('http://ec2-3-8-193-219.eu-west-2.compute.amazonaws.com/osm/{z}/{x}/{y}.png',{maxZoom:18, minZoom:15}).addTo(map);
 
     var nbTokens = parseInt(jQuery('.token').length);
 
