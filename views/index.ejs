@@ -84,7 +84,7 @@
         $('.longitude').val(Math.round(e.latlng.lng * 10000)/10000);
         $('.latitude').val(Math.round(e.latlng.lat * 10000)/10000);
 
-        map.setView(L.latLng(e.latlng.lat+0.0015, e.latlng.lng));
+        map.setView(L.latLng(e.latlng.lat, e.latlng.lng));
     }
 
     map.on('click', onMapClick);
