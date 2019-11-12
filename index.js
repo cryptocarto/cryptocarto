@@ -88,6 +88,9 @@ async function(req, res, next) {
             allTokensData[tokenData[0]] = tokenData;
           })
 
+          // Sort tokens by timestamp DESC
+          tokenIds.sort((a, b) => allTokensData[b][5] - allTokensData[a][5])
+
           // Render view
            res.render('index', { allTokensData: allTokensData, tokenIds: tokenIds });
          })
