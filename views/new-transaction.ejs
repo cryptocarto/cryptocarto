@@ -1,20 +1,20 @@
+<div class="new-transaction">
+      <h2>Create a new transaction</h2>
+      <div>
+      <form class="new-transaction-form" action="new-transaction" method="post">
 
-<h2>Create a new transaction</h2>
+            <p>Create a new pin on Klaytn blockchain with your own message. Click anywhere on map to autofill longitude and latitude.</p>
+            <label for="message">Message:</label><br />
+            <textarea class="form-control message" name="message" rows="3" placeholder="Message" required="true"></textarea>
+            <br />
+            <label for="message">Longitude (4 decimals - click on map to fill):</label><br />
+            <input type="text" class="form-control longitude" placeholder="Longitude" name="longitude" required="true" />
+            <br />
+            <label for="message">Latitude (4 decimals - click on map to fill):</label><br />
+            <input type="text" class="form-control latitude" placeholder="Latitude" name="latitude" required="true" />
+            <br /><br />
+            <button type="submit">Post transaction</button>
 
-<div>
-   <form id="new-transaction-form"action="new-transaction" method="post">
-
-         <p>Create a new pin on Klaytn blockchain with your own message. Click anywhere on map to autofill longitude and latitude.</p>
-         <label for="message">Message:</label><br />
-         <input type="text" class="form-control" placeholder="Message" name="message" id="message" required="true" />
-         <br />
-         <label for="message">Longitude (4 decimals - click on map to fill):</label><br />
-         <input type="text" class="form-control" placeholder="Longitude" name="longitude" id="longitude" required="true" />
-         <br />
-         <label for="message">Latitude (4 decimals - click on map to fill):</label><br />
-         <input type="text" class="form-control" placeholder="Latitude" name="latitude" id="latitude" required="true" />
-         <br />
-         <button type="submit">Post transaction</button>
-
-   </form>
+      </form>
+      </div>
 </div>

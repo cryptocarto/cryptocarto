@@ -1,30 +1,34 @@
 <%- include('top') -%>
 <div id="map"></div>
 
-<div id="board">
-    <h2>Your info</h2>
-    <div id="user-info">
-            <div>
-                <p>New address and private key are generated and saved in session if not already existing.</p>
-                <label for="address">Address:</label><br />
-                <input type="text" disabled="disabled" class="form-control" placeholder="..." name="address" id="address" 
-                value="<% if (typeof address != 'undefined' && address) { %><%= address %><% } %>" />
-                <br />
-                <label for="privatekey">PrivateKey:</label><br />
-                <input type="password" disabled="disabled" class="form-control" placeholder="..." name="privatekey" id="privatekey" 
-                value="<% if (typeof privatekey != 'undefined' && privatekey) { %><%= privatekey %><% } %>" />
-                <br />
-                <button onclick="$('#privatekey').attr('type', 'text')">Show</button>
-                <button onclick="$('#privatekey').attr('type', 'password')">Hide</button>
-                <br /><br />
-            </div>
-    </div>
+<img src="https://cryptocarto.xyz/wp-content/uploads/2019/11/CryptoCartoWithTextGray.png" id="logo-cryptocarto" />
 
+<div id="user-info">
+    <div>
+        <label for="address">Address: </label>
+        <input type="text" disabled="disabled" class="form-control" placeholder="..." name="address" id="address" 
+        value="<% if (typeof address != 'undefined' && address) { %><%= address %><% } %>" />
+        <br />
+        <label for="privatekey">PrivateKey: </label>
+        <input type="password" disabled="disabled" class="form-control" placeholder="..." name="privatekey" id="privatekey" 
+        value="<% if (typeof privatekey != 'undefined' && privatekey) { %><%= privatekey %><% } %>" />
+        <button onclick="$('#privatekey').attr('type', 'text')">Show</button>
+        <button onclick="$('#privatekey').attr('type', 'password')">Hide</button>
+        <p class="note">New address and private key are generated and saved in session if not already existing.</p>
+        <p>Click on the map to create a new pin on the blockchain</p>
+    </div>
+</div>
+
+<div id="board">
     <%- include('new-transaction') -%>
+</div>
 
 <% if (tokenIds.length) { %>
-    <h2>All pins</h2>
     <div id="tokens">
+    <% if (typeof generalMessage != 'undefined' && generalMessage) { %>
+        <p>Message: <%= generalMessage %></p>
+    <% } %>
+    <h2>Recent pins</h2>
     <% for(var i=0; i < tokenIds.length; i++) { %>
         <p class="token">
             Pin #<span id="token-<%= i %>-id"><%= allTokensData[tokenIds[i]][0] %></span><br />
@@ -37,7 +41,6 @@
     <% } %>
     </div>
 <% } %>
-</div>
 
 <script>
     var map = L.map('map').setView([48.8722,2.3321],16);
@@ -67,8 +70,15 @@
     }
 
     function onMapClick(e) {
-        $('#longitude').val(Math.round(e.latlng.lng * 10000)/10000);
-        $('#latitude').val(Math.round(e.latlng.lat * 10000)/10000);
+        var popup = L.popup()
+            .setLatLng(e.latlng)
+            .setContent(jQuery('.new-transaction').html())
+            .openOn(map);
+
+        $('.longitude').val(Math.round(e.latlng.lng * 10000)/10000);
+        $('.latitude').val(Math.round(e.latlng.lat * 10000)/10000);
+
+        map.setView(L.latLng(e.latlng.lat+0.0015, e.latlng.lng));
     }
 
     map.on('click', onMapClick);
