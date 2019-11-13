@@ -54,8 +54,9 @@
             <p class="user-token">
                 <img src="http://app.cryptocarto.xyz/token/<%= userTokensData[userTokenIds[j]][0] %>.png" />
                 <b><%= userTokensData[userTokenIds[j]][4] %></b><br/>
-                Pin #<span id="user-token-<%= j %>-id"><%= userTokensData[userTokenIds[j]][0] %></span><br />Longitude: <span id="user-token-<%= j %>-longitude"><%= userTokensData[userTokenIds[j]][2] / 10000 %></span>
-                / Latitude: <span id="user-token-<%= j %>-latitude"><%= userTokensData[userTokenIds[j]][3] / 10000 %></span><br />
+                Pin #<span id="user-token-<%= j %>-id"><%= userTokensData[userTokenIds[j]][0] %></span><br />
+                Latitude: <span id="user-token-<%= j %>-latitude"><%= userTokensData[userTokenIds[j]][2] / 10000 %></span>
+                / Longitude: <span id="user-token-<%= j %>-longitude"><%= userTokensData[userTokenIds[j]][3] / 10000 %></span><br />
             </p>
             <div class="spacer"></div>
         <% } %>
@@ -65,8 +66,8 @@
         <p class="token">
             Pin #<span id="token-<%= i %>-id"><%= allTokensData[tokenIds[i]][0] %></span><br />
             Owned by <a target="_blank" href="https://scope.klaytn.com/account/<%= allTokensData[tokenIds[i]][1] %>"><span id="token-<%= i %>-owner"><%= allTokensData[tokenIds[i]][1] %></span></a><br />
-            Longitude: <span id="token-<%= i %>-longitude"><%= allTokensData[tokenIds[i]][2] / 10000 %></span>
-            / Latitude: <span id="token-<%= i %>-latitude"><%= allTokensData[tokenIds[i]][3] / 10000 %></span><br />
+            Latitude: <span id="token-<%= i %>-latitude"><%= allTokensData[tokenIds[i]][2] / 10000 %></span>
+            / Longitude: <span id="token-<%= i %>-longitude"><%= allTokensData[tokenIds[i]][3] / 10000 %></span><br />
             Message: <span id="token-<%= i %>-message"><%= allTokensData[tokenIds[i]][4] %></span><br />
             Timestamp: <span id="token-<%= i %>-timestamp"><%= allTokensData[tokenIds[i]][5] %></span><br />
         </p>
@@ -81,8 +82,8 @@
     var nbTokens = parseInt(jQuery('.token').length);
 
     for (i = 0; i< nbTokens; i++) {
-        lng = parseFloat(jQuery('#token-'+i+'-longitude').text());
         lat = parseFloat(jQuery('#token-'+i+'-latitude').text());
+        lng = parseFloat(jQuery('#token-'+i+'-longitude').text());
 
         date = new Date(parseInt(jQuery('#token-'+i+'-timestamp').text()) * 1000);
         dateText = date.toISOString();
@@ -98,7 +99,7 @@
                             '<button onclick="$(\'#popup-token-'+i+'\').next(\'.metadata\').slideToggle()">Show/hide metadata</button><br/>' +
                             '<p class="metadata">' +
                                 'Pin #' + jQuery('#token-'+i+'-id').text() + '<br/>' +
-                                'Longitude: ' + lng + ' / Latitude: ' + lat + '<br/>' +
+                                'Latitude: ' + lat + ' / Longitude: ' + lng + '<br/>' +
                                 'Created at ' + dateText + 
                                 '<br/>' +'Tile coordinates: x = ' + xtile + ' ; y = ' + ytile +
                                 '<br/>' +'<a target="_blank" href="http://app.cryptocarto.xyz/token/' + jQuery('#token-'+i+'-id').text() + '.png">View token image</a>' +
@@ -114,8 +115,8 @@
             .setContent(jQuery('.new-transaction').html())
             .openOn(map);
 
-        $('.longitude').val(Math.round(e.latlng.lng * 10000)/10000);
         $('.latitude').val(Math.round(e.latlng.lat * 10000)/10000);
+        $('.longitude').val(Math.round(e.latlng.lng * 10000)/10000);
 
         map.setView(L.latLng(e.latlng.lat, e.latlng.lng));
     }

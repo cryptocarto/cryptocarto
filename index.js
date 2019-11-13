@@ -118,16 +118,16 @@ async function(req, res, next) {
     var tokenid = req.params.tokenaddress.replace('.png', '');
 
     // Decode latitude and longitude
-    idFormattedLongitude  = Math.trunc(tokenid/100000000)
-    idFormattedLatitude = tokenid - (idFormattedLongitude * 100000000)
-    if (idFormattedLongitude > 1000000) {
-        idFormattedLongitude = 0 - (idFormattedLongitude - 1000000);
-    }
-    longitude = idFormattedLongitude / 10000;
-    if (idFormattedLatitude > 10000000) {
-      idFormattedLatitude = 0 - (idFormattedLatitude - 10000000);
+    idFormattedLatitude  = Math.trunc(tokenid/100000000)
+    idFormattedLongitude = tokenid - (idFormattedLatitude * 100000000)
+    if (idFormattedLatitude > 1000000) {
+      idFormattedLatitude = 0 - (idFormattedLatitude - 1000000);
     }
     latitude = idFormattedLatitude / 10000;
+    if (idFormattedLongitude > 10000000) {
+      idFormattedLongitude = 0 - (idFormattedLongitude - 10000000);
+    }
+    longitude = idFormattedLongitude / 10000;
 
     // Calculate tile coordinates
     n = 2 ** 18 // n = 2 ^ zoom
@@ -185,7 +185,7 @@ async function(req, res, next) {
       from: req.session.address,
       to: process.env.SMART_CONTRACT_ADDRESS, //Contract on mainnet
       gas: '50000000',
-      data: CryptoCartoContract.methods.mintPinToken(message, longitude, latitude).encodeABI(),
+      data: CryptoCartoContract.methods.mintPinToken(message, latitude, longitude).encodeABI(),
       value: caver.utils.toPeb('0', 'KLAY'), //0.00001
     }, req.session.privatekey);
     
