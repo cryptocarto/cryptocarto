@@ -32,6 +32,14 @@ var messageMiddleware = function (req, res, next) {
   if (typeof req.session.privatekey != 'undefined') {
     res.locals.privatekey = req.session.privatekey;
   }
+  
+  if (typeof req.session.currentlat != 'undefined') {
+    res.locals.currentlat = req.session.currentlat;
+  }
+  
+  if (typeof req.session.currentlng != 'undefined') {
+    res.locals.currentlng = req.session.currentlng;
+  }
   next()
 }
 app.use(messageMiddleware)
@@ -73,6 +81,14 @@ async function(req, res, next) {
       res.locals.address = newAccount.address;
       req.session.privatekey = newAccount.privateKey;
       res.locals.privatekey = newAccount.privateKey;
+    }
+
+    // Default position of the map, Paris if not existing
+    if ((typeof req.session.currentlat == 'undefined') || (typeof req.session.currentlng == 'undefined')) {
+      req.session.currentlat = 48.8722;
+      res.locals.currentlat = 48.8722;
+      req.session.currentlng = 2.3321;
+      res.locals.currentlng = 2.3321;
     }
 
     // Getting pin data
@@ -166,8 +182,8 @@ async function(req, res, next) {
   try {
 
     const message    = req.body.message;
-    const longitude  = Math.floor(parseFloat(req.body.longitude) * 10000);
     const latitude   = Math.floor(parseFloat(req.body.latitude) * 10000);
+    const longitude  = Math.floor(parseFloat(req.body.longitude) * 10000);
 
     // Check latitude and logitude are inbounds
     latitudeReq = latitude != 0 && (latitude >= -899999) && (latitude <= 900000);
@@ -178,6 +194,9 @@ async function(req, res, next) {
       res.redirect('/new-transaction');
       return;
     }
+
+    req.session.currentlat = parseFloat(req.body.latitude);
+    req.session.currentlng = parseFloat(req.body.longitude);
 
     // sign transaction
     const { rawTransaction: senderRawTransaction } = await caver.klay.accounts.signTransaction({

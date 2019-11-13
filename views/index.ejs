@@ -52,11 +52,11 @@
         <h2>Your pins</h2>
         <% for(var j=0; j < userTokenIds.length; j++) { %>
             <p class="user-token">
-                <img src="http://app.cryptocarto.xyz/token/<%= userTokensData[userTokenIds[j]][0] %>.png" />
+                <img src="http://app.cryptocarto.xyz/token/<%= userTokensData[userTokenIds[j]][0] %>.png" onclick="map.setView([parseFloat($(this).siblings('.user-pin-lat').text()),parseFloat($(this).siblings('.user-pin-lng').text())],16)"/>
                 <b><%= userTokensData[userTokenIds[j]][4] %></b><br/>
                 Pin #<span id="user-token-<%= j %>-id"><%= userTokensData[userTokenIds[j]][0] %></span><br />
-                Latitude: <span id="user-token-<%= j %>-latitude"><%= userTokensData[userTokenIds[j]][2] / 10000 %></span>
-                / Longitude: <span id="user-token-<%= j %>-longitude"><%= userTokensData[userTokenIds[j]][3] / 10000 %></span><br />
+                Latitude: <span id="user-token-<%= j %>-latitude" class="user-pin-lat"><%= userTokensData[userTokenIds[j]][2] / 10000 %></span>
+                / Longitude: <span id="user-token-<%= j %>-longitude" class="user-pin-lng"><%= userTokensData[userTokenIds[j]][3] / 10000 %></span><br />
             </p>
             <div class="spacer"></div>
         <% } %>
@@ -72,11 +72,17 @@
             Timestamp: <span id="token-<%= i %>-timestamp"><%= allTokensData[tokenIds[i]][5] %></span><br />
         </p>
     <% } %>
+    <% if (typeof currentlat != 'undefined' && currentlat) { %>
+        <p>Last known latitude: <span id="currentlat"><%= currentlat %></span></p>
+    <% } %>
+    <% if (typeof currentlng != 'undefined' && currentlng) { %>
+        <p>Last known longitude: <span id="currentlng"><%= currentlng %></span></p>
+    <% } %>
     </div>
 <% } %>
 
 <script>
-    var map = L.map('map').setView([48.8722,2.3321],16);
+    var map = L.map('map').setView([parseFloat(jQuery('#currentlat').text()),parseFloat(jQuery('#currentlng').text())],16);
     L.tileLayer('http://map.cryptocarto.xyz/osm/{z}/{x}/{y}.png',{maxZoom:18, minZoom:15}).addTo(map);
 
     var nbTokens = parseInt(jQuery('.token').length);
@@ -114,9 +120,14 @@
             .setLatLng(e.latlng)
             .setContent(jQuery('.new-transaction').html())
             .openOn(map);
+        
+        lat = Math.round(e.latlng.lat * 10000)/10000;
+        lng = Math.round(e.latlng.lng * 10000)/10000;
 
-        $('.latitude').val(Math.round(e.latlng.lat * 10000)/10000);
-        $('.longitude').val(Math.round(e.latlng.lng * 10000)/10000);
+        $('.latitude').val(lat);
+        $('.longitude').val(lng);
+        $('#currentlat').text(lat);
+        $('#currentlng').text(lng);
 
         map.setView(L.latLng(e.latlng.lat, e.latlng.lng));
     }
