@@ -12,9 +12,11 @@ app.use('/leaflet', express.static(__dirname + '/leaflet')); // redirect leaflet
 app.use('/js', express.static(__dirname + '/js')); // redirect js
 app.use('/css', express.static(__dirname + '/css')); // redirect css
 app.use('/js', express.static(__dirname + '/node_modules/jquery/dist')); // redirect JS jQuery
+app.use('/token', express.static(__dirname + '/token-images')); // redirect token images
 app.use(require('cookie-parser')());
 app.use(require('body-parser').urlencoded({ extended: true }));
 app.use(require('express-session')({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false }));
+var watermark = require('dynamic-watermark');
 
 // General message middleware
 var messageMiddleware = function (req, res, next) {
@@ -44,7 +46,7 @@ const smartContractAddress = process.env.SMART_CONTRACT_ADDRESS
 
 // Get the ABI
 const fs = require('fs')
-const deployedAbi = fs.readFileSync('deployedABI', 'utf8')
+const deployedAbi = fs.readFileSync(__dirname + '/deployedABI', 'utf8')
 
 // Setting Cryptocarto account for pulls
 // const account = caver.klay.accounts.wallet.add(process.env.KLAYTN_WALLET_KEY_FOR_CALLS)
@@ -96,6 +98,55 @@ async function(req, res, next) {
          })
 
     })
+  } catch (error) { next(error) }
+});
+
+// Generate token asset image - only runs if image does'nt already exist
+app.get('/token/:tokenaddress',
+async function(req, res, next) {
+  try {
+    // Get token id from URL
+    var tokenid = req.params.tokenaddress.replace('.png', '');
+
+    // Decode latitude and longitude
+    idFormattedLongitude  = Math.trunc(tokenid/100000000)
+    idFormattedLatitude = tokenid - (idFormattedLongitude * 100000000)
+    if (idFormattedLongitude > 1000000) {
+        idFormattedLongitude = 0 - (idFormattedLongitude - 1000000);
+    }
+    longitude = idFormattedLongitude / 10000;
+    if (idFormattedLatitude > 10000000) {
+      idFormattedLatitude = 0 - (idFormattedLatitude - 10000000);
+    }
+    latitude = idFormattedLatitude / 10000;
+
+    // Calculate tile coordinates
+    n = 2 ** 18 // n = 2 ^ zoom
+    xtile = n * ((longitude + 180) / 360)
+    ytile = n * (1 - (Math.log(Math.tan(latitude / 180 * Math.PI) + (1/Math.cos(latitude / 180 * Math.PI))) / Math.PI)) / 2
+
+    // Position of the square on the tile
+    xCirclePosition = ((xtile - Math.trunc(xtile)) * 256) - 5
+    yCirclePosition = ((ytile - Math.trunc(ytile)) * 256) - 5 + 10
+
+    var optionsImageWatermark = {
+      type: "image",
+      source: "http://map.cryptocarto.xyz/osm/18/" + Math.floor(xtile) + "/" + Math.floor(ytile) + ".png",
+      logo: __dirname + '/img/square.png',
+      destination: __dirname + '/token-images/' + tokenid + '.png',
+      position: {
+          logoX : Math.round(xCirclePosition),
+          logoY : Math.round(yCirclePosition),
+          logoHeight: 10,
+          logoWidth: 10
+      }
+    };
+    // Create image
+    watermark.embed(optionsImageWatermark, function(status) {
+      res.redirect('/token/' + tokenid + '.png');
+      console.log(status);
+    });
+
   } catch (error) { next(error) }
 });
 

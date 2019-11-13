@@ -50,7 +50,7 @@
 
 <script>
     var map = L.map('map').setView([48.8722,2.3321],16);
-    L.tileLayer('http://ec2-3-8-193-219.eu-west-2.compute.amazonaws.com/osm/{z}/{x}/{y}.png',{maxZoom:18, minZoom:15}).addTo(map);
+    L.tileLayer('http://map.cryptocarto.xyz/osm/{z}/{x}/{y}.png',{maxZoom:18, minZoom:15}).addTo(map);
 
     var nbTokens = parseInt(jQuery('.token').length);
 
@@ -61,6 +61,11 @@
         date = new Date(parseInt(jQuery('#token-'+i+'-timestamp').text()) * 1000);
         dateText = date.toISOString();
 
+        // Calculate tile coordinates
+        n = 2 ** 18 // n = 2 ^ zoom
+        xtile = n * ((lng + 180) / 360) // xtile = n * ((lon_deg + 180) / 360)
+        ytile = n * (1 - (Math.log(Math.tan(lat / 180 * Math.PI) + (1/Math.cos(lat / 180 * Math.PI))) / Math.PI)) / 2
+
         popUpContent =  '<p id="popup-token-'+i+'">' +
                             '<span class="token-message">' + jQuery('#token-'+i+'-message').text() + '</span><br/>' +
                             '<span class="token-message-author">by <a target="_blank" href="https://scope.klaytn.com/account/' + jQuery('#token-'+i+'-owner').text() + '">' + jQuery('#token-'+i+'-owner').text().substring(0,10) + '...</a></span><br/><br/>' +
@@ -69,6 +74,7 @@
                                 'Pin #' + jQuery('#token-'+i+'-id').text() + '<br/>' +
                                 'Longitude: ' + lng + ' / Latitude: ' + lat + '<br/>' +
                                 'Created at ' + dateText + 
+                                '<br/>' +'Tile coordinates: x = ' + xtile + ' ; y = ' + ytile +
                             '</p>' +
                         '</p>';
 
