@@ -86,15 +86,24 @@ async function(req, res, next) {
         // Waiting for execution and retrieving
          await Promise.all(tokenDataPromises).then(function(result){
           var allTokensData = new Array;
+          var userTokensData = new Array;
+          var userTokenIds = new Array;
           result.forEach(tokenData => {
             allTokensData[tokenData[0]] = tokenData;
+
+            // References user owned tokens
+            if (tokenData[1].toLowerCase() == req.session.address.toLowerCase()){
+              userTokensData[tokenData[0]] = tokenData;
+              userTokenIds.push(tokenData[0]);
+            }
           })
 
           // Sort tokens by timestamp DESC
           tokenIds.sort((a, b) => allTokensData[b][5] - allTokensData[a][5])
+          userTokenIds.sort((a, b) => userTokensData[b][5] - userTokensData[a][5])
 
           // Render view
-           res.render('index', { allTokensData: allTokensData, tokenIds: tokenIds });
+           res.render('index', { allTokensData: allTokensData, userTokensData: userTokensData, tokenIds: tokenIds, userTokenIds: userTokenIds });
          })
 
     })
@@ -126,8 +135,8 @@ async function(req, res, next) {
     ytile = n * (1 - (Math.log(Math.tan(latitude / 180 * Math.PI) + (1/Math.cos(latitude / 180 * Math.PI))) / Math.PI)) / 2
 
     // Position of the square on the tile
-    xCirclePosition = ((xtile - Math.trunc(xtile)) * 256) - 5
-    yCirclePosition = ((ytile - Math.trunc(ytile)) * 256) - 5
+    xCirclePosition = ((xtile - Math.trunc(xtile)) * 256) - 12
+    yCirclePosition = ((ytile - Math.trunc(ytile)) * 256) - 12
 
     var optionsImageWatermark = {
       type: "image",
@@ -138,8 +147,8 @@ async function(req, res, next) {
       position: {
           logoX : Math.round(xCirclePosition),
           logoY : Math.round(yCirclePosition),
-          logoHeight: 10,
-          logoWidth: 10
+          logoHeight: 24,
+          logoWidth: 24
       }
     };
     // Create image

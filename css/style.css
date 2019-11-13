@@ -59,6 +59,10 @@ a{color:#00961e}
     font-size: 10px;
 }
 
+.user-token{
+    font-size: 11px;
+}
+
 #logo-cryptocarto{
     position: absolute;
     z-index: 1000;
@@ -70,4 +74,11 @@ a{color:#00961e}
 
 #user-new-pk {
     display:none;
+}
+
+.user-token img {
+    width:64px;
+    height:64px;
+    float:left;
+    margin-right:5px;
 }

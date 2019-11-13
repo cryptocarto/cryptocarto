@@ -48,6 +48,18 @@
     <% if (typeof generalMessage != 'undefined' && generalMessage) { %>
         <p>Message: <%= generalMessage %></p>
     <% } %>
+    <% if (userTokenIds.length) { %>
+        <h2>Your pins</h2>
+        <% for(var j=0; j < userTokenIds.length; j++) { %>
+            <p class="user-token">
+                <img src="http://app.cryptocarto.xyz/token/<%= userTokensData[userTokenIds[j]][0] %>.png" />
+                <b><%= userTokensData[userTokenIds[j]][4] %></b><br/>
+                Pin #<span id="user-token-<%= j %>-id"><%= userTokensData[userTokenIds[j]][0] %></span><br />Longitude: <span id="user-token-<%= j %>-longitude"><%= userTokensData[userTokenIds[j]][2] / 10000 %></span>
+                / Latitude: <span id="user-token-<%= j %>-latitude"><%= userTokensData[userTokenIds[j]][3] / 10000 %></span><br />
+            </p>
+            <div class="spacer"></div>
+        <% } %>
+    <% } %>
     <h2>Recent pins</h2>
     <% for(var i=0; i < tokenIds.length; i++) { %>
         <p class="token">
