@@ -127,10 +127,11 @@ async function(req, res, next) {
 
     // Position of the square on the tile
     xCirclePosition = ((xtile - Math.trunc(xtile)) * 256) - 5
-    yCirclePosition = ((ytile - Math.trunc(ytile)) * 256) - 5 + 10
+    yCirclePosition = ((ytile - Math.trunc(ytile)) * 256) - 5
 
     var optionsImageWatermark = {
       type: "image",
+      text: "test",
       source: "http://map.cryptocarto.xyz/osm/18/" + Math.floor(xtile) + "/" + Math.floor(ytile) + ".png",
       logo: __dirname + '/img/square.png',
       destination: __dirname + '/token-images/' + tokenid + '.png',
