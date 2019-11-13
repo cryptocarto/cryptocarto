@@ -63,7 +63,7 @@
     <% } %>
     <h2>Recent pins</h2>
     <% for(var i=0; i < tokenIds.length; i++) { %>
-        <p class="token" onclick="map.setView([parseFloat($(this).children('.global-pin-lng').text()),parseFloat($(this).children('.global-pin-lng').text())],16)">
+        <p class="token" onclick="map.setView([parseFloat($(this).children('.global-pin-lat').text()),parseFloat($(this).children('.global-pin-lng').text())],16)">
             Pin #<span id="token-<%= i %>-id"><%= allTokensData[tokenIds[i]][0] %></span><br />
             Owned by <a target="_blank" href="https://scope.klaytn.com/account/<%= allTokensData[tokenIds[i]][1] %>"><span id="token-<%= i %>-owner"><%= allTokensData[tokenIds[i]][1] %></span></a><br />
             Latitude: <span id="token-<%= i %>-latitude" class="global-pin-lat"><%= allTokensData[tokenIds[i]][2] / 10000 %></span>
