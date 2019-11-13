@@ -82,3 +82,10 @@ a{color:#00961e}
     float:left;
     margin-right:5px;
 }
+
+.token img {
+    width:64px;
+    height:64px;
+    float:left;
+    margin-right:5px;
+}
