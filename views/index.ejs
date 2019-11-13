@@ -5,16 +5,30 @@
 
 <div id="user-info">
     <div>
-        <label for="address">Address: </label>
-        <input type="text" disabled="disabled" class="form-control" placeholder="..." name="address" id="address" 
-        value="<% if (typeof address != 'undefined' && address) { %><%= address %><% } %>" />
-        <br />
-        <label for="privatekey">PrivateKey: </label>
-        <input type="password" disabled="disabled" class="form-control" placeholder="..." name="privatekey" id="privatekey" 
-        value="<% if (typeof privatekey != 'undefined' && privatekey) { %><%= privatekey %><% } %>" />
-        <button onclick="$('#privatekey').attr('type', 'text')">Show</button>
-        <button onclick="$('#privatekey').attr('type', 'password')">Hide</button>
-        <p class="note">New address and private key are generated and saved in session if not already existing.</p>
+
+        <div id="user-keys">
+            <label for="address">Address: </label>
+            <input type="text" disabled="disabled" class="form-control" placeholder="..." name="address" id="address" 
+            value="<% if (typeof address != 'undefined' && address) { %><%= address %><% } %>" />
+            <br />
+            <label for="privatekey">PrivateKey: </label>
+            <input type="password" disabled="disabled" class="form-control" placeholder="..." name="privatekey" id="privatekey" 
+            value="<% if (typeof privatekey != 'undefined' && privatekey) { %><%= privatekey %><% } %>" />
+            <button onclick="$('#privatekey').attr('type', 'text')">Show</button>
+            <button onclick="$('#privatekey').attr('type', 'password')">Hide</button>
+            <button onclick="$('#user-keys').hide();$('#user-new-pk').show()">Import other key</button>
+            <p class="note">New address and private key are generated and saved in session if not already existing.</p>
+        </div>
+
+        <div id="user-new-pk">
+            <form class="import-pk-form" action="import-pk" method="post">
+                <label for="privatekey">PrivateKey to import: </label>
+                <input type="text" class="form-control" placeholder="0x..." name="newprivatekey" id="newprivatekey" />
+                <button type="submit">Import this private key</button>
+            </form>
+            <button onclick="$('#user-keys').show();$('#user-new-pk').hide()">Cancel</button>
+        </div>
+
         <p>Click on the map to create a new pin on the blockchain</p>
         <p>Teleport to : 
             <button onclick="map.setView([48.8722,2.3321],16);">Paris</button>

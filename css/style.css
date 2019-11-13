@@ -67,3 +67,7 @@ a{color:#00961e}
     width: auto;
     height: 50px;
 }
+
+#user-new-pk {
+    display:none;
+}
