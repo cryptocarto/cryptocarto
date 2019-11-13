@@ -23,7 +23,7 @@
         <div id="user-new-pk">
             <form class="import-pk-form" action="import-pk" method="post">
                 <label for="privatekey">PrivateKey to import: </label>
-                <input type="text" class="form-control" placeholder="0x..." name="newprivatekey" id="newprivatekey" />
+                <input type="text" autocomplete="off" required="true" class="form-control" placeholder="0x..." name="newprivatekey" id="newprivatekey" />
                 <button type="submit">Import this private key</button>
             </form>
             <button onclick="$('#user-keys').show();$('#user-new-pk').hide()">Cancel</button>
