@@ -89,3 +89,8 @@ a{color:#00961e}
     float:left;
     margin-right:5px;
 }
+
+.orb-explorer {
+    font-weight: 600;
+    font-size: 14px;
+}

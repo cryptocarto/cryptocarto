@@ -49,7 +49,11 @@
         <p>Message: <%= generalMessage %></p>
     <% } %>
     <% if (userTokenIds.length) { %>
-        <h2>Your pins</h2>
+        <h2>Your pins - 
+            <% if (typeof address != 'undefined' && address) { %>
+                <a class="orb-explorer" href="http://cypress.explore.bitcrystals.com/address/?address=<%= address %>" target="_blank">Browse on Klaytn Orb Explorer</a>
+            <% } %>
+        </h2>
         <% for(var j=0; j < userTokenIds.length; j++) { %>
             <p class="user-token">
                 <img src="http://app.cryptocarto.xyz/token/<%= userTokensData[userTokenIds[j]][0] %>.png" onclick="map.setView([parseFloat($(this).siblings('.user-pin-lat').text()),parseFloat($(this).siblings('.user-pin-lng').text())],16)"/>
