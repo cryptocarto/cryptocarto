@@ -16,13 +16,24 @@ a{color:#00961e}
     z-index: 1000;
     bottom: 10px;
     left: 10px;
-    width: auto;
+    max-width: 50%;
     height: auto;
     background-color: #333;
     opacity: 0.85;
     border: solid 1px #fff;
-    padding: 0 20px 0 20px;
-    font-size: 14px;
+    font-size: 13px;
+}
+
+.general-info-collapser {
+    float: right;
+    border-bottom: solid 1px #fff;
+    border-left: solid 1px #fff;
+    padding: 5px 20px 5px 20px;
+    width: fit-content;
+}
+
+.general-info-main {
+    padding: 10px;
 }
 
 #user-info{
@@ -35,7 +46,6 @@ a{color:#00961e}
     background-color: #333;
     opacity: 0.85;
     border: solid 1px #fff;
-    padding: 10px 20px 0 20px;
     text-align: right;
 }
 
@@ -44,23 +54,50 @@ a{color:#00961e}
 #user-info input{width:300px;}
 #user-info .note {font-size:10px;}
 
+.user-info-collapser {
+    float: left;
+    border-bottom: solid 1px #fff;
+    border-right: solid 1px #fff;
+    padding: 20px 5px 20px 5px;
+    writing-mode: vertical-rl;
+    text-orientation: sideways;
+}
+
+.user-info-main {
+    float: left;
+    padding: 10px 20px 0 20px;
+}
+
 #tokens{
     position: absolute;
     z-index: 1000;
     bottom: 10px;
     right: 10px;
-    max-width: 20%;
-    height: 30%;
+    max-width: 30%;
+    max-height: 35%;
     background-color: #333;
     opacity: 0.85;
     border: solid 1px #fff;
-    padding: 0 20px 0 20px;
     overflow-y: scroll;
     font-size: 10px;
 }
 
 .user-token{
     font-size: 11px;
+}
+
+.tokens-info-collapser {
+    float: right;
+    border-bottom: solid 1px #fff;
+    border-left: solid 1px #fff;
+    padding: 5px 20px 5px 20px;
+    width: fit-content;
+    font-size: 14px;
+}
+
+.tokens-info-main {
+    float: left;
+    padding: 0px 10px;
 }
 
 #logo-cryptocarto{
@@ -93,4 +130,16 @@ a{color:#00961e}
 .orb-explorer {
     font-weight: 600;
     font-size: 14px;
+}
+
+.coordinates-form {
+    display: none;
+}
+
+.loader {
+    display: none;
+}
+
+.loader img {
+    width: 20px;
 }

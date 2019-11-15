@@ -31,6 +31,8 @@
     "fs": "0.0.1-security",
     "gm": "^1.23.1",
     "jquery": "^3.4.1",
+    "jquery-ui-dist": "^1.12.1",
+    "jquery-validation": "^1.19.1",
     "semver": "^6.3.0",
     "truffle-hdwallet-provider-klaytn": "^1.0.13-a"
   },
