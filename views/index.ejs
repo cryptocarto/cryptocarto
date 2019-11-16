@@ -151,10 +151,10 @@
 
     // Transaction form validator
     checkTransactionForm = function() {
-        if ($(".new-transaction-form").valid()) {
-            $(".new-transaction-form").submit();
-            $(".submit-transaction").attr('disabled', true);
-            $('.loader').show();
+        if ($('.leaflet-popup').find(".new-transaction-form").valid()) {
+            $('.leaflet-popup').find(".new-transaction-form").submit();
+            $('.leaflet-popup').find(".submit-transaction").attr('disabled', true);
+            $('.leaflet-popup').find('.loader').show();
         }
     };
 
