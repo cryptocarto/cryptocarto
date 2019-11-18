@@ -36,6 +36,11 @@
             <button onclick="map.setView([37.5326,127.02461],16);">Seoul</button>
             <button onclick="map.setView([43.7331,7.420],16);">Monaco</button>
             <button onclick="map.setView([46.2043,6.1431],16);">Geneva</button>
+            <br/>
+            ...or to 
+            Latitude <input type="text" placeholder="Latitude" name="teleport-latitude" id="teleport-latitude" required="true" value="42.6886" />
+            Longitude <input type="text" placeholder="Longitude" name="teleport-longitude" id="teleport-longitude" required="true" value="2.8948" />
+            <button onclick="map.setView([$('#teleport-latitude').val(),$('#teleport-longitude').val()],16);">Go</button>
         </p>
     </div>
 </div>

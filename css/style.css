@@ -51,7 +51,6 @@ a{color:#00961e}
 
 #board{display:none;font-size:10px;}
 
-#user-info input{width:300px;}
 #user-info .note {font-size:10px;}
 
 .user-info-collapser {
@@ -142,4 +141,12 @@ a{color:#00961e}
 
 .loader img {
     width: 20px;
+}
+
+#privatekey, #address {
+    width: 250px;
+}
+
+#teleport-longitude, #teleport-latitude {
+    width: 55px;
 }
