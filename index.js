@@ -22,9 +22,15 @@ app.use(require('express-session')({ secret: process.env.SESSION_SECRET, resave:
 var watermark = require('dynamic-watermark');
 
 // Redirect to HTTPS
-app.get('*', function(req, res) {  
-  res.redirect('https://' + req.headers.host + req.url);
-})
+if (process.env.ENVIRONMENT != 'dev') {
+  app.get('*', function(req, res, next) {
+    if (req.headers["x-forwarded-proto"] !== 'https') {
+      res.redirect('https://' + req.headers.host + req.url);
+      return;
+    }
+    next();
+  })
+}
 
 // General message middleware
 var messageMiddleware = function (req, res, next) {
