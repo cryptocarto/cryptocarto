@@ -21,6 +21,17 @@ app.use(require('body-parser').urlencoded({ extended: true }));
 app.use(require('express-session')({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false }));
 var watermark = require('dynamic-watermark');
 
+// Redirect to HTTPS
+if (process.env.ENVIRONMENT != 'dev') {
+  app.get('*', function(req, res, next) {
+    if (req.headers["x-forwarded-proto"] !== 'https') {
+      res.redirect('https://' + req.headers.host + req.url);
+      return;
+    }
+    next();
+  })
+}
+
 // General message middleware
 var messageMiddleware = function (req, res, next) {
   if (typeof req.session.generalMessage != 'undefined') {
