@@ -54,12 +54,12 @@
         <% if (userTokenIds.length) { %>
             <h2>Your pins - 
                 <% if (typeof address != 'undefined' && address) { %>
-                    <a class="orb-explorer" href="http://cypress.explore.bitcrystals.com/address/?address=<%= address %>" target="_blank">Browse on Klaytn Orb Explorer</a>
+                    <a class="orb-explorer" href="https://cypress.explore.bitcrystals.com/address/?address=<%= address %>" target="_blank">Browse on Klaytn Orb Explorer</a>
                 <% } %>
             </h2>
             <% for(var j=0; j < userTokenIds.length; j++) { %>
                 <p class="user-token">
-                    <img src="http://app.cryptocarto.xyz/token/<%= userTokensData[userTokenIds[j]][0] %>.png" onclick="map.setView([parseFloat($(this).siblings('.user-pin-lat').text()),parseFloat($(this).siblings('.user-pin-lng').text())],16)"/>
+                    <img src="https://app.cryptocarto.xyz/token/<%= userTokensData[userTokenIds[j]][0] %>.png" onclick="map.setView([parseFloat($(this).siblings('.user-pin-lat').text()),parseFloat($(this).siblings('.user-pin-lng').text())],16)"/>
                     <b><%= userTokensData[userTokenIds[j]][4] %></b><br/>
                     Pin #<span id="user-token-<%= j %>-id"><%= userTokensData[userTokenIds[j]][0] %></span><br />
                     Latitude: <span id="user-token-<%= j %>-latitude" class="user-pin-lat"><%= userTokensData[userTokenIds[j]][2] / 10000 %></span>
@@ -92,7 +92,7 @@
 
 <script>
     var map = L.map('map').setView([parseFloat(jQuery('#currentlat').text()),parseFloat(jQuery('#currentlng').text())],16);
-    L.tileLayer('http://map.cryptocarto.xyz/osm/{z}/{x}/{y}.png',{maxZoom:18, minZoom:15}).addTo(map);
+    L.tileLayer('https://map.cryptocarto.xyz/osm/{z}/{x}/{y}.png',{maxZoom:18, minZoom:15}).addTo(map);
 
     var nbTokens = parseInt(jQuery('.token').length);
 
@@ -117,7 +117,7 @@
                                 'Latitude: ' + lat + ' / Longitude: ' + lng + '<br/>' +
                                 'Created at ' + dateText + 
                                 '<br/>' +'Tile coordinates: x = ' + xtile + ' ; y = ' + ytile +
-                                '<br/>' +'<a target="_blank" href="http://app.cryptocarto.xyz/token/' + jQuery('#token-'+i+'-id').text() + '.png">View token image</a>' +
+                                '<br/>' +'<a target="_blank" href="https://app.cryptocarto.xyz/token/' + jQuery('#token-'+i+'-id').text() + '.png">View token image</a>' +
                             '</p>' +
                         '</p>';
 
