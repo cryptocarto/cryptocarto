@@ -145,20 +145,22 @@ renderPinTokens = function (result, tokenIds, req, res) {
 
   // Get known Pins from disk
   if (fs.existsSync(__dirname + '/pinDataList.json', 'utf8')) {
-    json = fs.readFileSync(__dirname + '/pinDataList.json', 'utf8')
     allTokensData = JSON.parse(fs.readFileSync(__dirname + '/pinDataList.json', 'utf8'));
   }
 
-  //Get tokens for this specific user
-  var userTokensData = new Array;
-  var userTokenIds = new Array;
+  // Add tokens retrieved from blockchain
   Object.keys(result).map(function (objectKey) {
     allTokensData[result[objectKey][0]] = result[objectKey];
+  })
 
+  // Get tokens for this specific user
+  var userTokensData = new Array;
+  var userTokenIds = new Array;
+  Object.keys(allTokensData).map(function (objectKey) {
     // References user owned tokens
-    if (result[objectKey][1].toLowerCase() == req.session.address.toLowerCase()){
-      userTokensData[result[objectKey][0]] = result[objectKey];
-      userTokenIds.push(result[objectKey][0]);
+    if (allTokensData[objectKey][1].toLowerCase() == req.session.address.toLowerCase()){
+      userTokensData[allTokensData[objectKey][0]] = allTokensData[objectKey];
+      userTokenIds.push(allTokensData[objectKey][0]);
     }
   })
 
