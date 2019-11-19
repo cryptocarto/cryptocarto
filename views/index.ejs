@@ -17,6 +17,7 @@
             <br />
             <button onclick="$('#privatekey').attr('type', 'text')">Show</button>
             <button onclick="$('#privatekey').attr('type', 'password')">Hide</button>
+            <button onclick="window.location.href = '/save-user-info';">Save to disk</button>
             <button onclick="$('#user-keys').hide();$('#user-new-pk').show()">Import other key</button>
             <p class="note">New address and private key are generated and saved in session if not already existing.</p>
         </div>
