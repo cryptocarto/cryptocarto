@@ -1,27 +1,32 @@
 
 html{height:100%}
-body{height:100%;font-family: 'Open Sans', sans-serif;background-color:#333;color:#CCC}
+body{height:100%;font-family: 'Open Sans', sans-serif;background-color:#333;color:#CCC; font-size: 13px;margin:0}
 a{color:#00961e}
 #map{width:100%;height:100%;float:left}
 #board input{width:70%}
 .new-transaction-form input {width:100%;}
-.new-transaction-form textarea {width:100%;}
+.new-transaction-form textarea {width:90%;}
 .spacer{clear:both}
 .token-message{font-size: 18px}
 .metadata{display:none}
 
+p {margin: 0 0 10px 0;}
+
+.general-message {
+    margin: 10px 0;
+}
 
 #infos{
     position: absolute;
-    z-index: 1000;
     bottom: 10px;
     left: 10px;
-    max-width: 50%;
+    max-width: 45%;
     height: auto;
     background-color: #333;
     opacity: 0.85;
     border: solid 1px #fff;
     font-size: 13px;
+    z-index: 8000;
 }
 
 .general-info-collapser {
@@ -38,20 +43,21 @@ a{color:#00961e}
 
 #user-info{
     position: absolute;
-    z-index: 1000;
     top: 10px;
     right: 10px;
     max-width: 70%;
+    max-height: 100%;
     height: auto;
     background-color: #333;
     opacity: 0.85;
     border: solid 1px #fff;
     text-align: right;
+    z-index: 10000;
 }
 
 #board{display:none;font-size:10px;}
 
-#user-info .note {font-size:10px;}
+#user-info .note {font-size:10px; margin-top: 2px;}
 
 .user-info-collapser {
     float: left;
@@ -63,22 +69,21 @@ a{color:#00961e}
 }
 
 .user-info-main {
-    float: left;
     padding: 10px 20px 0 20px;
 }
 
 #tokens{
     position: absolute;
-    z-index: 1000;
     bottom: 10px;
     right: 10px;
-    max-width: 30%;
-    max-height: 35%;
+    max-width: 45%;
+    max-height: 45%;
     background-color: #333;
     opacity: 0.85;
     border: solid 1px #fff;
     overflow-y: scroll;
     font-size: 10px;
+    z-index: 9000;
 }
 
 .user-token{
@@ -91,17 +96,16 @@ a{color:#00961e}
     border-left: solid 1px #fff;
     padding: 5px 20px 5px 20px;
     width: fit-content;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .tokens-info-main {
-    float: left;
     padding: 0px 10px;
 }
 
 #logo-cryptocarto{
     position: absolute;
-    z-index: 1000;
+    z-index: 7000;
     top: 24px;
     left: 62px;
     width: auto;
@@ -112,23 +116,31 @@ a{color:#00961e}
     display:none;
 }
 
-.user-token img {
+.user-token img.token-image {
     width:64px;
     height:64px;
     float:left;
-    margin-right:5px;
+    margin-right:8px;
 }
 
-.token img {
+.token img.token-image {
     width:64px;
     height:64px;
     float:left;
-    margin-right:5px;
+    margin-right:8px;
 }
+
+.token img.token-default-image {
+    height:64px;
+    padding: 0 13px;
+    float:left;
+    margin-right:8px;
+}
+
 
 .orb-explorer {
     font-weight: 600;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .coordinates-form {
@@ -150,3 +162,67 @@ a{color:#00961e}
 #teleport-longitude, #teleport-latitude {
     width: 55px;
 }
+
+#teleport-zone {
+    margin-top: 10px;
+    line-height: 30px;
+}
+
+.leaflet-popup-content-wrapper {
+    font-family: 'Open Sans', sans-serif;
+    background-color:#333;
+    color:#CCC;
+    font-size: 13px;
+    margin:0;
+    opacity: 0.85;
+}
+
+.leaflet-popup-tip {
+    background-color:#333;
+    opacity: 0.85;
+}
+
+.leaflet-popup-content {
+    padding: 20px;
+    margin:0;
+}
+
+.leaflet-popup-content h2 {
+    font-size: 15px;
+    margin: 0 0 10px 0;
+}
+
+.leaflet-popup-content a {
+    color:#00961e
+}
+
+button {
+    background-color: #555;
+    border: solid 1px #FFF;
+    color: #FFF;
+    padding: 3px 6px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 13px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+button:hover {
+    background-color: #333;
+}
+
+input, textarea {
+    background-color: #DDD;
+    border: solid 1px #FFF;
+    color: #000;
+    padding: 3px 3px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 13px;
+    margin: 2px;
+    border-radius: 3px;
+}
+
