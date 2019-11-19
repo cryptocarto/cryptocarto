@@ -116,14 +116,7 @@ p {margin: 0 0 10px 0;}
     display:none;
 }
 
-.user-token img.token-image {
-    width:64px;
-    height:64px;
-    float:left;
-    margin-right:8px;
-}
-
-.token img.token-image {
+.token-image {
     width:64px;
     height:64px;
     float:left;
@@ -171,7 +164,7 @@ p {margin: 0 0 10px 0;}
 .leaflet-popup-content-wrapper {
     font-family: 'Open Sans', sans-serif;
     background-color:#333;
-    color:#CCC;
+    color:#EEE;
     font-size: 13px;
     margin:0;
     opacity: 0.85;
@@ -183,6 +176,7 @@ p {margin: 0 0 10px 0;}
 }
 
 .leaflet-popup-content {
+    color:#EEEDDD;
     padding: 20px;
     margin:0;
 }
