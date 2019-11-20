@@ -132,11 +132,11 @@
                             '<button onclick="$(\'#popup-token-'+i+'\').children(\'.metadata\').slideToggle()">Show/hide metadata</button>' +
                             '<button onclick="$(\'#popup-token-'+i+'\').children(\'.share-pin\').slideToggle()">Share this pin</button><br/>' +
                             '<div class="share-pin">' +
-                                '<br />Shareable link:<br />' + 
-                                '<a target="_blank" href="https://app.cryptocarto.xyz/view-pin/' + jQuery('#token-'+i+'-id').text() + '">https://app.cryptocarto.xyz/view-pin/' + jQuery('#token-'+i+'-id').text() + '</a><br/>' + 
+                                '<br />Shareable link: <a target="_blank" href="https://app.cryptocarto.xyz/view-pin/' + jQuery('#token-'+i+'-id').text() + '">https://app.cryptocarto.xyz/view-pin/' + jQuery('#token-'+i+'-id').text() + '</a><br/>' + 
                                 '<textarea id="share-link" class="share-link">https://app.cryptocarto.xyz/view-pin/' + jQuery('#token-'+i+'-id').text() + '</textArea>' +
+                                '<a class="button-style" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=app.cryptocarto.xyz/view-pin/' + jQuery('#token-'+i+'-id').text() + '">Share on Facebook</a>' +
                                 '<button onclick="document.getElementById(\'share-link\').select(); document.execCommand(\'copy\'); $(\'#copied-message-conf\').show().fadeOut(2000);">Copy link to clipboard</button>' +
-                                '<span id="copied-message-conf"> Copied</span><br/>' +
+                                '<span id="copied-message-conf"> Copied</span>' +
                             '</div>' +
                             '<div class="metadata">' +
                                 '<br />Pin #' + jQuery('#token-'+i+'-id').text() + '<br/>' +

@@ -193,10 +193,10 @@ p {margin: 0 0 10px 0;}
     color:#00961e
 }
 
-button {
+button, .button-style {
     background-color: #555;
     border: solid 1px #FFF;
-    color: #FFF;
+    color: #FFF !important;
     padding: 3px 6px;
     text-align: center;
     text-decoration: none;
@@ -205,9 +205,10 @@ button {
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 3px;
+    font-family: 'Open Sans'
 }
 
-button:hover {
+button:hover, .button-style:hover {
     background-color: #333;
 }
 
