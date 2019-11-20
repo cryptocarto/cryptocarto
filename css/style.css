@@ -9,6 +9,9 @@ a{color:#00961e}
 .spacer{clear:both}
 .token-message{font-size: 18px}
 .metadata{display:none}
+.share-pin{display:none}
+.share-pin textarea {position: absolute; left:-9999px;}
+#copied-message-conf {display: none;}
 
 p {margin: 0 0 10px 0;}
 

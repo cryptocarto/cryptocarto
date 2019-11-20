@@ -54,6 +54,11 @@ var messageMiddleware = function (req, res, next) {
   if (typeof req.session.currentlng != 'undefined') {
     res.locals.currentlng = req.session.currentlng;
   }
+
+  if (typeof req.session.openPinId != 'undefined') {
+    res.locals.openPinId = req.session.openPinId;
+    req.session.openPinId = "";
+  }
   next()
 }
 app.use(messageMiddleware)
@@ -353,6 +358,26 @@ async function(req, res, next) {
     req.session.privatekey = retrievedAccount.privateKey;
 
     req.session.generalMessage = 'Account with address ' + retrievedAccount.address.substring(0,10) + '... was succesfully retrieved.';
+    res.redirect('/');
+  } catch (error) { next(error) }
+});
+
+// Import an existing private key
+app.get('/view-pin/:pinid',
+async function(req, res, next) {
+  try {
+    // Get token id from URL
+    var tokenId = parseInt(req.params.pinid);
+
+    //Get tokenData
+    tokenData = await CryptoCartoContract.methods.getPinToken(tokenId).call();
+
+    // Set poition session variables
+    req.session.currentlat = parseFloat(tokenData[2]) / 10000;
+    req.session.currentlng = parseFloat(tokenData[3]) / 10000;
+    req.session.openPinId = tokenId;
+
+    req.session.generalMessage = 'Viewing Pin #' + tokenId;
     res.redirect('/');
   } catch (error) { next(error) }
 });
