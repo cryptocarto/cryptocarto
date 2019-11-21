@@ -14,15 +14,20 @@
 		<script src="/js/jquery.min.js"></script>
 		<script src="/js/jquery-ui.min.js"></script>
 		<script src="/js/jquery.validate.min.js"></script>
-
-		<% if (typeof openPinId != 'undefined' && openPinId) { %>
+<% if (typeof openPinId != 'undefined' && openPinId) { %>
 		<meta property="og:title" content="View CryptoCarto Pin #<%= openPinId %>" />
 		<meta property="og:url" content="https://app.cryptocarto.xyz/view-pin/<%= openPinId %>" />
 		<meta property="og:image" content="https://app.cryptocarto.xyz/token/<%= openPinId %>.png" />
+		<meta property="og:type" content="website" />
+		<meta property="fb:app_id" content="" />
+	<% if (typeof allTokensData[openPinId] != 'undefined' && allTokensData[openPinId]) { %>
+		<meta property="og:description" content="
+		This claimed spot is located at latitude <%= allTokensData[openPinId][2] / 10000 %> and longitude <%= allTokensData[openPinId][3] / 10000 %>.
+		Owned by address <%= allTokensData[openPinId][1] %>, it displays the message '<%= allTokensData[openPinId][4] %>'.
+		Created at <%= new Date(parseInt(allTokensData[openPinId][5] * 1000)).toISOString() %> with ID <%= openPinId %> on CryptoCarto." />
+	<% } else { %>
 		<meta property="og:description" content="View claimed spot with ID <%= openPinId %> on CryptoCarto." />
-        <% } %>
-
+	<% } %>
+<% } %>
 	</head>
-
 	<body>
-
