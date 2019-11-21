@@ -362,7 +362,7 @@ async function(req, res, next) {
   } catch (error) { next(error) }
 });
 
-// Import an existing private key
+// View a specific pin
 app.get('/view-pin/:pinid',
 async function(req, res, next) {
   try {
@@ -378,7 +378,8 @@ async function(req, res, next) {
     req.session.openPinId = tokenId;
 
     req.session.generalMessage = 'Viewing Pin #' + tokenId;
-    res.redirect('/');
+    req.url = "/";
+    app.handle(req, res, next);
   } catch (error) { next(error) }
 });
 
