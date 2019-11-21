@@ -69,9 +69,9 @@
             </h2>
             <% for(var j=0; j < userTokenIds.length; j++) { %>
                 <p class="user-token">
-                    <img class="token-image" src="/token/<%= userTokensData[userTokenIds[j]][0] %>.png" onclick="map.setView([parseFloat($(this).siblings('.user-pin-lat').text()),parseFloat($(this).siblings('.user-pin-lng').text())],16)"/>
+                    <img class="token-image" src="/token/<%= userTokensData[userTokenIds[j]][0] %>.png" onclick="markers[$(this).siblings('.user-pin-id').text()].openPopup(); map.setView(markers[$(this).siblings('.user-pin-id').text()].getLatLng(),16);"/>
                     <b><%= userTokensData[userTokenIds[j]][4] %></b><br/>
-                    Pin #<span id="user-token-<%= j %>-id"><%= userTokensData[userTokenIds[j]][0] %></span><br />
+                    Pin #<span id="user-token-<%= j %>-id" class="user-pin-id"><%= userTokensData[userTokenIds[j]][0] %></span><br />
                     Latitude: <span id="user-token-<%= j %>-latitude" class="user-pin-lat"><%= userTokensData[userTokenIds[j]][2] / 10000 %></span>
                     / Longitude: <span id="user-token-<%= j %>-longitude" class="user-pin-lng"><%= userTokensData[userTokenIds[j]][3] / 10000 %></span><br />
                     Created at: <span id="user-token-<%= j %>-timestamp"><%= new Date(parseInt(userTokensData[userTokenIds[j]][5] * 1000)).toISOString() %></span>
@@ -83,13 +83,13 @@
         <% for(var i=0; i < tokenIds.length; i++) { %>
             <p class="token">
                     <% if (i < 20) { %>
-                        <img class="token-image" src="/token/<%= allTokensData[tokenIds[i]][0] %>.png" onclick="map.setView([parseFloat($(this).siblings('.global-pin-lat').text()),parseFloat($(this).siblings('.global-pin-lng').text())],16)" />
+                        <img class="token-image" src="/token/<%= allTokensData[tokenIds[i]][0] %>.png" onclick="markers[$(this).siblings('.global-pin-id').text()].openPopup(); map.setView(markers[$(this).siblings('.global-pin-id').text()].getLatLng(),16);" />
                     <% } else { %>
-                        <img class="token-default-image" src="/leaflet/images/marker-icon-2x.png" onclick="map.setView([parseFloat($(this).siblings('.global-pin-lat').text()),parseFloat($(this).siblings('.global-pin-lng').text())],16)" />
+                        <img class="token-default-image" src="/leaflet/images/marker-icon-2x.png" onclick="markers[$(this).siblings('.global-pin-id').text()].openPopup(); map.setView(markers[$(this).siblings('.global-pin-id').text()].getLatLng(),16);" />
                     <% } %>
 
                 <b><span id="token-<%= i %>-message"><%= allTokensData[tokenIds[i]][4] %></span></b><br/>
-                Pin #<span id="token-<%= i %>-id"><%= allTokensData[tokenIds[i]][0] %></span><br />
+                Pin #<span id="token-<%= i %>-id" class="global-pin-id"><%= allTokensData[tokenIds[i]][0] %></span><br />
                 Owned by <a target="_blank" href="https://scope.klaytn.com/account/<%= allTokensData[tokenIds[i]][1] %>"><span id="token-<%= i %>-owner"><%= allTokensData[tokenIds[i]][1] %></span></a><br />
                 Latitude: <span id="token-<%= i %>-latitude" class="global-pin-lat"><%= allTokensData[tokenIds[i]][2] / 10000 %></span>
                 / Longitude: <span id="token-<%= i %>-longitude" class="global-pin-lng"><%= allTokensData[tokenIds[i]][3] / 10000 %></span><br />
@@ -116,6 +116,7 @@
     L.tileLayer('https://map.cryptocarto.xyz/osm/{z}/{x}/{y}.png',{maxZoom:18, minZoom:15}).addTo(map);
 
     var nbTokens = parseInt(jQuery('.token').length);
+    var markers = new Array;
 
     for (i = 0; i< nbTokens; i++) {
         lat = parseFloat(jQuery('#token-'+i+'-latitude').text());
@@ -148,11 +149,11 @@
                             '</div>' +
                         '</div>';
 
-        marker = L.marker([lat,lng]).addTo(map).bindPopup(popUpContent);
+        markers[jQuery('#token-'+i+'-id').text()] = L.marker([lat,lng]).addTo(map).bindPopup(popUpContent);
 
         // Open popup if view-pin was called
         if (jQuery('#viewPinId') && jQuery('#viewPinId').text() == jQuery('#token-'+i+'-id').text()) {
-            marker.openPopup();
+            markers[jQuery('#token-'+i+'-id').text()].openPopup();
         }
 
         // Create a rectangle for the reserved spot around the pin
