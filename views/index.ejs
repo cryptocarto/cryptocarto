@@ -176,7 +176,15 @@
 
         $('.leaflet-popup').find("textarea").focus()
 
-        map.setView(L.latLng(e.latlng.lat, e.latlng.lng));
+        // Set map center, shifted by a Y factor depending on screen height
+        shiftFactor = 0.1
+        if (screen.height < 500) { shiftFactor = 0.25 }
+        else if (screen.height < 600) { shiftFactor = 0.20 }
+        else if (screen.height < 800) { shiftFactor = 0.15 }
+
+        coordinates = map.project(e.latlng, map.getZoom());
+        coordinates.y -= map.getSize().y * shiftFactor;
+        map.setView(map.unproject(coordinates));
     }
 
     map.on('click', onMapClick);
@@ -185,7 +193,10 @@
     $('.user-info-collapser').click(function(){$('.user-info-main').toggle();});
     if (screen.width < 1200) {$('.user-info-main').toggle();}
     $('.tokens-info-collapser').click(function(){$('.tokens-info-main').toggle();});
-    if (screen.width < 600) {$('.tokens-info-main').toggle();}
+    if (screen.width < 600) {
+        $('.tokens-info-main').toggle();
+        $('#tokens').css({ "max-width": "95%" });
+    }
 
     // Transaction form validator
     checkTransactionForm = function() {

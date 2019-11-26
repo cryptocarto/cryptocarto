@@ -152,7 +152,7 @@ p {margin: 0 0 10px 0;}
 }
 
 #privatekey, #address {
-    width: 250px;
+    width: 70%;
 }
 
 #teleport-longitude, #teleport-latitude {
