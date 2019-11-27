@@ -113,6 +113,8 @@
 
 <script>
     var map = L.map('map').setView([parseFloat(jQuery('#currentlat').text()),parseFloat(jQuery('#currentlng').text())],16);
+    var rectangleToReserve = null;
+
     L.tileLayer('https://map.cryptocarto.xyz/osm/{z}/{x}/{y}.png',{maxZoom:18, minZoom:15}).addTo(map);
 
     var nbTokens = parseInt(jQuery('.token').length);
@@ -161,6 +163,11 @@
     }
 
     function onMapClick(e) {
+
+        if (rectangleToReserve) {
+            map.removeControl(rectangleToReserve);
+        }
+
         var popup = L.popup()
             .setLatLng(e.latlng)
             .setContent(jQuery('.new-transaction').html())
@@ -168,6 +175,9 @@
         
         lat = Math.round(e.latlng.lat * 10000)/10000;
         lng = Math.round(e.latlng.lng * 10000)/10000;
+
+        // Create a rectangle for the spot to reserve around the click zone
+        rectangleToReserve = L.rectangle([[lat-0.00005,lng-0.00005], [lat+0.00005,lng+0.00005]], {color: '#00961e', weight: 1}).addTo(map);
 
         $('.latitude').val(lat);
         $('.longitude').val(lng);
