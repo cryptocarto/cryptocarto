@@ -62,11 +62,21 @@
             <p class="general-message">Message: <%= generalMessage %></p>
         <% } %>
         <% if (userTokenIds.length) { %>
-            <h2>Your pins - 
-                <% if (typeof address != 'undefined' && address) { %>
-                    <a class="orb-explorer" href="https://cypress.explore.bitcrystals.com/address/?address=<%= address %>" target="_blank">Browse on Klaytn Orb Explorer</a>
-                <% } %>
+            <h2>Your pins
+            <% if (typeof address != 'undefined' && address) { %>
+                <span class="note">
+                    - browse on
+                    <a class="orb-explorer" href="https://cypress.explore.bitcrystals.com/address/?address=<%= address %>" target="_blank">
+                        Orb Explorer
+                    </a>
+                    or
+                    <a class="orb-explorer" href="https://scope.klaytn.com/account/<%= address %>" target="_blank">
+                        Klaytn Explorer
+                    </a>
+                </span>
+            <% } %>
             </h2>
+            
             <% for(var j=0; j < userTokenIds.length; j++) { %>
                 <p class="user-token">
                     <img class="token-image" src="/token/<%= userTokensData[userTokenIds[j]][0] %>.png" onclick="markers[$(this).siblings('.user-pin-id').text()].openPopup(); map.setView(markers[$(this).siblings('.user-pin-id').text()].getLatLng(),16);"/>
@@ -90,7 +100,8 @@
 
                 <b><span id="token-<%= i %>-message"><%= allTokensData[tokenIds[i]][4] %></span></b><br/>
                 Pin #<span id="token-<%= i %>-id" class="global-pin-id"><%= allTokensData[tokenIds[i]][0] %></span><br />
-                Owned by <a target="_blank" href="https://scope.klaytn.com/account/<%= allTokensData[tokenIds[i]][1] %>"><span id="token-<%= i %>-owner"><%= allTokensData[tokenIds[i]][1] %></span></a><br />
+                Owned by <a target="_blank" href="https://cypress.explore.bitcrystals.com/address/?address=<%= allTokensData[tokenIds[i]][1] %>"><%= allTokensData[tokenIds[i]][1].substring(0,10) %>...<%= allTokensData[tokenIds[i]][1].substring(34,42) %></a><span id="token-<%= i %>-owner" class="token-owner-fulladdress"><%= allTokensData[tokenIds[i]][1] %></span>
+                (<a target="_blank" href="https://scope.klaytn.com/account/<%= allTokensData[tokenIds[i]][1] %>">details</a>)<br />
                 Latitude: <span id="token-<%= i %>-latitude" class="global-pin-lat"><%= allTokensData[tokenIds[i]][2] / 10000 %></span>
                 / Longitude: <span id="token-<%= i %>-longitude" class="global-pin-lng"><%= allTokensData[tokenIds[i]][3] / 10000 %></span><br />
                 Created at: <span id="token-<%= i %>-timestamp"><%= new Date(parseInt(allTokensData[tokenIds[i]][5] * 1000)).toISOString() %></span>
@@ -131,7 +142,9 @@
 
         popUpContent =  '<div id="popup-token-'+i+'">' +
                             '<span class="token-message">' + jQuery('#token-'+i+'-message').text() + '</span><br/>' +
-                            '<span class="token-message-author">by <a target="_blank" href="https://scope.klaytn.com/account/' + jQuery('#token-'+i+'-owner').text() + '">' + jQuery('#token-'+i+'-owner').text().substring(0,20) + '...</a></span><br/><br/>' +
+                            '<span class="token-message-author">by <a target="_blank" href="https://cypress.explore.bitcrystals.com/address/?address=' + jQuery('#token-'+i+'-owner').text() + '">' + 
+                                jQuery('#token-'+i+'-owner').text().substring(0,10) + '...' + jQuery('#token-'+i+'-owner').text().substring(34,42) + '</a>' + 
+                            '</span><br/><br/>' +
                             '<button onclick="$(\'#popup-token-'+i+'\').children(\'.metadata\').slideToggle()">Show/hide metadata</button>' +
                             '<button onclick="$(\'#popup-token-'+i+'\').children(\'.share-pin\').slideToggle()">Share this pin</button><br/>' +
                             '<div class="share-pin">' +

@@ -60,7 +60,7 @@ p {margin: 0 0 10px 0;}
 
 #board{display:none;font-size:10px;}
 
-#user-info .note {font-size:10px; margin-top: 2px;}
+.note {font-size:10px; margin-top: 2px;}
 
 .user-info-collapser {
     float: left;
@@ -87,6 +87,10 @@ p {margin: 0 0 10px 0;}
     overflow-y: scroll;
     font-size: 10px;
     z-index: 9000;
+}
+
+.token-owner-fulladdress {
+    display: none;
 }
 
 .user-token{
