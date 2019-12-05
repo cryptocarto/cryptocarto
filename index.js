@@ -88,6 +88,30 @@ const feePayerAddress = process.env.FEE_PAYER_ADDRESS;
 const feePayerPrivateKey = process.env.FEE_PAYER_PRIVATE_KEY;
 caver.klay.accounts.wallet.add(feePayerPrivateKey, feePayerAddress);
 
+// Watch ERC-721 transfers and update cache every minute
+setInterval(function() {
+  caver.klay.getBlockNumber().then(function(latestBlockNumber){
+    console.log("Running transfer watcher at block " + latestBlockNumber);
+    CryptoCartoContract.getPastEvents('Transfer', {
+      fromBlock: latestBlockNumber - 70, // Get events for last 80 blocks (60 for 1min + margin)
+      toBlock: 'latest'}
+    , function(error, events){
+      if (fs.existsSync(__dirname + '/pinIdsList.json', 'utf8')) {
+        var currentPinList = JSON.parse(fs.readFileSync(__dirname + '/pinIdsList.json', 'utf8'));    
+        events.forEach(event => {
+          tokenIdToRemove = event.returnValues.tokenId;
+          console.log("Purging token ID #" + tokenIdToRemove);
+          indexOfPin = currentPinList.indexOf(tokenIdToRemove);
+          if (indexOfPin >= 0) {
+            currentPinList.splice(currentPinList.indexOf(tokenIdToRemove), 1);
+          }
+        });
+        fs.writeFileSync(__dirname + '/pinIdsList.json', JSON.stringify(currentPinList), 'utf8');
+      }
+    })
+  })
+}, 60000); // 1min
+
 //Define routes
 app.get('/',
 async function(req, res, next) {
