@@ -6,10 +6,13 @@ a{color:#00961e}
 #board input{width:70%}
 .new-transaction-form input {width:100%;}
 .new-transaction-form textarea {width:90%;}
+.transfer-pin-form input {width:90%;}
 .spacer{clear:both}
 .token-message{font-size: 18px}
 .metadata{display:none}
 .share-pin{display:none}
+.transfer-pin{display:none}
+.transfer-link{cursor:pointer;text-decoration:underline}
 .share-pin textarea {position: absolute; left:-9999px;}
 #copied-message-conf {display: none;}
 

@@ -81,7 +81,12 @@
                 <p class="user-token">
                     <img class="token-image" src="/token/<%= userTokensData[userTokenIds[j]][0] %>.png" onclick="markers[$(this).siblings('.user-pin-id').text()].openPopup(); map.setView(markers[$(this).siblings('.user-pin-id').text()].getLatLng(),16);"/>
                     <b><%= userTokensData[userTokenIds[j]][4] %></b><br/>
-                    Pin #<span id="user-token-<%= j %>-id" class="user-pin-id"><%= userTokensData[userTokenIds[j]][0] %></span><br />
+                    Pin #<span id="user-token-<%= j %>-id" class="user-pin-id"><%= userTokensData[userTokenIds[j]][0] %></span> -
+                    <a class="transfer-link" onclick="
+                        markers[$(this).siblings('.user-pin-id').text()].openPopup();
+                        $('#transfer-pin-'+ $(this).siblings('.user-pin-id').text()).slideDown()
+                        map.setView(markers[$(this).siblings('.user-pin-id').text()].getLatLng(),16);">
+                    Transfer</a><br />
                     Latitude: <span id="user-token-<%= j %>-latitude" class="user-pin-lat"><%= userTokensData[userTokenIds[j]][2] / 10000 %></span>
                     / Longitude: <span id="user-token-<%= j %>-longitude" class="user-pin-lng"><%= userTokensData[userTokenIds[j]][3] / 10000 %></span><br />
                     Created at: <span id="user-token-<%= j %>-timestamp"><%= new Date(parseInt(userTokensData[userTokenIds[j]][5] * 1000)).toISOString() %></span>
@@ -145,8 +150,14 @@
                             '<span class="token-message-author">by <a target="_blank" href="https://cypress.explore.bitcrystals.com/address/?address=' + jQuery('#token-'+i+'-owner').text() + '">' + 
                                 jQuery('#token-'+i+'-owner').text().substring(0,10) + '...' + jQuery('#token-'+i+'-owner').text().substring(34,42) + '</a>' + 
                             '</span><br/><br/>' +
-                            '<button onclick="$(\'#popup-token-'+i+'\').children(\'.metadata\').slideToggle()">Show/hide metadata</button>' +
-                            '<button onclick="$(\'#popup-token-'+i+'\').children(\'.share-pin\').slideToggle()">Share this pin</button><br/>' +
+                            '<button onclick="' + 
+                                '$(\'#popup-token-'+i+'\').children(\'.share-pin\').slideToggle();'+
+                                '$(\'#popup-token-'+i+'\').children(\'.metadata\').slideUp();'+
+                            '">Share this pin</button>' +
+                            '<button onclick="' + 
+                                '$(\'#popup-token-'+i+'\').children(\'.metadata\').slideToggle();'+
+                                '$(\'#popup-token-'+i+'\').children(\'.share-pin\').slideUp();'+
+                            '">Show Metadata</button>' +
                             '<div class="share-pin">' +
                                 '<br />Shareable link: <a target="_blank" href="https://app.cryptocarto.xyz/view-pin/' + jQuery('#token-'+i+'-id').text() + '">https://app.cryptocarto.xyz/view-pin/' + jQuery('#token-'+i+'-id').text() + '</a><br/>' + 
                                 '<textarea id="share-link" class="share-link">https://app.cryptocarto.xyz/view-pin/' + jQuery('#token-'+i+'-id').text() + '</textArea>' +
@@ -161,6 +172,15 @@
                                 '<br/>' +'Tile coordinates: x = ' + xtile + ' ; y = ' + ytile +
                                 '<br/>' +'<a target="_blank" href="/token/' + jQuery('#token-'+i+'-id').text() + '.png">View token image</a>' +
                                 '<br/>' +'<a target="_blank" href="/token-metadata/' + jQuery('#token-'+i+'-id').text() + '">View token metadata JSON</a>' +
+                            '</div>' +
+                            '<div class="transfer-pin" id="transfer-pin-' + jQuery('#token-'+i+'-id').text() + '">' +
+                                '<form class="transfer-pin-form" action="/transfer-pin" method="post">' +
+                                    '<br /><label for="transferaddress">Transfer token to address:</label><br />' +
+                                    '<input type="text" class="form-control transferaddress" placeholder="0x..." name="transferaddress" required="true" />' +
+                                    '<input type="hidden" class="form-control tokenidtotransfer" placeholder="id" name="tokenidtotransfer" required="true" value="' + jQuery('#token-'+i+'-id').text() + '"/>' +
+                                    '<br /><button type="submit" class="submit-transaction" onclick="checkTransactionForm();">Transfer token</button>' +
+                                    '<span class="loader"><br /><img src="/img/loader.gif" /> posting on blockchain (~10sec wait)</span>' +
+                                '</form>' +
                             '</div>' +
                         '</div>';
 

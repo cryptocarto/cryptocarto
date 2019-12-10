@@ -407,6 +407,57 @@ async function(req, res, next) {
   } catch (error) { next(error) }
 });
 
+
+// Transfers a pin token to a new user
+app.post('/transfer-pin',
+async function(req, res, next) {
+  try {
+
+    const newAddress  = req.body.transferaddress;
+    const tokenId     = req.body.tokenidtotransfer;
+
+    // sign transaction
+    const { rawTransaction: senderRawTransaction } = await caver.klay.accounts.signTransaction({
+      type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
+      from: req.session.address,
+      to: process.env.SMART_CONTRACT_ADDRESS, //Contract on mainnet
+      gas: '50000000',
+      data: CryptoCartoContract.methods.transferFrom(req.session.address, newAddress, tokenId).encodeABI(),
+      value: caver.utils.toPeb('0', 'KLAY'),
+    }, req.session.privatekey);
+    
+    // Send transaction through fee delegation
+    await caver.klay.sendTransaction({
+      senderRawTransaction: senderRawTransaction,
+      feePayer: feePayerAddress,
+    })
+    .on('transactionHash', function(hash){
+        console.log('transactionHash', hash);
+    })
+    .on('receipt', function(receipt){
+        console.log('receipt', receipt);
+        console.log('Tx hash is '+ receipt.transactionHash);
+        console.log('Sender Tx hash is '+ receipt.senderTxHash);
+    })
+    .on('error', console.error);
+
+    req.session.generalMessage = 'Token #' + tokenId + ' was transferred to ' + newAddress;
+
+    // Purge token from cache
+    if (fs.existsSync(__dirname + '/pinIdsList.json', 'utf8')) {
+      var currentPinList = JSON.parse(fs.readFileSync(__dirname + '/pinIdsList.json', 'utf8'));
+        indexOfPin = currentPinList.indexOf(tokenId);
+        if (indexOfPin >= 0) {
+          currentPinList.splice(currentPinList.indexOf(tokenId), 1);
+        }
+      fs.writeFileSync(__dirname + '/pinIdsList.json', JSON.stringify(currentPinList), 'utf8');
+    }
+
+    res.redirect('/');
+
+  } catch (error) { next(error) }
+});
+
 //Error handler
 app.use(function (err, req, res, next) {
   req.session.generalMessage = "Error: " + err.message;
