@@ -178,7 +178,7 @@
                                     '<br /><label for="transferaddress">Transfer token to address:</label><br />' +
                                     '<input type="text" class="form-control transferaddress" placeholder="0x..." name="transferaddress" required="true" />' +
                                     '<input type="hidden" class="form-control tokenidtotransfer" placeholder="id" name="tokenidtotransfer" required="true" value="' + jQuery('#token-'+i+'-id').text() + '"/>' +
-                                    '<br /><button type="submit" class="submit-transaction" onclick="checkTransactionForm();">Transfer token</button>' +
+                                    '<br /><button type="submit" class="submit-transfer" onclick="checkTransferForm();">Transfer token</button>' +
                                     '<span class="loader"><br /><img src="/img/loader.gif" /> posting on blockchain (~10sec wait)</span>' +
                                 '</form>' +
                             '</div>' +
@@ -246,6 +246,15 @@
         if ($('.leaflet-popup').find(".new-transaction-form").valid()) {
             $('.leaflet-popup').find(".new-transaction-form").submit();
             $('.leaflet-popup').find(".submit-transaction").attr('disabled', true);
+            $('.leaflet-popup').find('.loader').show();
+        }
+    };
+
+    // Transfer form validator
+    checkTransferForm = function() {
+        if ($('.leaflet-popup').find(".transfer-pin-form").valid()) {
+            $('.leaflet-popup').find(".transfer-pin-form").submit();
+            $('.leaflet-popup').find(".submit-transfer").attr('disabled', true);
             $('.leaflet-popup').find('.loader').show();
         }
     };
