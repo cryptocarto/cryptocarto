@@ -457,7 +457,7 @@ async function(req, res, next) {
 
     // Remove token from DB to trigger resync
     console.log("Purging token ID #" + tokenId);
-    PinToken.deleteMany({ tokenId: { $eq: tokenId } })
+    await PinToken.deleteMany({ tokenId: { $eq: tokenId } })
 
     res.redirect('/');
 
