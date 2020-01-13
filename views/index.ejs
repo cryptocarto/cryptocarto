@@ -79,17 +79,17 @@
             
             <% for(var j=0; j < userTokenIds.length; j++) { %>
                 <p class="user-token">
-                    <img class="token-image" src="/token/<%= userTokensData[userTokenIds[j]][0] %>.png" onclick="markers[$(this).siblings('.user-pin-id').text()].openPopup(); map.setView(markers[$(this).siblings('.user-pin-id').text()].getLatLng(),16);"/>
-                    <b><%= userTokensData[userTokenIds[j]][4] %></b><br/>
-                    Pin #<span id="user-token-<%= j %>-id" class="user-pin-id"><%= userTokensData[userTokenIds[j]][0] %></span> -
+                    <img class="token-image" src="/token/<%= userTokensData[userTokenIds[j]]['tokenId'] %>.png" onclick="markers[$(this).siblings('.user-pin-id').text()].openPopup(); map.setView(markers[$(this).siblings('.user-pin-id').text()].getLatLng(),16);"/>
+                    <b><%= userTokensData[userTokenIds[j]]['message'] %></b><br/>
+                    Pin #<span id="user-token-<%= j %>-id" class="user-pin-id"><%= userTokensData[userTokenIds[j]]['tokenId'] %></span> -
                     <a class="transfer-link" onclick="
                         markers[$(this).siblings('.user-pin-id').text()].openPopup();
                         $('#transfer-pin-'+ $(this).siblings('.user-pin-id').text()).slideDown()
                         map.setView(markers[$(this).siblings('.user-pin-id').text()].getLatLng(),16);">
                     Transfer</a><br />
-                    Latitude: <span id="user-token-<%= j %>-latitude" class="user-pin-lat"><%= userTokensData[userTokenIds[j]][2] / 10000 %></span>
-                    / Longitude: <span id="user-token-<%= j %>-longitude" class="user-pin-lng"><%= userTokensData[userTokenIds[j]][3] / 10000 %></span><br />
-                    Created at: <span id="user-token-<%= j %>-timestamp"><%= new Date(parseInt(userTokensData[userTokenIds[j]][5] * 1000)).toISOString() %></span>
+                    Latitude: <span id="user-token-<%= j %>-latitude" class="user-pin-lat"><%= userTokensData[userTokenIds[j]]['latitude'] / 10000 %></span>
+                    / Longitude: <span id="user-token-<%= j %>-longitude" class="user-pin-lng"><%= userTokensData[userTokenIds[j]]['longitude'] / 10000 %></span><br />
+                    Created at: <span id="user-token-<%= j %>-timestamp"><%= new Date(parseInt(userTokensData[userTokenIds[j]]['timestamp'] * 1000)).toISOString() %></span>
                     <div class="spacer"></div>
                 </p>
             <% } %>
@@ -98,18 +98,18 @@
         <% for(var i=0; i < tokenIds.length; i++) { %>
             <p class="token">
                     <% if (i < 20) { %>
-                        <img class="token-image" src="/token/<%= allTokensData[tokenIds[i]][0] %>.png" onclick="markers[$(this).siblings('.global-pin-id').text()].openPopup(); map.setView(markers[$(this).siblings('.global-pin-id').text()].getLatLng(),16);" />
+                        <img class="token-image" src="/token/<%= allTokensData[tokenIds[i]]['tokenId'] %>.png" onclick="markers[$(this).siblings('.global-pin-id').text()].openPopup(); map.setView(markers[$(this).siblings('.global-pin-id').text()].getLatLng(),16);" />
                     <% } else { %>
                         <img class="token-default-image" src="/leaflet/images/marker-icon-2x.png" onclick="markers[$(this).siblings('.global-pin-id').text()].openPopup(); map.setView(markers[$(this).siblings('.global-pin-id').text()].getLatLng(),16);" />
                     <% } %>
 
-                <b><span id="token-<%= i %>-message"><%= allTokensData[tokenIds[i]][4] %></span></b><br/>
-                Pin #<span id="token-<%= i %>-id" class="global-pin-id"><%= allTokensData[tokenIds[i]][0] %></span><br />
-                Owned by <a target="_blank" href="https://cypress.explore.bitcrystals.com/address/?address=<%= allTokensData[tokenIds[i]][1] %>"><%= allTokensData[tokenIds[i]][1].substring(0,10) %>...<%= allTokensData[tokenIds[i]][1].substring(34,42) %></a><span id="token-<%= i %>-owner" class="token-owner-fulladdress"><%= allTokensData[tokenIds[i]][1] %></span>
-                (<a target="_blank" href="https://scope.klaytn.com/account/<%= allTokensData[tokenIds[i]][1] %>">details</a>)<br />
-                Latitude: <span id="token-<%= i %>-latitude" class="global-pin-lat"><%= allTokensData[tokenIds[i]][2] / 10000 %></span>
-                / Longitude: <span id="token-<%= i %>-longitude" class="global-pin-lng"><%= allTokensData[tokenIds[i]][3] / 10000 %></span><br />
-                Created at: <span id="token-<%= i %>-timestamp"><%= new Date(parseInt(allTokensData[tokenIds[i]][5] * 1000)).toISOString() %></span>
+                <b><span id="token-<%= i %>-message"><%= allTokensData[tokenIds[i]]['message'] %></span></b><br/>
+                Pin #<span id="token-<%= i %>-id" class="global-pin-id"><%= allTokensData[tokenIds[i]]['tokenId'] %></span><br />
+                Owned by <a target="_blank" href="https://cypress.explore.bitcrystals.com/address/?address=<%= allTokensData[tokenIds[i]]['owner'] %>"><%= allTokensData[tokenIds[i]]['owner'].substring(0,10) %>...<%= allTokensData[tokenIds[i]]['owner'].substring(34,42) %></a><span id="token-<%= i %>-owner" class="token-owner-fulladdress"><%= allTokensData[tokenIds[i]]['owner'] %></span>
+                (<a target="_blank" href="https://scope.klaytn.com/account/<%= allTokensData[tokenIds[i]]['owner'] %>">details</a>)<br />
+                Latitude: <span id="token-<%= i %>-latitude" class="global-pin-lat"><%= allTokensData[tokenIds[i]]['latitude'] / 10000 %></span>
+                / Longitude: <span id="token-<%= i %>-longitude" class="global-pin-lng"><%= allTokensData[tokenIds[i]]['longitude'] / 10000 %></span><br />
+                Created at: <span id="token-<%= i %>-timestamp"><%= new Date(parseInt(allTokensData[tokenIds[i]]['timestamp'] * 1000)).toISOString() %></span>
                 <div class="spacer"></div>
             </p>
             <div class="spacer"></div>

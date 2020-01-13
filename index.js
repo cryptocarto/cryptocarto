@@ -4,6 +4,24 @@ dotenv.config();
 var port = process.env.PORT || 4210;
 var app = express();
 
+// Connect to mongo and declare PinToken schema
+var mongoose = require('mongoose');
+mongoose.connect(process.env.MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true});
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'Connection error:'));
+db.once('open', function() { console.log("Connected to DB")});
+
+var pinTokenSchema = new mongoose.Schema({
+  tokenId : String,
+  owner: String,
+  latitude : Number,
+  longitude : Number,
+  message : String,
+  timestamp : String
+});
+
+var PinToken = mongoose.model('PinToken', pinTokenSchema);
+
 // Configure view engine to render EJS templates.
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
@@ -75,9 +93,6 @@ const smartContractAddress = process.env.SMART_CONTRACT_ADDRESS
 const fs = require('fs')
 const deployedAbi = fs.readFileSync(__dirname + '/deployedABI', 'utf8')
 
-// Setting Cryptocarto account for pulls
-// const account = caver.klay.accounts.wallet.add(process.env.KLAYTN_WALLET_KEY_FOR_CALLS)
-
 // Setting contract
 const CryptoCartoContract = deployedAbi
   && smartContractAddress
@@ -93,24 +108,70 @@ setInterval(function() {
   caver.klay.getBlockNumber().then(function(latestBlockNumber){
     console.log("Running transfer watcher at block " + latestBlockNumber);
     CryptoCartoContract.getPastEvents('Transfer', {
-      fromBlock: latestBlockNumber - 70, // Get events for last 80 blocks (60 for 1min + margin)
+      fromBlock: latestBlockNumber - 35, // Get events for last 35 blocks (30 for 30sec + margin)
       toBlock: 'latest'}
     , function(error, events){
-      if (fs.existsSync(__dirname + '/pinIdsList.json', 'utf8')) {
-        var currentPinList = JSON.parse(fs.readFileSync(__dirname + '/pinIdsList.json', 'utf8'));    
-        events.forEach(event => {
-          tokenIdToRemove = event.returnValues.tokenId;
-          console.log("Purging token ID #" + tokenIdToRemove);
-          indexOfPin = currentPinList.indexOf(tokenIdToRemove);
-          if (indexOfPin >= 0) {
-            currentPinList.splice(currentPinList.indexOf(tokenIdToRemove), 1);
-          }
-        });
-        fs.writeFileSync(__dirname + '/pinIdsList.json', JSON.stringify(currentPinList), 'utf8');
-      }
+
+      // Updating owner for token
+      events.forEach(event => {
+        tokenIdToRemove = event.returnValues.tokenId;
+        console.log("Updating token ID #" + event.returnValues.tokenId);
+        PinToken.updateMany({ tokenId: event.returnValues.tokenId }, { $set: { owner: event.returnValues.to } })
+      });
+
     })
   })
-}, 60000); // 1min
+  // Getting pin data
+  updatePinTokensDB();
+}, 30000); // 30sec
+
+// Function to update PinToken DB from blockchain
+updatePinTokensDB = async function () {
+  await CryptoCartoContract.methods.getAllPinTokenIds().call().then(async function(tokenIds){
+
+    // Exclude known Pins from lookup (pins already in DB)
+    tokenIdsToLookup = tokenIds;
+    currentPinIds = await PinToken.distinct("tokenId");
+    tokenIdsToLookup = tokenIds.filter(x => !currentPinIds.includes(x));
+    
+    // If new tokens, save them in DB
+    if (tokenIdsToLookup.length > 0) {
+
+      // Getting token data in parallel
+      const tokenDataPromises = tokenIdsToLookup.map(async function(tokenId){
+        return CryptoCartoContract.methods.getPinToken(tokenId).call()
+      });
+
+      // Waiting for blockchain return, then saves to DB
+      await Promise.all(tokenDataPromises).then(async function(result) {
+
+        // Saves new tokens to DB
+        const tokenSavePromises = Object.keys(result).map(async function (objectKey) {
+          var newPinToken = new PinToken({
+            tokenId : result[objectKey][0],
+            owner: result[objectKey][1],
+            latitude : result[objectKey][2],
+            longitude : result[objectKey][3],
+            message : result[objectKey][4],
+            timestamp : result[objectKey][5]
+          });
+        
+          // Saves if not existing
+          if (!await PinToken.countDocuments({ tokenId: newPinToken.tokenId })) {
+            await newPinToken.save();
+            console.log("PinToken #" + newPinToken.tokenId + " saved to DB.")
+          };
+          
+        })
+        // Wait for saves
+        await Promise.all(tokenSavePromises)
+      })
+    }
+  });
+}
+
+// Triggers an update at app launch
+updatePinTokensDB();
 
 //Define routes
 app.get('/',
@@ -134,76 +195,33 @@ async function(req, res, next) {
       res.locals.currentlng = 2.3321;
     }
 
-    // Getting pin data
-    CryptoCartoContract.methods.getAllPinTokenIds().call().then(async function(tokenIds){
+    // Get pins from DB (incuding new ones)
+    var tokensDataFromDB = await PinToken.find().sort({timestamp:-1});
+    var tokenIds = new Array;
+    var allTokensData = new Array;
 
-      // Exclude known Pins from lookup
-      tokenIdsToLookup = tokenIds;
-      if (fs.existsSync(__dirname + '/pinIdsList.json', 'utf8')) {
-        var currentPinList = JSON.parse(fs.readFileSync(__dirname + '/pinIdsList.json', 'utf8'));
-        tokenIdsToLookup = tokenIds.filter(x => !currentPinList.includes(x));
-      }
+    // Create array indexed by tokenId and tokenIds array
+    Object.keys(tokensDataFromDB).map(function (objectKey) {
+      allTokensData[tokensDataFromDB[objectKey]["tokenId"]] = tokensDataFromDB[objectKey];
+      tokenIds.push(tokensDataFromDB[objectKey]["tokenId"]);
+    })
 
-      // If no new token, skip blockchain calls
-      if (tokenIdsToLookup.length <= 0) {
-        var allTokensData = Array;
-        if (fs.existsSync(__dirname + '/pinDataList.json', 'utf8')) {
-          allTokensData = JSON.parse(fs.readFileSync(__dirname + '/pinDataList.json', 'utf8'));
-        }
-        renderPinTokens(allTokensData, tokenIds, req, res);
-      } else {
+    // Get tokens for this specific user
+    var userTokensDataFromDB = await PinToken.find({ owner: { '$regex': new RegExp(req.session.address,"i")} }).sort({timestamp:-1});
+    var userTokenIds = new Array;
+    var userTokensData = new Array;
 
-        // Getting token data in parallel
-        const tokenDataPromises = tokenIdsToLookup.map(async function(tokenId){
-          return CryptoCartoContract.methods.getPinToken(tokenId).call()
-        });
+    // Create array indexed by tokenId and userTokenIds array
+    Object.keys(userTokensDataFromDB).map(function (objectKey) {
+      userTokensData[userTokensDataFromDB[objectKey]["tokenId"]] = userTokensDataFromDB[objectKey];
+      userTokenIds.push(userTokensDataFromDB[objectKey]["tokenId"]);
+    })
 
-        // Waiting for blockchain return, then render
-        await Promise.all(tokenDataPromises).then(function(result) {
-          renderPinTokens(result, tokenIds, req, res)
-        })
-      }
-    });
+    // Render view
+    res.render('index', { allTokensData: allTokensData, userTokensData: userTokensData, tokenIds: tokenIds, userTokenIds: userTokenIds });
+
   } catch (error) { next(error) }
 });
-
-// View function to render retrieved pin tokens on map
-renderPinTokens = function (result, tokenIds, req, res) {
-
-  var allTokensData = new Object;
-
-  // Get known Pins from disk
-  if (fs.existsSync(__dirname + '/pinDataList.json', 'utf8')) {
-    allTokensData = JSON.parse(fs.readFileSync(__dirname + '/pinDataList.json', 'utf8'));
-  }
-
-  // Add tokens retrieved from blockchain
-  Object.keys(result).map(function (objectKey) {
-    allTokensData[result[objectKey][0]] = result[objectKey];
-  })
-
-  // Get tokens for this specific user
-  var userTokensData = new Array;
-  var userTokenIds = new Array;
-  Object.keys(allTokensData).map(function (objectKey) {
-    // References user owned tokens
-    if (allTokensData[objectKey][1].toLowerCase() == req.session.address.toLowerCase()){
-      userTokensData[allTokensData[objectKey][0]] = allTokensData[objectKey];
-      userTokenIds.push(allTokensData[objectKey][0]);
-    }
-  })
-
-  // Sort tokens by timestamp DESC
-  tokenIds.sort((a, b) => allTokensData[b][5] - allTokensData[a][5])
-  userTokenIds.sort((a, b) => userTokensData[b][5] - userTokensData[a][5])
-
-  // Save Pin List on disk
-  fs.writeFileSync(__dirname + '/pinIdsList.json', JSON.stringify(tokenIds), 'utf8');
-  fs.writeFileSync(__dirname + '/pinDataList.json', JSON.stringify(allTokensData), 'utf8');
-
-  // Render view
-   res.render('index', { allTokensData: allTokensData, userTokensData: userTokensData, tokenIds: tokenIds, userTokenIds: userTokenIds });
-}
 
 // Generate token asset image - only runs if image does'nt already exist
 app.get('/token/:tokenaddress',
@@ -363,6 +381,9 @@ async function(req, res, next) {
 
     req.session.generalMessage = 'Transaction was created on blockchain.';
 
+    // Updates the PinTokens DB
+    await updatePinTokensDB();
+
     res.redirect('/');
 
   } catch (error) { next(error) }
@@ -443,15 +464,9 @@ async function(req, res, next) {
 
     req.session.generalMessage = 'Token #' + tokenId + ' was transferred to ' + newAddress;
 
-    // Purge token from cache
-    if (fs.existsSync(__dirname + '/pinIdsList.json', 'utf8')) {
-      var currentPinList = JSON.parse(fs.readFileSync(__dirname + '/pinIdsList.json', 'utf8'));
-        indexOfPin = currentPinList.indexOf(tokenId);
-        if (indexOfPin >= 0) {
-          currentPinList.splice(currentPinList.indexOf(tokenId), 1);
-        }
-      fs.writeFileSync(__dirname + '/pinIdsList.json', JSON.stringify(currentPinList), 'utf8');
-    }
+    // Updating token owner
+    console.log("Updating token ID #" + tokenId);
+    await PinToken.updateMany({ tokenId: tokenId }, { $set: { owner: newAddress } })
 
     res.redirect('/');
 

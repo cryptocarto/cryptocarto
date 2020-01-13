@@ -33,6 +33,7 @@
     "jquery": "^3.4.1",
     "jquery-ui-dist": "^1.12.1",
     "jquery-validation": "^1.19.1",
+    "mongoose": "^5.8.5",
     "semver": "^6.3.0",
     "truffle-hdwallet-provider-klaytn": "^1.0.13-a"
   },
