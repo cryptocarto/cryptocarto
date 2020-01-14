@@ -3,19 +3,13 @@
         <p class="token">
                 <% if (i < 20) { %>
                     <img class="token-image" src="/token/<%= allTokensData[tokenIds[i]]['tokenId'] %>.png" onclick="
-                        markers[$(this).siblings('.global-pin-id').text()].openPopup();
+                        jQuery('#viewPinId').text($(this).siblings('.global-pin-id').text());
                         map.setView(markers[$(this).siblings('.global-pin-id').text()].getLatLng(),16);
-                        $('#currentlat').text(markers[$(this).siblings('.global-pin-id').text()].getLatLng().lat);
-                        $('#currentlng').text(markers[$(this).siblings('.global-pin-id').text()].getLatLng().lng);
-                        loadPinTokens();
                     " />
                 <% } else { %>
                     <img class="token-default-image" src="/leaflet/images/marker-icon-2x.png" onclick="
-                        markers[$(this).siblings('.global-pin-id').text()].openPopup();
+                        jQuery('#viewPinId').text($(this).siblings('.global-pin-id').text());
                         map.setView(markers[$(this).siblings('.global-pin-id').text()].getLatLng(),16);
-                        $('#currentlat').text(markers[$(this).siblings('.global-pin-id').text()].getLatLng().lat);
-                        $('#currentlng').text(markers[$(this).siblings('.global-pin-id').text()].getLatLng().lng);
-                        loadPinTokens();
                     " />
                 <% } %>
 

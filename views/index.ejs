@@ -37,15 +37,15 @@
 
         <p id="teleport-zone">
             Teleport to : 
-            <button onclick="map.setView([48.8722,2.3321],16);$('#currentlat').text(48.8722);$('#currentlng').text(2.3321);">Paris</button>
-            <button onclick="map.setView([37.5326,127.02461],16);$('#currentlat').text(37.5326);$('#currentlng').text(127.02461);">Seoul</button>
-            <button onclick="map.setView([43.7331,7.420],16);$('#currentlat').text(43.7331);$('#currentlng').text(7.420);">Monaco</button>
-            <button onclick="map.setView([46.2043,6.1431],16);$('#currentlat').text(46.2043);$('#currentlng').text(6.1431);">Geneva</button>
+            <button onclick="map.setView([48.8722,2.3321],16);">Paris</button>
+            <button onclick="map.setView([37.5326,127.02461],16);">Seoul</button>
+            <button onclick="map.setView([43.7331,7.420],16);">Monaco</button>
+            <button onclick="map.setView([46.2043,6.1431],16);">Geneva</button>
             <br />
             ...or to 
             Latitude <input type="text" placeholder="Latitude" name="teleport-latitude" id="teleport-latitude" required="true" value="42.6886" />
             Longitude <input type="text" placeholder="Longitude" name="teleport-longitude" id="teleport-longitude" required="true" value="2.8948" />
-            <button onclick="map.setView([$('#teleport-latitude').val(),$('#teleport-longitude').val()],16);$('#currentlat').text($('#teleport-latitude').val());$('#currentlng').text($('#teleport-longitude').val());">Go</button>
+            <button onclick="map.setView([$('#teleport-latitude').val(),$('#teleport-longitude').val()],16);">Go</button>
         </p>
     </div>
 </div>
@@ -80,17 +80,15 @@
             <% for(var j=0; j < userTokenIds.length; j++) { %>
                 <p class="user-token">
                     <img class="token-image" src="/token/<%= userTokensData[userTokenIds[j]]['tokenId'] %>.png" onclick="
-                        markers[$(this).siblings('.user-pin-id').text()].openPopup();
+                        jQuery('#viewPinId').text($(this).siblings('.user-pin-id').text());
                         map.setView(markers[$(this).siblings('.user-pin-id').text()].getLatLng(),16);
-                        $('#currentlat').text(markers[$(this).siblings('.user-pin-id').text()].getLatLng().lat);
-                        $('#currentlng').text(markers[$(this).siblings('.user-pin-id').text()].getLatLng().lng);
                     "/>
                     <b><%= userTokensData[userTokenIds[j]]['message'] %></b><br/>
                     Pin #<span id="user-token-<%= j %>-id" class="user-pin-id"><%= userTokensData[userTokenIds[j]]['tokenId'] %></span> -
                     <a class="transfer-link" onclick="
-                        markers[$(this).siblings('.user-pin-id').text()].openPopup();
-                        $('#transfer-pin-'+ $(this).siblings('.user-pin-id').text()).slideDown()
-                        map.setView(markers[$(this).siblings('.user-pin-id').text()].getLatLng(),16);">
+                        jQuery('#viewPinId').text($(this).siblings('.user-pin-id').text());
+                        map.setView(markers[$(this).siblings('.user-pin-id').text()].getLatLng(),16);
+                    ">
                     Transfer</a><br />
                     Latitude: <span id="user-token-<%= j %>-latitude" class="user-pin-lat"><%= userTokensData[userTokenIds[j]]['latitude'] / 10000 %></span>
                     / Longitude: <span id="user-token-<%= j %>-longitude" class="user-pin-lng"><%= userTokensData[userTokenIds[j]]['longitude'] / 10000 %></span><br />
@@ -105,17 +103,13 @@
             <p class="token">
                     <% if (i < 20) { %>
                         <img class="token-image" src="/token/<%= allTokensData[tokenIds[i]]['tokenId'] %>.png" onclick="
-                            markers[$(this).siblings('.global-pin-id').text()].openPopup();
+                            jQuery('#viewPinId').text($(this).siblings('.global-pin-id').text());
                             map.setView(markers[$(this).siblings('.global-pin-id').text()].getLatLng(),16);
-                            $('#currentlat').text(markers[$(this).siblings('.global-pin-id').text()].getLatLng().lat);
-                            $('#currentlng').text(markers[$(this).siblings('.global-pin-id').text()].getLatLng().lng);
                         " />
                     <% } else { %>
                         <img class="token-default-image" src="/leaflet/images/marker-icon-2x.png" onclick="
-                            markers[$(this).siblings('.global-pin-id').text()].openPopup();
+                            jQuery('#viewPinId').text($(this).siblings('.global-pin-id').text());
                             map.setView(markers[$(this).siblings('.global-pin-id').text()].getLatLng(),16);
-                            $('#currentlat').text(markers[$(this).siblings('.global-pin-id').text()].getLatLng().lat);
-                            $('#currentlng').text(markers[$(this).siblings('.global-pin-id').text()].getLatLng().lng);
                         " />
                     <% } %>
 
@@ -137,9 +131,11 @@
         <% if (typeof currentlng != 'undefined' && currentlng) { %>
             <p>Last known longitude: <span id="currentlng"><%= currentlng %></span></p>
         <% } %>
-        <% if (typeof openPinId != 'undefined' && openPinId) { %>
-            <p>Pin ID requested: <span id="viewPinId"><%= openPinId %></span></p>
-        <% } %>
+        <p>Pin ID requested: <span id="viewPinId">
+            <% if (typeof openPinId != 'undefined' && openPinId) { %>
+                <%= openPinId %>
+            <% } %>
+        </span></p>
     </div>
 </div>
 <% } %>
@@ -206,6 +202,7 @@
         // Open popup if view-pin was called
         if (jQuery('#viewPinId') && jQuery('#viewPinId').text() == jQuery('#token-'+i+'-id').text()) {
             markers[jQuery('#token-'+i+'-id').text()].openPopup();
+            jQuery('#viewPinId').text("");
         }
 
         // Create a rectangle for the reserved spot around the pin
@@ -251,9 +248,24 @@
 
     // Refresh tokens on move
     map.on('moveend', function(e){
-        $('#currentlat').text(map.getCenter().lat)
-        $('#currentlng').text(map.getCenter().lng)
-        loadPinTokens();
+        previousLat = $('#currentlat').text();
+        previousLng = $('#currentlng').text();
+        newLat = Math.round(map.getCenter().lat * 10000)/10000;
+        newLng = Math.round(map.getCenter().lng * 10000)/10000;
+
+        // Perform only if moved more than 0.02 in coordinates
+        if (Math.abs(previousLat-newLat) > 0.02 || Math.abs(previousLng-newLng) > 0.02) {
+            $('#currentlat').text(newLat);
+            $('#currentlng').text(newLng);
+            loadPinTokens();
+        } else {
+            // Open popup if needed
+            if (jQuery('#viewPinId') && jQuery('#viewPinId').text() && (jQuery('#viewPinId').text() in markers)) {
+                markers[jQuery('#viewPinId').text()].openPopup();
+                jQuery('#viewPinId').text("")
+            }
+        }
+    
     });
 
     // Collapsers and auto hide for small displays
@@ -351,6 +363,12 @@
                                 '</div>';
 
                 markers[jQuery('#token-'+i+'-id').text()] = L.marker([lat,lng]).addTo(map).bindPopup(popUpContent);
+
+                // Open popup if needed
+                if (jQuery('#viewPinId') && jQuery('#viewPinId').text() && (jQuery('#viewPinId').text() in markers)) {
+                    markers[jQuery('#viewPinId').text()].openPopup();
+                    jQuery('#viewPinId').text("")
+                }
             }
 
         })
