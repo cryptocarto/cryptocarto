@@ -81,13 +81,13 @@
                 <p class="user-token">
                     <img class="token-image" src="/token/<%= userTokensData[userTokenIds[j]]['tokenId'] %>.png" onclick="
                         jQuery('#viewPinId').text($(this).siblings('.user-pin-id').text());
-                        map.setView(markers[$(this).siblings('.user-pin-id').text()].getLatLng(),16);
+                        map.setView([$(this).siblings('.user-pin-lat').text(), $(this).siblings('.user-pin-lng').text()],16);
                     "/>
                     <b><%= userTokensData[userTokenIds[j]]['message'] %></b><br/>
                     Pin #<span id="user-token-<%= j %>-id" class="user-pin-id"><%= userTokensData[userTokenIds[j]]['tokenId'] %></span> -
                     <a class="transfer-link" onclick="
                         jQuery('#viewPinId').text($(this).siblings('.user-pin-id').text());
-                        map.setView(markers[$(this).siblings('.user-pin-id').text()].getLatLng(),16);
+                        map.setView([$(this).siblings('.user-pin-lat').text(), $(this).siblings('.user-pin-lng').text()],16);
                     ">
                     Transfer</a><br />
                     Latitude: <span id="user-token-<%= j %>-latitude" class="user-pin-lat"><%= userTokensData[userTokenIds[j]]['latitude'] / 10000 %></span>
