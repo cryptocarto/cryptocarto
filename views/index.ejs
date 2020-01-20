@@ -43,9 +43,41 @@
             <button onclick="map.setView([46.2043,6.1431],16);">Geneva</button>
             <br />
             ...or to 
-            Latitude <input type="text" placeholder="Latitude" name="teleport-latitude" id="teleport-latitude" required="true" value="42.6886" />
-            Longitude <input type="text" placeholder="Longitude" name="teleport-longitude" id="teleport-longitude" required="true" value="2.8948" />
-            <button onclick="map.setView([$('#teleport-latitude').val(),$('#teleport-longitude').val()],16);">Go</button>
+            Latitude <input type="text" onClick="this.select();" placeholder="Latitude" name="teleport-latitude" id="teleport-latitude" required="true" value="42.6886" />
+            Longitude <input type="text" onClick="this.select();" placeholder="Longitude" name="teleport-longitude" id="teleport-longitude" required="true" value="2.8948" />
+            <button onclick="cryptocartoTeleporter()">Go</button>
+            <br />...or try typing a place name here (beta): <input onClick="this.select();" autocomplete="off" id="geocoding-field" type="text" />
+            <button onclick="cryptocartoGeocoder()">Go</button>
+            <script>
+                // Geocoding function
+                cryptocartoGeocoder = function() {
+                    var geocoder = new maptiler.Geocoder({key: 'hRjkiHQiQvUA7GFcwv6N'});
+                    var geocodingString = $('#geocoding-field').val();
+                    if (geocodingString) {
+                        geocoder.geocode($('#geocoding-field').val()).then(function(results) {
+                            if(results.features[0]) {
+                                console.log('Geocoding for \''+ geocodingString + '\' succedeed and yielded: \'' + results.features[0].place_name + '\'.')
+                                $('#geocoding-field').val(results.features[0].place_name)
+                                map.setView([results.features[0].center[1],results.features[0].center[0]],18);
+                            } else {
+                                console.log('Geocoding for \''+ geocodingString + '\' failed...')
+                                $('#geocoding-field').val('I\'m not sure... please try again')
+                            }
+                        });
+                    }
+                }
+
+                // Teleporting function
+                cryptocartoTeleporter = function() {
+                    map.setView([$('#teleport-latitude').val(),$('#teleport-longitude').val()],16);
+                }
+
+                // Bind "Enter" keypress events
+                $(document).on("keypress", $('#geocoding-field'), function(e){if(e.which == 13){ cryptocartoGeocoder() }});
+                $(document).on("keypress", $('#teleport-latitude'), function(e){if(e.which == 13){ cryptocartoTeleporter() }});
+                $(document).on("keypress", $('#teleport-longitude'), function(e){if(e.which == 13){ cryptocartoTeleporter() }});
+
+            </script>
         </p>
     </div>
 </div>
@@ -54,29 +86,29 @@
     <%- include('new-transaction') -%>
 </div>
 
-<% if (tokenIds.length) { %>
 <div id="tokens">
     <div class="tokens-info-collapser">&#9776; Tokens Info &#9776;</div>
     <div class="tokens-info-main">
         <% if (typeof generalMessage != 'undefined' && generalMessage) { %>
             <p class="general-message">Message: <%= generalMessage %></p>
         <% } %>
+
         <% if (userTokenIds.length) { %>
-            <h2>Your pins
-            <% if (typeof address != 'undefined' && address) { %>
-                <span class="note">
-                    - browse on
-                    <a class="orb-explorer" href="https://cypress.explore.bitcrystals.com/address/?address=<%= address %>" target="_blank">
-                        Orb Explorer
-                    </a>
-                    or
-                    <a class="orb-explorer" href="https://scope.klaytn.com/account/<%= address %>" target="_blank">
-                        Klaytn Explorer
-                    </a>
-                </span>
-            <% } %>
+        <h2>Your pins
+                <% if (typeof address != 'undefined' && address) { %>
+                    <span class="note">
+                        - browse on
+                        <a class="orb-explorer" href="https://cypress.explore.bitcrystals.com/address/?address=<%= address %>" target="_blank">
+                            Orb Explorer
+                        </a>
+                        or
+                        <a class="orb-explorer" href="https://scope.klaytn.com/account/<%= address %>" target="_blank">
+                            Klaytn Explorer
+                        </a>
+                    </span>
+                <% } %>
             </h2>
-            
+                
             <% for(var j=0; j < userTokenIds.length; j++) { %>
                 <p class="user-token">
                     <img class="token-image" src="/token/<%= userTokensData[userTokenIds[j]]['tokenId'] %>.png" onclick="
@@ -97,34 +129,40 @@
                 </p>
             <% } %>
         <% } %>
+
         <h2>Neighbour pins</h2>
         <div id="neighbour-token-list">
-        <% for(var i=0; i < tokenIds.length; i++) { %>
-            <p class="token">
-                    <% if (i < 20) { %>
-                        <img class="token-image" src="/token/<%= allTokensData[tokenIds[i]]['tokenId'] %>.png" onclick="
-                            jQuery('#viewPinId').text($(this).siblings('.global-pin-id').text());
-                            map.setView(markers[$(this).siblings('.global-pin-id').text()].getLatLng(),16);
-                        " />
-                    <% } else { %>
-                        <img class="token-default-image" src="/leaflet/images/marker-icon-2x.png" onclick="
-                            jQuery('#viewPinId').text($(this).siblings('.global-pin-id').text());
-                            map.setView(markers[$(this).siblings('.global-pin-id').text()].getLatLng(),16);
-                        " />
-                    <% } %>
+            <% if (tokenIds.length && tokenIds.length > 0) { %>
+                <% for(var i=0; i < tokenIds.length; i++) { %>
+                    <p class="token">
+                        <% if (i < 20) { %>
+                            <img class="token-image" src="/token/<%= allTokensData[tokenIds[i]]['tokenId'] %>.png" onclick="
+                                jQuery('#viewPinId').text($(this).siblings('.global-pin-id').text());
+                                map.setView(markers[$(this).siblings('.global-pin-id').text()].getLatLng(),16);
+                            " />
+                        <% } else { %>
+                            <img class="token-default-image" src="/leaflet/images/marker-icon-2x.png" onclick="
+                                jQuery('#viewPinId').text($(this).siblings('.global-pin-id').text());
+                                map.setView(markers[$(this).siblings('.global-pin-id').text()].getLatLng(),16);
+                            " />
+                        <% } %>
 
-                <b><span id="token-<%= i %>-message"><%= allTokensData[tokenIds[i]]['message'] %></span></b><br/>
-                Pin #<span id="token-<%= i %>-id" class="global-pin-id"><%= allTokensData[tokenIds[i]]['tokenId'] %></span><br />
-                Owned by <a target="_blank" href="https://cypress.explore.bitcrystals.com/address/?address=<%= allTokensData[tokenIds[i]]['owner'] %>"><%= allTokensData[tokenIds[i]]['owner'].substring(0,10) %>...<%= allTokensData[tokenIds[i]]['owner'].substring(34,42) %></a><span id="token-<%= i %>-owner" class="token-owner-fulladdress"><%= allTokensData[tokenIds[i]]['owner'] %></span>
-                (<a target="_blank" href="https://scope.klaytn.com/account/<%= allTokensData[tokenIds[i]]['owner'] %>">details</a>)<br />
-                Latitude: <span id="token-<%= i %>-latitude" class="global-pin-lat"><%= allTokensData[tokenIds[i]]['latitude'] / 10000 %></span>
-                / Longitude: <span id="token-<%= i %>-longitude" class="global-pin-lng"><%= allTokensData[tokenIds[i]]['longitude'] / 10000 %></span><br />
-                Created at: <span id="token-<%= i %>-timestamp"><%= new Date(parseInt(allTokensData[tokenIds[i]]['timestamp'] * 1000)).toISOString() %></span>
-                <div class="spacer"></div>
-            </p>
-            <div class="spacer"></div>
+                        <b><span id="token-<%= i %>-message"><%= allTokensData[tokenIds[i]]['message'] %></span></b><br/>
+                        Pin #<span id="token-<%= i %>-id" class="global-pin-id"><%= allTokensData[tokenIds[i]]['tokenId'] %></span><br />
+                        Owned by <a target="_blank" href="https://cypress.explore.bitcrystals.com/address/?address=<%= allTokensData[tokenIds[i]]['owner'] %>"><%= allTokensData[tokenIds[i]]['owner'].substring(0,10) %>...<%= allTokensData[tokenIds[i]]['owner'].substring(34,42) %></a><span id="token-<%= i %>-owner" class="token-owner-fulladdress"><%= allTokensData[tokenIds[i]]['owner'] %></span>
+                        (<a target="_blank" href="https://scope.klaytn.com/account/<%= allTokensData[tokenIds[i]]['owner'] %>">details</a>)<br />
+                        Latitude: <span id="token-<%= i %>-latitude" class="global-pin-lat"><%= allTokensData[tokenIds[i]]['latitude'] / 10000 %></span>
+                        / Longitude: <span id="token-<%= i %>-longitude" class="global-pin-lng"><%= allTokensData[tokenIds[i]]['longitude'] / 10000 %></span><br />
+                        Created at: <span id="token-<%= i %>-timestamp"><%= new Date(parseInt(allTokensData[tokenIds[i]]['timestamp'] * 1000)).toISOString() %></span>
+                        <div class="spacer"></div>
+                    </p>
+                    <div class="spacer"></div>
+                <% } %>
+            <% } else { %>
+                <p>No tokens around here... why not create a new one? Click anywhere on the map!</p>
             <% } %>
         </div>
+
         <% if (typeof currentlat != 'undefined' && currentlat) { %>
             <p>Last known latitude: <span id="currentlat"><%= currentlat %></span></p>
         <% } %>
@@ -137,7 +175,6 @@
         </p>
     </div>
 </div>
-<% } %>
 
 <script>
     var map = L.map('map').setView([parseFloat(jQuery('#currentlat').text()),parseFloat(jQuery('#currentlng').text())],16);

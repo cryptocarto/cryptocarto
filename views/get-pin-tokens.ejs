@@ -1,6 +1,7 @@
 <div id="neighbour-token-list">
-    <% for(var i=0; i < tokenIds.length; i++) { %>
-        <p class="token">
+    <% if (tokenIds.length && tokenIds.length > 0) { %>
+        <% for(var i=0; i < tokenIds.length; i++) { %>
+            <p class="token">
                 <% if (i < 20) { %>
                     <img class="token-image" src="/token/<%= allTokensData[tokenIds[i]]['tokenId'] %>.png" onclick="
                         jQuery('#viewPinId').text($(this).siblings('.global-pin-id').text());
@@ -13,15 +14,19 @@
                     " />
                 <% } %>
 
-            <b><span id="token-<%= i %>-message"><%= allTokensData[tokenIds[i]]['message'] %></span></b><br/>
-            Pin #<span id="token-<%= i %>-id" class="global-pin-id"><%= allTokensData[tokenIds[i]]['tokenId'] %></span><br />
-            Owned by <a target="_blank" href="https://cypress.explore.bitcrystals.com/address/?address=<%= allTokensData[tokenIds[i]]['owner'] %>"><%= allTokensData[tokenIds[i]]['owner'].substring(0,10) %>...<%= allTokensData[tokenIds[i]]['owner'].substring(34,42) %></a><span id="token-<%= i %>-owner" class="token-owner-fulladdress"><%= allTokensData[tokenIds[i]]['owner'] %></span>
-            (<a target="_blank" href="https://scope.klaytn.com/account/<%= allTokensData[tokenIds[i]]['owner'] %>">details</a>)<br />
-            Latitude: <span id="token-<%= i %>-latitude" class="global-pin-lat"><%= allTokensData[tokenIds[i]]['latitude'] / 10000 %></span>
-            / Longitude: <span id="token-<%= i %>-longitude" class="global-pin-lng"><%= allTokensData[tokenIds[i]]['longitude'] / 10000 %></span><br />
-            Created at: <span id="token-<%= i %>-timestamp"><%= new Date(parseInt(allTokensData[tokenIds[i]]['timestamp'] * 1000)).toISOString() %></span>
+                <b><span id="token-<%= i %>-message"><%= allTokensData[tokenIds[i]]['message'] %></span></b><br/>
+                Pin #<span id="token-<%= i %>-id" class="global-pin-id"><%= allTokensData[tokenIds[i]]['tokenId'] %></span><br />
+                Owned by <a target="_blank" href="https://cypress.explore.bitcrystals.com/address/?address=<%= allTokensData[tokenIds[i]]['owner'] %>"><%= allTokensData[tokenIds[i]]['owner'].substring(0,10) %>...<%= allTokensData[tokenIds[i]]['owner'].substring(34,42) %></a><span id="token-<%= i %>-owner" class="token-owner-fulladdress"><%= allTokensData[tokenIds[i]]['owner'] %></span>
+                (<a target="_blank" href="https://scope.klaytn.com/account/<%= allTokensData[tokenIds[i]]['owner'] %>">details</a>)<br />
+                Latitude: <span id="token-<%= i %>-latitude" class="global-pin-lat"><%= allTokensData[tokenIds[i]]['latitude'] / 10000 %></span>
+                / Longitude: <span id="token-<%= i %>-longitude" class="global-pin-lng"><%= allTokensData[tokenIds[i]]['longitude'] / 10000 %></span><br />
+                Created at: <span id="token-<%= i %>-timestamp"><%= new Date(parseInt(allTokensData[tokenIds[i]]['timestamp'] * 1000)).toISOString() %></span>
+                <div class="spacer"></div>
+            </p>
             <div class="spacer"></div>
-        </p>
-        <div class="spacer"></div>
+        <% } %>
+    <% } else { %>
+        <p>No tokens around here... why not create a new one?<br />
+            Click anywhere on the map!</p>
     <% } %>
 </div>
