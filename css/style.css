@@ -15,6 +15,7 @@ a{color:#00961e}
 .transfer-link{cursor:pointer;text-decoration:underline}
 .share-pin textarea {position: absolute; left:-9999px;}
 #copied-message-conf {display: none;}
+.maptiler-geocoder-results {z-index: 10000 !important;}
 
 p {margin: 0 0 10px 0;}
 

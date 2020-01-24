@@ -46,26 +46,14 @@
             Latitude <input type="text" onClick="this.select();" placeholder="Latitude" name="teleport-latitude" id="teleport-latitude" required="true" value="42.6886" />
             Longitude <input type="text" onClick="this.select();" placeholder="Longitude" name="teleport-longitude" id="teleport-longitude" required="true" value="2.8948" />
             <button onclick="cryptocartoTeleporter()">Go</button>
-            <br />...or try typing a place name here (beta): <input onClick="this.select();" autocomplete="off" id="geocoding-field" type="text" />
-            <button onclick="cryptocartoGeocoder()">Go</button>
+            <br />...or type a place name here: <input onClick="this.select();" autocomplete="off" id="geocoding-field" type="text" />
             <script>
-                // Geocoding function
-                cryptocartoGeocoder = function() {
-                    var geocoder = new maptiler.Geocoder({key: 'hRjkiHQiQvUA7GFcwv6N'});
-                    var geocodingString = $('#geocoding-field').val();
-                    if (geocodingString) {
-                        geocoder.geocode($('#geocoding-field').val()).then(function(results) {
-                            if(results.features[0]) {
-                                console.log('Geocoding for \''+ geocodingString + '\' succedeed and yielded: \'' + results.features[0].place_name + '\'.')
-                                $('#geocoding-field').val(results.features[0].place_name)
-                                map.setView([results.features[0].center[1],results.features[0].center[0]],18);
-                            } else {
-                                console.log('Geocoding for \''+ geocodingString + '\' failed...')
-                                $('#geocoding-field').val('I\'m not sure... please try again')
-                            }
-                        });
-                    }
-                }
+                // Geocoding function: fill input with result and teleport to center of matched item
+                var geocoder = new maptiler.Geocoder({input: 'geocoding-field', key: 'hRjkiHQiQvUA7GFcwv6N'});
+                geocoder.on('select', function(item) {
+                    $('#geocoding-field').val(item.place_name);
+                    map.setView([item.center[1],item.center[0]],18);
+                });
 
                 // Teleporting function
                 cryptocartoTeleporter = function() {
@@ -73,7 +61,6 @@
                 }
 
                 // Bind "Enter" keypress events
-                $(document).on("keypress", $('#geocoding-field'), function(e){if(e.which == 13){ cryptocartoGeocoder() }});
                 $(document).on("keypress", $('#teleport-latitude'), function(e){if(e.which == 13){ cryptocartoTeleporter() }});
                 $(document).on("keypress", $('#teleport-longitude'), function(e){if(e.which == 13){ cryptocartoTeleporter() }});
 
