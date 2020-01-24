@@ -61,8 +61,8 @@
                 }
 
                 // Bind "Enter" keypress events
-                $(document).on("keypress", $('#teleport-latitude'), function(e){if(e.which == 13){ cryptocartoTeleporter() }});
-                $(document).on("keypress", $('#teleport-longitude'), function(e){if(e.which == 13){ cryptocartoTeleporter() }});
+                $('#teleport-latitude').keypress(function(e){if(e.which == 13){ cryptocartoTeleporter() }});
+                $('#teleport-longitude').keypress(function(e){if(e.which == 13){ cryptocartoTeleporter() }});
 
             </script>
         </p>
