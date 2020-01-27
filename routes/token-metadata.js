@@ -24,5 +24,7 @@ module.exports = async function(req, res, next) {
     
     // Render view
     res.render('token-metadata', { tokenMetadata: tokenMetadata });
-  } catch (error) { next(error) }
+  } catch (error) { 
+    res.render('token-metadata', { tokenMetadata: { 'error' : 'Invalid query' }}); 
+  }
 };
