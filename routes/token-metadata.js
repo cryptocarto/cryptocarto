@@ -2,24 +2,24 @@
 * Generate token asset image - only runs if image does'nt already exist
 */
 
-// Get CryptoCarto contract
-const CryptoCartoContract = require('../utils/cryptocarto-contract')
+// Get PinToken interface
+const PinToken = require('../utils/pintoken')
 
 module.exports = async function(req, res, next) {
   try {
     // Get token id from URL
     var tokenId = parseInt(req.params.tokenid);
 
-    //Get tokenData
-    tokenData = await CryptoCartoContract.methods.getPinToken(tokenId).call();
+    //Get tokenData from DB
+    tokenData = await PinToken.findOne({"tokenId" : tokenId});
 
     // Formatting metadata
     tokenMetadata = {
-      'id': tokenData[0],
-      'latitude': parseFloat(tokenData[2]) / 10000,
-      'longitude': parseFloat(tokenData[3]) / 10000,
-      'message': tokenData[4],
-      'created_at_utc_timestamp': tokenData[5]
+      'id': tokenData['tokenId'],
+      'latitude': parseFloat(tokenData['latitude']) / 10000,
+      'longitude': parseFloat(tokenData['longitude']) / 10000,
+      'message': tokenData['message'],
+      'created_at_utc_timestamp': tokenData['timestamp']
     };
     
     // Render view
