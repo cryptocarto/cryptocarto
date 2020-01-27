@@ -107,6 +107,7 @@
                     <a class="transfer-link" onclick="
                         jQuery('#viewPinId').text($(this).siblings('.user-pin-id').text());
                         map.setView([$(this).siblings('.user-pin-lat').text(), $(this).siblings('.user-pin-lng').text()],16);
+                        $('#transfer-pin-'+ $(this).siblings('.user-pin-id').text()).slideDown();
                     ">
                     Transfer</a><br />
                     Latitude: <span id="user-token-<%= j %>-latitude" class="user-pin-lat"><%= userTokensData[userTokenIds[j]]['latitude'] / 10000 %></span>
