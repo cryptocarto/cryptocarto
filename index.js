@@ -4,23 +4,8 @@ dotenv.config();
 var port = process.env.PORT || 4210;
 var app = express();
 
-// Connect to mongo and declare PinToken schema
-var mongoose = require('mongoose');
-mongoose.connect(process.env.MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true});
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'Connection error:'));
-db.once('open', function() { console.log("Connected to DB")});
-
-var pinTokenSchema = new mongoose.Schema({
-  tokenId : String,
-  owner: String,
-  latitude : Number,
-  longitude : Number,
-  message : String,
-  timestamp : String
-});
-
-var PinToken = mongoose.model('PinToken', pinTokenSchema);
+// Get a PinToken DB interface
+var PinToken = require('./utils/pintoken')
 
 // Configure view engine to render EJS templates.
 app.set('views', __dirname + '/views');
