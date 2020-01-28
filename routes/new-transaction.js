@@ -5,7 +5,6 @@
 // Get required interfaces
 const caver = require('../utils/caver')
 const CryptoCartoContract = require('../utils/cryptocarto-contract')
-const PinToken = require('../utils/pintoken')
 
 module.exports = async function(req, res, next) {
   try {
