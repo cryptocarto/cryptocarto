@@ -13,5 +13,6 @@ router.post('/import-pk', require('./import-pk'));
 router.post('/transfer-pin', require('./transfer-pin'));
 router.get('/save-user-info', require('./save-user-info'));
 router.get('/token-metadata/:tokenid', require('./token-metadata'));
+router.get('/token/:tokenaddress', require('./token-image-generation'));
 
 module.exports = router;
