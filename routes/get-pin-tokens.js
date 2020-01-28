@@ -23,7 +23,7 @@ module.exports = async function(req, res, next) {
     req.session.currentlng = longitude;
 
     // Return data
-    res.render('get-pin-tokens', { pinTokensData: { allTokensData: allTokensData, userTokensData: userTokensData, tokenIds: tokenIds, userTokenIds: userTokenIds } });
+    res.render('neighbour-token-list', { allTokensData: allTokensData, userTokensData: userTokensData, tokenIds: tokenIds, userTokenIds: userTokenIds } );
   } catch (error) { next(error) }
 
 };

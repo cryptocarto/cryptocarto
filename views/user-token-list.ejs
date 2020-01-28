@@ -1,0 +1,35 @@
+<h2>Your pins
+    <% if (typeof address != 'undefined' && address) { %>
+        <span class="note">
+            - browse on
+            <a class="orb-explorer" href="https://cypress.explore.bitcrystals.com/address/?address=<%= address %>" target="_blank">
+                Orb Explorer
+            </a>
+            or
+            <a class="orb-explorer" href="https://scope.klaytn.com/account/<%= address %>" target="_blank">
+                Klaytn Explorer
+            </a>
+        </span>
+    <% } %>
+</h2>
+    
+<% for(var j=0; j < userTokenIds.length; j++) { %>
+    <p class="user-token">
+        <img class="token-image" src="/token/<%= userTokensData[userTokenIds[j]]['tokenId'] %>.png" onclick="
+            jQuery('#viewPinId').text($(this).siblings('.user-pin-id').text());
+            map.setView([$(this).siblings('.user-pin-lat').text(), $(this).siblings('.user-pin-lng').text()],16);
+        "/>
+        <b><%= userTokensData[userTokenIds[j]]['message'] %></b><br/>
+        Pin #<span id="user-token-<%= j %>-id" class="user-pin-id"><%= userTokensData[userTokenIds[j]]['tokenId'] %></span> -
+        <a class="transfer-link" onclick="
+            jQuery('#viewPinId').text($(this).siblings('.user-pin-id').text());
+            jQuery('#viewPinId').addClass('transfer')
+            map.setView([$(this).siblings('.user-pin-lat').text(), $(this).siblings('.user-pin-lng').text()],16);
+        ">
+        Transfer</a><br />
+        Latitude: <span id="user-token-<%= j %>-latitude" class="user-pin-lat"><%= userTokensData[userTokenIds[j]]['latitude'] / 10000 %></span>
+        / Longitude: <span id="user-token-<%= j %>-longitude" class="user-pin-lng"><%= userTokensData[userTokenIds[j]]['longitude'] / 10000 %></span><br />
+        Created at: <span id="user-token-<%= j %>-timestamp"><%= new Date(parseInt(userTokensData[userTokenIds[j]]['timestamp'] * 1000)).toISOString() %></span>
+        <div class="spacer"></div>
+    </p>
+<% } %>

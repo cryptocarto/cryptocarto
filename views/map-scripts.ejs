@@ -1,0 +1,242 @@
+<script>
+    var map = L.map('map').setView([parseFloat(jQuery('#currentlat').text()),parseFloat(jQuery('#currentlng').text())],16);
+    var rectangleToReserve = null;
+
+    L.tileLayer('https://map.cryptocarto.xyz/osm/{z}/{x}/{y}.png',{maxZoom:18, minZoom:15}).addTo(map);
+
+    var nbTokens = parseInt(jQuery('.token').length);
+    var markers = new Array;
+
+    for (i = 0; i< nbTokens; i++) {
+        lat = parseFloat(jQuery('#token-'+i+'-latitude').text());
+        lng = parseFloat(jQuery('#token-'+i+'-longitude').text());
+
+        // Calculate tile coordinates
+        n = 2 ** 18 // n = 2 ^ zoom
+        xtile = n * ((lng + 180) / 360) // xtile = n * ((lon_deg + 180) / 360)
+        ytile = n * (1 - (Math.log(Math.tan(lat / 180 * Math.PI) + (1/Math.cos(lat / 180 * Math.PI))) / Math.PI)) / 2
+
+        popUpContent =  '<div id="popup-token-'+i+'">' +
+                            '<span class="token-message">' + jQuery('#token-'+i+'-message').text() + '</span><br/>' +
+                            '<span class="token-message-author">by <a target="_blank" href="https://cypress.explore.bitcrystals.com/address/?address=' + jQuery('#token-'+i+'-owner').text() + '">' + 
+                                jQuery('#token-'+i+'-owner').text().substring(0,10) + '...' + jQuery('#token-'+i+'-owner').text().substring(34,42) + '</a>' + 
+                            '</span><br/><br/>' +
+                            '<button onclick="' + 
+                                '$(\'#popup-token-'+i+'\').children(\'.share-pin\').slideToggle();'+
+                                '$(\'#popup-token-'+i+'\').children(\'.metadata\').slideUp();'+
+                            '">Share this pin</button>' +
+                            '<button onclick="' + 
+                                '$(\'#popup-token-'+i+'\').children(\'.metadata\').slideToggle();'+
+                                '$(\'#popup-token-'+i+'\').children(\'.share-pin\').slideUp();'+
+                            '">Show Metadata</button>' +
+                            '<div class="share-pin">' +
+                                '<br />Shareable link: <a target="_blank" href="https://app.cryptocarto.xyz/view-pin/' + jQuery('#token-'+i+'-id').text() + '">https://app.cryptocarto.xyz/view-pin/' + jQuery('#token-'+i+'-id').text() + '</a><br/>' + 
+                                '<textarea id="share-link" class="share-link">https://app.cryptocarto.xyz/view-pin/' + jQuery('#token-'+i+'-id').text() + '</textArea>' +
+                                '<a class="button-style" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=app.cryptocarto.xyz/view-pin/' + jQuery('#token-'+i+'-id').text() + '">Share on Facebook</a>' +
+                                '<button onclick="document.getElementById(\'share-link\').select(); document.execCommand(\'copy\'); $(\'#copied-message-conf\').show().fadeOut(2000);">Copy link to clipboard</button>' +
+                                '<span id="copied-message-conf"> Copied</span>' +
+                            '</div>' +
+                            '<div class="metadata">' +
+                                '<br />Pin #' + jQuery('#token-'+i+'-id').text() + '<br/>' +
+                                'Latitude: ' + lat + ' / Longitude: ' + lng + '<br/>' +
+                                'Created at ' + jQuery('#token-'+i+'-timestamp').text() + 
+                                '<br/>' +'Tile coordinates: x = ' + xtile + ' ; y = ' + ytile +
+                                '<br/>' +'<a target="_blank" href="/token/' + jQuery('#token-'+i+'-id').text() + '.png">View token image</a>' +
+                                '<br/>' +'<a target="_blank" href="/token-metadata/' + jQuery('#token-'+i+'-id').text() + '">View token metadata JSON</a>' +
+                            '</div>' +
+                            '<div class="transfer-pin" id="transfer-pin-' + jQuery('#token-'+i+'-id').text() + '">' +
+                                '<form class="transfer-pin-form" action="/transfer-pin" method="post">' +
+                                    '<br /><label for="transferaddress">Transfer token to address:</label><br />' +
+                                    '<input type="text" class="form-control transferaddress" placeholder="0x..." name="transferaddress" required="true" />' +
+                                    '<input type="hidden" class="form-control tokenidtotransfer" placeholder="id" name="tokenidtotransfer" required="true" value="' + jQuery('#token-'+i+'-id').text() + '"/>' +
+                                    '<br /><button type="submit" class="submit-transfer" onclick="checkTransferForm();">Transfer token</button>' +
+                                    '<span class="loader"><br /><img src="/img/loader.gif" /> posting on blockchain (~10sec wait)</span>' +
+                                '</form>' +
+                            '</div>' +
+                        '</div>';
+
+        markers[jQuery('#token-'+i+'-id').text()] = L.marker([lat,lng]).addTo(map).bindPopup(popUpContent);
+
+        // Open popup if view-pin was called
+        if (jQuery('#viewPinId') && jQuery('#viewPinId').text() && (jQuery('#viewPinId').text() in markers)) {
+            markers[jQuery('#viewPinId').text()].openPopup();
+            jQuery('#viewPinId').text("");
+        }
+
+        // Create a rectangle for the reserved spot around the pin
+        L.rectangle([[lat-0.00005,lng-0.00005], [lat+0.00005,lng+0.00005]], {color: '#4054b2', weight: 1}).addTo(map).bindPopup(popUpContent);
+    }
+
+    function onMapClick(e) {
+
+        if (rectangleToReserve) {
+            map.removeControl(rectangleToReserve);
+        }
+
+        var popup = L.popup()
+            .setLatLng(e.latlng)
+            .setContent(jQuery('.new-transaction').html())
+            .openOn(map);
+        
+        lat = Math.round(e.latlng.lat * 10000)/10000;
+        lng = Math.round(e.latlng.lng * 10000)/10000;
+
+        // Create a rectangle for the spot to reserve around the click zone
+        rectangleToReserve = L.rectangle([[lat-0.00005,lng-0.00005], [lat+0.00005,lng+0.00005]], {color: '#00961e', weight: 1}).addTo(map);
+
+        $('.latitude').val(lat);
+        $('.longitude').val(lng);
+        $('#currentlat').text(lat);
+        $('#currentlng').text(lng);
+
+        $('.leaflet-popup').find("textarea").focus()
+
+        // Set map center, shifted by a Y factor depending on screen height
+        shiftFactor = 0.1
+        if (screen.height < 500) { shiftFactor = 0.25 }
+        else if (screen.height < 600) { shiftFactor = 0.20 }
+        else if (screen.height < 800) { shiftFactor = 0.15 }
+
+        coordinates = map.project(e.latlng, map.getZoom());
+        coordinates.y -= map.getSize().y * shiftFactor;
+        map.setView(map.unproject(coordinates));
+    }
+
+    map.on('click', onMapClick);
+
+    // Refresh tokens on move
+    map.on('moveend', function(e){
+        previousLat = $('#currentlat').text();
+        previousLng = $('#currentlng').text();
+        newLat = Math.round(map.getCenter().lat * 10000)/10000;
+        newLng = Math.round(map.getCenter().lng * 10000)/10000;
+
+        // Perform only if moved more than 0.02 in coordinates
+        if (Math.abs(previousLat-newLat) > 0.02 || Math.abs(previousLng-newLng) > 0.02) {
+            $('#currentlat').text(newLat);
+            $('#currentlng').text(newLng);
+            loadPinTokens();
+        } else {
+            // Open popup if needed
+            if (jQuery('#viewPinId') && jQuery('#viewPinId').text() && (jQuery('#viewPinId').text() in markers)) {
+                markers[jQuery('#viewPinId').text()].openPopup();
+                if (jQuery('#viewPinId').hasClass('transfer')){
+                    $('#transfer-pin-'+ jQuery('#viewPinId').text()).slideDown();
+                    jQuery('#viewPinId').removeClass('transfer');
+                }
+                jQuery('#viewPinId').text("");
+            }
+        }
+    
+    });
+
+    // Collapsers and auto hide for small displays
+    $('.user-info-collapser').click(function(){$('.user-info-main').toggle();});
+    if (screen.width < 1200) {$('.user-info-main').toggle();}
+    $('.tokens-info-collapser').click(function(){$('.tokens-info-main').toggle();});
+    if (screen.width < 600) {
+        $('.tokens-info-main').toggle();
+        $('#tokens').css({ "max-width": "95%" });
+    }
+
+    // Transaction form validator
+    checkTransactionForm = function() {
+        if ($('.leaflet-popup').find(".new-transaction-form").valid()) {
+            $('.leaflet-popup').find(".new-transaction-form").submit();
+            $('.leaflet-popup').find(".submit-transaction").attr('disabled', true);
+            $('.leaflet-popup').find('.loader').show();
+        }
+    };
+
+    // Transfer form validator
+    checkTransferForm = function() {
+        if ($('.leaflet-popup').find(".transfer-pin-form").valid()) {
+            $('.leaflet-popup').find(".transfer-pin-form").submit();
+            $('.leaflet-popup').find(".submit-transfer").attr('disabled', true);
+            $('.leaflet-popup').find('.loader').show();
+        }
+    };
+
+    // Load PinTokens around current position
+    loadPinTokens = function() {
+        currentLat = jQuery('#currentlat').text();
+        currentLng = jQuery('#currentlng').text();
+
+        jQuery.ajax({
+            method: "POST",
+            url: "/get-pin-tokens",
+            data: { latitude: currentLat, longitude: currentLng }
+        })
+        .done(function(response) {
+            //Remove current markers
+            for (let tokenId in markers) { map.removeLayer(markers[tokenId]); }
+
+            jQuery('#neighbour-token-list').html(response);
+
+            markers = [];
+            nbTokens = parseInt(jQuery('.token').length);
+
+            for (i = 0; i< nbTokens; i++) {
+                lat = parseFloat(jQuery('#token-'+i+'-latitude').text());
+                lng = parseFloat(jQuery('#token-'+i+'-longitude').text());
+
+                // Calculate tile coordinates
+                n = 2 ** 18 // n = 2 ^ zoom
+                xtile = n * ((lng + 180) / 360) // xtile = n * ((lon_deg + 180) / 360)
+                ytile = n * (1 - (Math.log(Math.tan(lat / 180 * Math.PI) + (1/Math.cos(lat / 180 * Math.PI))) / Math.PI)) / 2
+
+                popUpContent =  '<div id="popup-token-'+i+'">' +
+                                    '<span class="token-message">' + jQuery('#token-'+i+'-message').text() + '</span><br/>' +
+                                    '<span class="token-message-author">by <a target="_blank" href="https://cypress.explore.bitcrystals.com/address/?address=' + jQuery('#token-'+i+'-owner').text() + '">' + 
+                                        jQuery('#token-'+i+'-owner').text().substring(0,10) + '...' + jQuery('#token-'+i+'-owner').text().substring(34,42) + '</a>' + 
+                                    '</span><br/><br/>' +
+                                    '<button onclick="' + 
+                                        '$(\'#popup-token-'+i+'\').children(\'.share-pin\').slideToggle();'+
+                                        '$(\'#popup-token-'+i+'\').children(\'.metadata\').slideUp();'+
+                                    '">Share this pin</button>' +
+                                    '<button onclick="' + 
+                                        '$(\'#popup-token-'+i+'\').children(\'.metadata\').slideToggle();'+
+                                        '$(\'#popup-token-'+i+'\').children(\'.share-pin\').slideUp();'+
+                                    '">Show Metadata</button>' +
+                                    '<div class="share-pin">' +
+                                        '<br />Shareable link: <a target="_blank" href="https://app.cryptocarto.xyz/view-pin/' + jQuery('#token-'+i+'-id').text() + '">https://app.cryptocarto.xyz/view-pin/' + jQuery('#token-'+i+'-id').text() + '</a><br/>' + 
+                                        '<textarea id="share-link" class="share-link">https://app.cryptocarto.xyz/view-pin/' + jQuery('#token-'+i+'-id').text() + '</textArea>' +
+                                        '<a class="button-style" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=app.cryptocarto.xyz/view-pin/' + jQuery('#token-'+i+'-id').text() + '">Share on Facebook</a>' +
+                                        '<button onclick="document.getElementById(\'share-link\').select(); document.execCommand(\'copy\'); $(\'#copied-message-conf\').show().fadeOut(2000);">Copy link to clipboard</button>' +
+                                        '<span id="copied-message-conf"> Copied</span>' +
+                                    '</div>' +
+                                    '<div class="metadata">' +
+                                        '<br />Pin #' + jQuery('#token-'+i+'-id').text() + '<br/>' +
+                                        'Latitude: ' + lat + ' / Longitude: ' + lng + '<br/>' +
+                                        'Created at ' + jQuery('#token-'+i+'-timestamp').text() + 
+                                        '<br/>' +'Tile coordinates: x = ' + xtile + ' ; y = ' + ytile +
+                                        '<br/>' +'<a target="_blank" href="/token/' + jQuery('#token-'+i+'-id').text() + '.png">View token image</a>' +
+                                        '<br/>' +'<a target="_blank" href="/token-metadata/' + jQuery('#token-'+i+'-id').text() + '">View token metadata JSON</a>' +
+                                    '</div>' +
+                                    '<div class="transfer-pin" id="transfer-pin-' + jQuery('#token-'+i+'-id').text() + '">' +
+                                        '<form class="transfer-pin-form" action="/transfer-pin" method="post">' +
+                                            '<br /><label for="transferaddress">Transfer token to address:</label><br />' +
+                                            '<input type="text" class="form-control transferaddress" placeholder="0x..." name="transferaddress" required="true" />' +
+                                            '<input type="hidden" class="form-control tokenidtotransfer" placeholder="id" name="tokenidtotransfer" required="true" value="' + jQuery('#token-'+i+'-id').text() + '"/>' +
+                                            '<br /><button type="submit" class="submit-transfer" onclick="checkTransferForm();">Transfer token</button>' +
+                                            '<span class="loader"><br /><img src="/img/loader.gif" /> posting on blockchain (~10sec wait)</span>' +
+                                        '</form>' +
+                                    '</div>' +
+                                '</div>';
+
+                markers[jQuery('#token-'+i+'-id').text()] = L.marker([lat,lng]).addTo(map).bindPopup(popUpContent);
+
+                // Open popup if needed
+                if (jQuery('#viewPinId') && jQuery('#viewPinId').text() && (jQuery('#viewPinId').text() in markers)) {
+                    markers[jQuery('#viewPinId').text()].openPopup();
+                    jQuery('#viewPinId').text("")
+                }
+            }
+
+        })
+        .fail(function() { console.log("Error while updating PinTokens"); });
+
+    };
+
+
+</script>
