@@ -99,91 +99,6 @@ updatePinTokensDB = require('./utils/update-pin-tokens-db')
 updatePinTokensDB();
 
 //Define routes
-app.get('/',
-async function(req, res, next) {
-  try {
-
-    // Create a new account on the fly if not in session
-    if ((typeof req.session.address == 'undefined') || (typeof req.session.privatekey == 'undefined')) {
-      const newAccount = caver.klay.accounts.create();
-      req.session.address = newAccount.address;
-      res.locals.address = newAccount.address;
-      req.session.privatekey = newAccount.privateKey;
-      res.locals.privatekey = newAccount.privateKey;
-    }
-
-    // Default position of the map, Paris if not existing
-    if ((typeof req.session.currentlat == 'undefined') || (typeof req.session.currentlng == 'undefined')) {
-      req.session.currentlat = 48.8722;
-      res.locals.currentlat = 48.8722;
-      req.session.currentlng = 2.3321;
-      res.locals.currentlng = 2.3321;
-    }
-
-    // Get PinToken data from DB for current position
-    [allTokensData, tokenIds, userTokensData, userTokenIds] = await getPinTokensAround(req.session.currentlat, req.session.currentlng, req.session.address);
-
-    // Render view
-    res.render('index', { allTokensData: allTokensData, userTokensData: userTokensData, tokenIds: tokenIds, userTokenIds: userTokenIds });
-
-  } catch (error) { next(error) }
-});
-
-// Function to get PinTokens around given lat/lng
-getPinTokensAround = async function (latitude, longitude, userAddress) {
-    // Get pins from DB (incuding new ones)
-    var params = { 
-      latitude: { $lt: latitude*10000+1000, $gt: latitude*10000-1000},
-      longitude: { $lt: longitude*10000+1000, $gt: longitude*10000-1000}
-    };
-
-    var tokensDataFromDB = await PinToken.find(params).sort({timestamp:-1});
-    var tokenIds = new Array;
-    var allTokensData = new Object;
-
-    // Create array indexed by tokenId and tokenIds array
-    Object.keys(tokensDataFromDB).map(function (objectKey) {
-      allTokensData[tokensDataFromDB[objectKey]["tokenId"]] = tokensDataFromDB[objectKey];
-      tokenIds.push(tokensDataFromDB[objectKey]["tokenId"]);
-    })
-
-    // Get tokens for this specific user
-    var userTokensDataFromDB = await PinToken.find({ owner: { '$regex': new RegExp(userAddress,"i")} }).sort({timestamp:-1});
-    var userTokenIds = new Array;
-    var userTokensData = new Object;
-
-    // Create array indexed by tokenId and userTokenIds array
-    Object.keys(userTokensDataFromDB).map(function (objectKey) {
-      userTokensData[userTokensDataFromDB[objectKey]["tokenId"]] = userTokensDataFromDB[objectKey];
-      userTokenIds.push(userTokensDataFromDB[objectKey]["tokenId"]);
-    })
-
-    return [allTokensData, tokenIds, userTokensData, userTokenIds];
-}
-
-// Generate token asset image - only runs if image does'nt already exist
-app.post('/get-pin-tokens',
-async function(req, res, next) {
-  try {
-    // Control on lat/lng presence
-    if (!req.body.latitude || !req.body.longitude) {
-      throw new Error('Latitude and longitude are needed.')
-    }
-
-    const latitude   = parseFloat(req.body.latitude);
-    const longitude  = parseFloat(req.body.longitude);
-
-    // Get PinToken data from DB for current position
-    [allTokensData, tokenIds, userTokensData, userTokenIds] = await getPinTokensAround(latitude, longitude, req.session.address);
-
-    // Set position session variables
-    req.session.currentlat = latitude;
-    req.session.currentlng = longitude;
-
-    // Return data
-    res.render('get-pin-tokens', { pinTokensData: { allTokensData: allTokensData, userTokensData: userTokensData, tokenIds: tokenIds, userTokenIds: userTokenIds } });
-  } catch (error) { next(error) }
-});
 
 // Generate token asset image - only runs if image does'nt already exist
 app.get('/token/:tokenaddress',
@@ -256,7 +171,7 @@ async function(req, res, next) {
   } catch (error) { next(error) }
 });
 
-// Add routes
+// Add other routes
 app.use(require("./routes"));
 
 //Error handler
