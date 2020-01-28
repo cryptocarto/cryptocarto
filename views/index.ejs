@@ -106,6 +106,7 @@
                     Pin #<span id="user-token-<%= j %>-id" class="user-pin-id"><%= userTokensData[userTokenIds[j]]['tokenId'] %></span> -
                     <a class="transfer-link" onclick="
                         jQuery('#viewPinId').text($(this).siblings('.user-pin-id').text());
+                        jQuery('#viewPinId').addClass('transfer')
                         map.setView([$(this).siblings('.user-pin-lat').text(), $(this).siblings('.user-pin-lng').text()],16);
                     ">
                     Transfer</a><br />
@@ -225,7 +226,7 @@
         // Open popup if view-pin was called
         if (jQuery('#viewPinId') && jQuery('#viewPinId').text() && (jQuery('#viewPinId').text() in markers)) {
             markers[jQuery('#viewPinId').text()].openPopup();
-            jQuery('#viewPinId').text("")
+            jQuery('#viewPinId').text("");
         }
 
         // Create a rectangle for the reserved spot around the pin
@@ -285,7 +286,11 @@
             // Open popup if needed
             if (jQuery('#viewPinId') && jQuery('#viewPinId').text() && (jQuery('#viewPinId').text() in markers)) {
                 markers[jQuery('#viewPinId').text()].openPopup();
-                jQuery('#viewPinId').text("")
+                if (jQuery('#viewPinId').hasClass('transfer')){
+                    $('#transfer-pin-'+ jQuery('#viewPinId').text()).slideDown();
+                    jQuery('#viewPinId').removeClass('transfer');
+                }
+                jQuery('#viewPinId').text("");
             }
         }
     
