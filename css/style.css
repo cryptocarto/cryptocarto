@@ -97,7 +97,7 @@ p {margin: 0 0 10px 0;}
     display: none;
 }
 
-.user-token{
+.user-token, .token{
     font-size: 11px;
 }
 
@@ -127,18 +127,35 @@ p {margin: 0 0 10px 0;}
     display:none;
 }
 
+div.token, div.user-token{
+    max-width: 70%;
+    float: left;
+    border: 1px solid #888;
+    padding: 5px;
+    margin: 0 5px 5px 0;
+    height: 33px;
+    overflow: hidden;
+}
+
+
+.token-data {
+    display: none;
+}
+
+.token-info {
+    margin: 0 0 0 40px;
+}
+
 .token-image {
-    width:64px;
-    height:64px;
-    float:left;
-    margin-right:8px;
+    width:32px;
+    height:32px;
+    float: left;
 }
 
 .token img.token-default-image {
-    height:64px;
-    padding: 0 13px;
-    float:left;
-    margin-right:8px;
+    height:32px;
+    padding: 0 6px 0 7px;
+    float: left;
 }
 
 
@@ -157,6 +174,15 @@ p {margin: 0 0 10px 0;}
 
 .loader img {
     width: 20px;
+}
+
+.ajax-loader {
+    display: none;
+    margin-left: 10px;
+}
+
+.ajax-loader img {
+    width: 14px;
 }
 
 #privatekey, #address {
@@ -231,4 +257,3 @@ input, textarea {
     margin: 2px;
     border-radius: 3px;
 }
-

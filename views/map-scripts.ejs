@@ -162,17 +162,26 @@
         currentLat = jQuery('#currentlat').text();
         currentLng = jQuery('#currentlng').text();
 
+        //Remove current markers
+        for (let tokenId in markers) { map.removeLayer(markers[tokenId]); }
+
+        //Display loader and scroll to top
+        jQuery('.ajax-loader').show();
+        jQuery('#tokens').scrollTop(0);
+
         jQuery.ajax({
             method: "POST",
             url: "/get-pin-tokens",
             data: { latitude: currentLat, longitude: currentLng }
         })
         .done(function(response) {
-            //Remove current markers
-            for (let tokenId in markers) { map.removeLayer(markers[tokenId]); }
+            //Hide loader
+            jQuery('.ajax-loader').hide();
 
+            //Display new markers in side list
             jQuery('#neighbour-token-list').html(response);
 
+            //Display markers on map
             markers = [];
             nbTokens = parseInt(jQuery('.token').length);
 

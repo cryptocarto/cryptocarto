@@ -20,16 +20,17 @@
             <%- include('user-token-list') -%>
         <% } %>
 
-        <h2>Neighbour pins</h2>
+        <h2>Neighbour pins<span class="ajax-loader"><img src="/img/loader.gif" /> reloading...</span></h2>
         <%- include('neighbour-token-list') -%>
 
+        <div class="spacer"></div>
+        <p>
         <% if (typeof currentlat != 'undefined' && currentlat) { %>
             <p>Last known latitude: <span id="currentlat"><%= currentlat %></span></p>
         <% } %>
         <% if (typeof currentlng != 'undefined' && currentlng) { %>
             <p>Last known longitude: <span id="currentlng"><%= currentlng %></span></p>
         <% } %>
-        <p>
             Pin ID requested: 
             <span id="viewPinId"><% if (typeof openPinId != 'undefined' && openPinId) { %><%= openPinId %><% } %></span>
         </p>
