@@ -162,9 +162,6 @@
         currentLat = jQuery('#currentlat').text();
         currentLng = jQuery('#currentlng').text();
 
-        //Remove current markers
-        for (let tokenId in markers) { map.removeLayer(markers[tokenId]); }
-
         //Display loader and scroll to top
         jQuery('.ajax-loader').show();
         jQuery('#tokens').scrollTop(0);
@@ -243,7 +240,12 @@
             }
 
         })
-        .fail(function() { console.log("Error while updating PinTokens"); });
+        .fail(function() { 
+            //Remove current markers
+            for (let tokenId in markers) { map.removeLayer(markers[tokenId]); }
+
+            console.log("Error while updating PinTokens"); 
+        });
 
     };
 
