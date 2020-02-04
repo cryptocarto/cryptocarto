@@ -14,6 +14,6 @@ var pinTokenSchema = new db.Schema({
   timestamp : String
 });
 
-var PinToken = db.model('PinToken', pinTokenSchema);
+var PinToken = db.model(process.env.PINTOKEN_COLLECTION_NAME, pinTokenSchema);
 
 module.exports = PinToken;
