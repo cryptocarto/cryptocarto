@@ -20,7 +20,7 @@
                     (<a target="_blank" href="https://scope.klaytn.com/account/<%= allTokensData[tokenIds[i]]['owner'] %>">details</a>)<br />
                     Latitude: <span id="token-<%= i %>-latitude" class="global-pin-lat"><%= allTokensData[tokenIds[i]]['latitude'] / 10000 %></span>
                     / Longitude: <span id="token-<%= i %>-longitude" class="global-pin-lng"><%= allTokensData[tokenIds[i]]['longitude'] / 10000 %></span><br />
-                    Created at: <span id="token-<%= i %>-timestamp"><%= new Date(parseInt(allTokensData[tokenIds[i]]['timestamp'] * 1000)).toISOString() %></span>
+                    Created on <span id="token-<%= i %>-timestamp"><%= new Date(parseInt(allTokensData[tokenIds[i]]['timestamp'] * 1000)).toUTCString() %></span>
                     <div class="spacer"></div>
                 </div>
             </div>

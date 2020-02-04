@@ -34,7 +34,7 @@
             Pin #<span id="user-token-<%= j %>-id" class="user-pin-id"><%= userTokensData[userTokenIds[j]]['tokenId'] %></span> -
             Latitude: <span id="user-token-<%= j %>-latitude" class="user-pin-lat"><%= userTokensData[userTokenIds[j]]['latitude'] / 10000 %></span>
             / Longitude: <span id="user-token-<%= j %>-longitude" class="user-pin-lng"><%= userTokensData[userTokenIds[j]]['longitude'] / 10000 %></span><br />
-            Created at: <span id="user-token-<%= j %>-timestamp"><%= new Date(parseInt(userTokensData[userTokenIds[j]]['timestamp'] * 1000)).toISOString() %></span>
+            Created on <span id="user-token-<%= j %>-timestamp"><%= new Date(parseInt(userTokensData[userTokenIds[j]]['timestamp'] * 1000)).toUTCString() %></span>
         </div>
     </div>
 <% } %>
