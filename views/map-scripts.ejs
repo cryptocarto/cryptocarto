@@ -55,12 +55,7 @@
                             '</div>' +
                         '</div>';
 
-        markers[jQuery('#token-'+i+'-id').text()] = L.marker([lat,lng]).addTo(map).bindPopup(popUpContent).on('click', function(e) {
-            jQuery('#viewPinId').text(jQuery('#token-'+i+'-id').text());
-            jQuery('#currentlat').text(e.latlng.lat);
-            jQuery('#currentlng').text(e.latlng.lng);
-            loadPinTokens();
-        });
+        markers[jQuery('#token-'+i+'-id').text()] = L.marker([lat,lng]).addTo(map).bindPopup(popUpContent);
 
         // Open popup if view-pin was called
         if (jQuery('#viewPinId') && jQuery('#viewPinId').text() && (jQuery('#viewPinId').text() in markers)) {
@@ -183,8 +178,13 @@
             //Display new markers in side list
             jQuery('#neighbour-token-list').html(response);
 
+            //Remove current markers
+            for (let tokenIdToRemove in markers) { 
+                map.removeLayer(markers[tokenIdToRemove]);
+            }  
+            markers = []
+
             //Display markers on map
-            markers = [];
             nbTokens = parseInt(jQuery('.token').length);
 
             for (i = 0; i< nbTokens; i++) {
@@ -235,13 +235,8 @@
                                     '</div>' +
                                 '</div>';
 
-                markers[jQuery('#token-'+i+'-id').text()] = L.marker([lat,lng]).addTo(map).bindPopup(popUpContent).on('click', function(e) {
-                    jQuery('#viewPinId').text(jQuery('#token-'+i+'-id').text());
-                    jQuery('#currentlat').text(e.latlng.lat);
-                    jQuery('#currentlng').text(e.latlng.lng);
-                    loadPinTokens();
-                });
-
+                markers[jQuery('#token-'+i+'-id').text()] = L.marker([lat,lng]).addTo(map).bindPopup(popUpContent);
+                
                 // Open popup if needed
                 if (jQuery('#viewPinId') && jQuery('#viewPinId').text() && (jQuery('#viewPinId').text() in markers)) {
                     markers[jQuery('#viewPinId').text()].openPopup();

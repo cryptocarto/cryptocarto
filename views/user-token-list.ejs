@@ -16,10 +16,10 @@
 <% for(var j=0; j < userTokenIds.length; j++) { %>
     <div class="user-token">
         <img class="token-image" src="/token/<%= userTokensData[userTokenIds[j]]['tokenId'] %>.png" onclick="
-            jQuery('#viewPinId').text($(this).siblings('.token-data').children('.user-pin-id').text());
             jQuery('#currentlat').text($(this).siblings('.token-data').children('.user-pin-lat').text());
             jQuery('#currentlng').text($(this).siblings('.token-data').children('.user-pin-lng').text());
             map.setView([$(this).siblings('.token-data').children('.user-pin-lat').text(), $(this).siblings('.token-data').children('.user-pin-lng').text()],16);
+            jQuery('#viewPinId').text($(this).siblings('.token-data').children('.user-pin-id').text());
             loadPinTokens();"/>
         
         <p class="token-info">
