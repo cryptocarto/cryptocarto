@@ -2,7 +2,7 @@
     var map = L.map('map').setView([parseFloat(jQuery('#currentlat').text()),parseFloat(jQuery('#currentlng').text())],16);
     var rectangleToReserve = null;
 
-    L.tileLayer('https://map.cryptocarto.xyz/osm/{z}/{x}/{y}.png',{maxZoom:18, minZoom:15}).addTo(map);
+    L.tileLayer('https://map.cryptocarto.xyz/osm/{z}/{x}/{y}.png',{maxZoom:18, minZoom:14}).addTo(map);
 
     var nbTokens = parseInt(jQuery('.token').length);
     var markers = new Array;
