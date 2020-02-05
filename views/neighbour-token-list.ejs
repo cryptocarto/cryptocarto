@@ -3,7 +3,10 @@
         <% for(var i=0; i < tokenIds.length; i++) { %>
             <div class="token" onclick="
                 jQuery('#viewPinId').text($(this).children('.token-data').children('.global-pin-id').text());
-                map.setView(markers[$(this).children('.token-data').children('.global-pin-id').text()].getLatLng(),16);" >
+                jQuery('#currentlat').text($(this).children('.token-data').children('.global-pin-lat').text());
+                jQuery('#currentlng').text($(this).children('.token-data').children('.global-pin-lng').text());
+                map.setView(markers[$(this).children('.token-data').children('.global-pin-id').text()].getLatLng(),16);
+                loadPinTokens();" >
                 <% if (i < 40) { %>
                     <img class="token-image" src="/token/<%= allTokensData[tokenIds[i]]['tokenId'] %>.png" />
                 <% } else { %>

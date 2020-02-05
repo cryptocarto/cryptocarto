@@ -17,8 +17,10 @@
     <div class="user-token">
         <img class="token-image" src="/token/<%= userTokensData[userTokenIds[j]]['tokenId'] %>.png" onclick="
             jQuery('#viewPinId').text($(this).siblings('.token-data').children('.user-pin-id').text());
+            jQuery('#currentlat').text($(this).siblings('.token-data').children('.user-pin-lat').text());
+            jQuery('#currentlng').text($(this).siblings('.token-data').children('.user-pin-lng').text());
             map.setView([$(this).siblings('.token-data').children('.user-pin-lat').text(), $(this).siblings('.token-data').children('.user-pin-lng').text()],16);
-        "/>
+            loadPinTokens();"/>
         
         <p class="token-info">
             <b><%= userTokensData[userTokenIds[j]]['message'].substring(0,50) %><% if (userTokensData[userTokenIds[j]]['message'].length > 50) { %>...<% } %></b><br/>

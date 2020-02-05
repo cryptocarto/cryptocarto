@@ -55,7 +55,12 @@
                             '</div>' +
                         '</div>';
 
-        markers[jQuery('#token-'+i+'-id').text()] = L.marker([lat,lng]).addTo(map).bindPopup(popUpContent);
+        markers[jQuery('#token-'+i+'-id').text()] = L.marker([lat,lng]).addTo(map).bindPopup(popUpContent).on('click', function(e) {
+            jQuery('#viewPinId').text(jQuery('#token-'+i+'-id').text());
+            jQuery('#currentlat').text(e.latlng.lat);
+            jQuery('#currentlng').text(e.latlng.lng);
+            loadPinTokens();
+        });
 
         // Open popup if view-pin was called
         if (jQuery('#viewPinId') && jQuery('#viewPinId').text() && (jQuery('#viewPinId').text() in markers)) {
@@ -230,12 +235,17 @@
                                     '</div>' +
                                 '</div>';
 
-                markers[jQuery('#token-'+i+'-id').text()] = L.marker([lat,lng]).addTo(map).bindPopup(popUpContent);
+                markers[jQuery('#token-'+i+'-id').text()] = L.marker([lat,lng]).addTo(map).bindPopup(popUpContent).on('click', function(e) {
+                    jQuery('#viewPinId').text(jQuery('#token-'+i+'-id').text());
+                    jQuery('#currentlat').text(e.latlng.lat);
+                    jQuery('#currentlng').text(e.latlng.lng);
+                    loadPinTokens();
+                });
 
                 // Open popup if needed
                 if (jQuery('#viewPinId') && jQuery('#viewPinId').text() && (jQuery('#viewPinId').text() in markers)) {
                     markers[jQuery('#viewPinId').text()].openPopup();
-                    jQuery('#viewPinId').text("")
+                    jQuery('#viewPinId').text("");
                 }
             }
 
