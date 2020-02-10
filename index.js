@@ -44,25 +44,27 @@ const caver = require('./utils/caver')
 const CryptoCartoContract = require('./utils/cryptocarto-contract')
 
 // Watch ERC-721 transfers and update cache every minute
-setInterval(function() {
-  caver.klay.getBlockNumber().then(function(latestBlockNumber){
-    console.log("Running transfer watcher at block " + latestBlockNumber);
-    CryptoCartoContract.getPastEvents('Transfer', {
-      fromBlock: latestBlockNumber - 35, // Get events for last 35 blocks (30 for 30sec + margin)
-      toBlock: 'latest'}
-    , function(error, events){
-
-      // Updating owner for token
-      events.forEach(event => {
-        tokenIdToRemove = event.returnValues.tokenId;
-        console.log("Updating token ID #" + event.returnValues.tokenId);
-        PinToken.updateMany({ tokenId: event.returnValues.tokenId }, { $set: { owner: event.returnValues.to } })
-      });
-
+setInterval(async function() {
+  try {
+    await caver.klay.getBlockNumber().then(function(latestBlockNumber){
+      console.log("Running transfer watcher at block " + latestBlockNumber);
+      CryptoCartoContract.getPastEvents('Transfer', {
+        fromBlock: latestBlockNumber - 35, // Get events for last 35 blocks (30 for 30sec + margin)
+        toBlock: 'latest'}
+      , function(error, events){
+        try {
+          // Updating owner for token
+          events.forEach(event => {
+            tokenIdToRemove = event.returnValues.tokenId;
+            console.log("Updating token ID #" + event.returnValues.tokenId);
+            PinToken.updateMany({ tokenId: event.returnValues.tokenId }, { $set: { owner: event.returnValues.to } })
+          });
+        } catch (error) { console.error("Error while crawling events.") }
+      })
     })
-  })
+    updatePinTokensDB();
+  } catch (error) { console.error("Error while watching ERC-20 transfers.") }
   // Getting pin data
-  updatePinTokensDB();
 }, 30000); // 30sec
 
 // Triggers an update at app launch
