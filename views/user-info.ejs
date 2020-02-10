@@ -1,37 +1,11 @@
 <div id="user-info">
-    <div class="user-info-collapser">&#9776; User Info &#9776;</div>
+    <div class="user-info-collapser">&#9776; Teleport zone &#9776;</div>
     <div class="user-info-main">
-        <p>Click on map to create a new pin - <a href="https://cryptocarto.xyz/how-to/" target="_blank">Check how to use</a></p>
-        <div id="user-keys">
-            <label for="address">Address: </label>
-            <input type="text" disabled="disabled" class="form-control" placeholder="..." name="address" id="address" 
-            value="<% if (typeof address != 'undefined' && address) { %><%= address %><% } %>" />
-            <br />
-            <label for="privatekey">PrivateKey: </label>
-            <input type="password" disabled="disabled" class="form-control" placeholder="..." name="privatekey" id="privatekey" 
-            value="<% if (typeof privatekey != 'undefined' && privatekey) { %><%= privatekey %><% } %>" />
-            <br />
-            <button onclick="$('#privatekey').attr('type', 'text')">Show</button>
-            <button onclick="$('#privatekey').attr('type', 'password')">Hide</button>
-            <button onclick="window.location.href = '/save-user-info';">Save to disk</button>
-            <button onclick="$('#user-keys').hide();$('#user-new-pk').show()">Import other key</button>
-            <p class="note">
-                A new blockchain account is generated and saved in session at your first visit.<br />
-                Save your info, and re-use it with the "Import other key" feature when you come back!
-            </p>
-        </div>
 
-        <div id="user-new-pk">
-            <form class="import-pk-form" action="/import-pk" method="post">
-                <label for="privatekey">PrivateKey to import: </label>
-                <input type="text" autocomplete="off" required="true" class="form-control" placeholder="0x..." name="newprivatekey" id="newprivatekey" />
-                <br /><button type="submit">Import this private key</button>
-                <button onclick="$('#user-keys').show();$('#user-new-pk').hide()">Cancel</button>
-            </form>
-        </div>
-
-        <p id="teleport-zone">
-            Teleport to : 
+        <div id="teleport-zone">
+            <label for="geocoding-field">Teleport to:</label> <input onClick="this.select();" placeholder="city name..." autocomplete="off" id="geocoding-field" type="text" />
+            <br />
+            ...or to : 
             <button onclick="map.setView([48.8722,2.3321],16);">Paris</button>
             <button onclick="map.setView([37.5326,127.02461],16);">Seoul</button>
             <button onclick="map.setView([43.7331,7.420],16);">Monaco</button>
@@ -41,7 +15,6 @@
             Latitude <input type="text" onClick="this.select();" placeholder="Latitude" name="teleport-latitude" id="teleport-latitude" required="true" value="42.6886" />
             Longitude <input type="text" onClick="this.select();" placeholder="Longitude" name="teleport-longitude" id="teleport-longitude" required="true" value="2.8948" />
             <button onclick="cryptocartoTeleporter()">Go</button>
-            <br />...or type a place name here: <input onClick="this.select();" autocomplete="off" id="geocoding-field" type="text" />
             <script>
                 // Geocoding function: fill input with result and teleport to center of matched item
                 var geocoder = new maptiler.Geocoder({input: 'geocoding-field', key: 'hRjkiHQiQvUA7GFcwv6N'});
@@ -60,6 +33,6 @@
                 $('#teleport-longitude').keypress(function(e){if(e.which == 13){ cryptocartoTeleporter() }});
 
             </script>
-        </p>
+        </div>
     </div>
 </div>

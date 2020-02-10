@@ -130,15 +130,6 @@
     
     });
 
-    // Collapsers and auto hide for small displays
-    $('.user-info-collapser').click(function(){$('.user-info-main').toggle();});
-    if (screen.width < 1200) {$('.user-info-main').toggle();}
-    $('.tokens-info-collapser').click(function(){$('.tokens-info-main').toggle();});
-    if (screen.width < 600) {
-        $('.tokens-info-main').toggle();
-        $('#tokens').css({ "max-width": "95%" });
-    }
-
     // Transaction form validator
     checkTransactionForm = function() {
         if ($('.leaflet-popup').find(".new-transaction-form").valid()) {
