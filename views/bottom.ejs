@@ -33,7 +33,7 @@
 							<label for="privatekey">PrivateKey to import: </label>
 							<input type="text" autocomplete="off" required="true" class="form-control" placeholder="0x..." name="newprivatekey" id="newprivatekey" />
 							<br /><button type="submit">Import this private key</button>
-							<button onclick="$('#user-keys').show();$('#user-new-pk').hide()">Cancel</button>
+							<button type="button" onclick="$('#user-keys').show();$('#user-new-pk').hide()">Cancel</button>
 						</form>
 					</div>
 			
@@ -42,7 +42,7 @@
 							<label for="new-name">New name: </label>
 							<input type="text" autocomplete="off" required="true" class="form-control" placeholder="name..." name="newname" id="newname" />
 							<br /><button type="submit">Change your display name</button>
-							<button onclick="$('#user-keys').show();$('#user-change-name').hide()">Cancel</button>
+							<button type="button" onclick="$('#user-keys').show();$('#user-change-name').hide()">Cancel</button>
 						</form>
 					</div>
 
