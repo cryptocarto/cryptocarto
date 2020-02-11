@@ -6,7 +6,18 @@
 				
 				<div class="general-info-main">
 					<img src="" id="user-avatar" class="blockies-avatar" />
-					<p class="display-name-zone">Hello <b><% if (typeof displayname != 'undefined' && displayname) { %><%= displayname %><% } %></b></p>
+					<p class="display-name-zone">
+						Hello <b><% if (typeof displayname != 'undefined' && displayname) { %><%= displayname %><% } %></b>
+						- Level 
+						<% if (userTokenIds.length <=          0) { %>0
+						<% } else if (userTokenIds.length <=   3) { %>1
+						<% } else if (userTokenIds.length <=   9) { %>2
+						<% } else if (userTokenIds.length <=  19) { %>3
+						<% } else if (userTokenIds.length <=  39) { %>4
+						<% } else if (userTokenIds.length <=  69) { %>5
+						<% } else if (userTokenIds.length <= 119) { %>6
+						<% } else { %>7<% } %>
+					</p>
 					<div class="spacer"></div>
 					<p>Click on map to create a new pin - <a href="https://cryptocarto.xyz/how-to/" target="_blank">Check how to use</a></p>
 					<div id="user-keys">
