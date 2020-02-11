@@ -24,6 +24,10 @@ module.exports = function (req, res, next) {
         res.locals.currentlng = req.session.currentlng;
     }
 
+    if (typeof req.session.displayname != 'undefined') {
+        res.locals.displayname = req.session.displayname;
+    }
+
     if (typeof req.session.openPinId != 'undefined') {
         res.locals.openPinId = req.session.openPinId;
         req.session.openPinId = "";

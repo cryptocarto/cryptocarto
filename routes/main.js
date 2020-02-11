@@ -4,6 +4,7 @@
 
 // Get required interfaces
 const caver = require('../utils/caver')
+const DisplayName = require('../utils/displayname')
 getPinTokensAround = require('../utils/get-pin-tokens-around')
 
 module.exports = async function(req, res, next) {
@@ -24,6 +25,19 @@ module.exports = async function(req, res, next) {
         res.locals.currentlat = 48.8722;
         req.session.currentlng = 2.3321;
         res.locals.currentlng = 2.3321;
+      }
+  
+      // Loads display name or apply default
+      if ((typeof req.session.displayname == 'undefined')) {
+        var displayName = await DisplayName.findOne({ address: req.session.address });
+        
+        if (!displayName) {
+          req.session.displayname = req.session.address.substring(0,10);
+          req.locals.displayname = req.session.address.substring(0,10);
+        } else {
+          req.session.displayname = displayName.name;
+          res.locals.displayname = displayName.name;
+        }
       }
 
       // Get PinToken data from DB for current position

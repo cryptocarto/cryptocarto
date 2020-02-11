@@ -127,6 +127,10 @@ p {margin: 0 0 10px 0;}
     display:none;
 }
 
+#user-change-name {
+    display:none;
+}
+
 div.token, div.user-token{
     max-width: 70%;
     float: left;

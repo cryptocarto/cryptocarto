@@ -5,6 +5,7 @@
 
 				
 				<div class="general-info-main">
+					<p>Hello <b><% if (typeof displayname != 'undefined' && displayname) { %><%= displayname %><% } %></b></p>
 					<p>Click on map to create a new pin - <a href="https://cryptocarto.xyz/how-to/" target="_blank">Check how to use</a></p>
 					<div id="user-keys">
 						<label for="address">Address: </label>
@@ -15,10 +16,12 @@
 						<input type="password" disabled="disabled" class="form-control" placeholder="..." name="privatekey" id="privatekey" 
 						value="<% if (typeof privatekey != 'undefined' && privatekey) { %><%= privatekey %><% } %>" />
 						<br />
-						<button onclick="$('#privatekey').attr('type', 'text')">Show</button>
-						<button onclick="$('#privatekey').attr('type', 'password')">Hide</button>
+						<button onclick="
+							if ($('#privatekey').attr('type') == 'password') { $('#privatekey').attr('type', 'text') }
+							else { $('#privatekey').attr('type', 'password') }">Show/Hide</button>
 						<button onclick="window.location.href = '/save-user-info';">Save to disk</button>
-						<button onclick="$('#user-keys').hide();$('#user-new-pk').show()">Import other key</button>
+						<button onclick="$('#user-keys').hide();$('#user-new-pk').show();$('#newprivatekey').focus()">Import other key</button>
+						<button onclick="$('#user-keys').hide();$('#user-change-name').show();$('#newname').focus()">Change name</button>
 						<p class="note">
 							A new blockchain account is generated and saved in session at your first visit.<br />
 							Save your info, and re-use it with the "Import other key" feature when you come back!
@@ -31,6 +34,15 @@
 							<input type="text" autocomplete="off" required="true" class="form-control" placeholder="0x..." name="newprivatekey" id="newprivatekey" />
 							<br /><button type="submit">Import this private key</button>
 							<button onclick="$('#user-keys').show();$('#user-new-pk').hide()">Cancel</button>
+						</form>
+					</div>
+			
+					<div id="user-change-name">
+						<form class="change-name-form" action="/change-name" method="post">
+							<label for="new-name">New name: </label>
+							<input type="text" autocomplete="off" required="true" class="form-control" placeholder="name..." name="newname" id="newname" />
+							<br /><button type="submit">Change your display name</button>
+							<button onclick="$('#user-keys').show();$('#user-change-name').hide()">Cancel</button>
 						</form>
 					</div>
 
