@@ -5,7 +5,9 @@
 
 				
 				<div class="general-info-main">
-					<p>Hello <b><% if (typeof displayname != 'undefined' && displayname) { %><%= displayname %><% } %></b></p>
+					<img src="" id="blockies-avatar" />
+					<p class="display-name-zone">Hello <b><% if (typeof displayname != 'undefined' && displayname) { %><%= displayname %><% } %></b></p>
+					<div class="spacer"></div>
 					<p>Click on map to create a new pin - <a href="https://cryptocarto.xyz/how-to/" target="_blank">Check how to use</a></p>
 					<div id="user-keys">
 						<label for="address">Address: </label>
@@ -74,7 +76,9 @@
 				if (screen.width < 1200) {$('.user-info-main').hide();}
 				if ((screen.width < 900) || (screen.height < 600)) {$('.general-info-main').hide();}
 				if (screen.width < 600) {$('.tokens-info-main').hide();	$('#tokens').css({ "max-width": "95%" });}
-				
+			
+				$('#blockies-avatar').attr("src", blockies.create({ seed: $('#address').val() ,size: 8,scale: 3}).toDataURL());
+
 			</script>
 		</div>
 	</body>

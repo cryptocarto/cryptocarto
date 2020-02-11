@@ -131,6 +131,17 @@ p {margin: 0 0 10px 0;}
     display:none;
 }
 
+.display-name-zone {
+    margin-top: 3px;
+}
+
+#blockies-avatar {
+    float: left;
+    width: 24px;
+    height: 24px;
+    margin: 0 10px 5px 0;
+}
+
 div.token, div.user-token{
     max-width: 70%;
     float: left;

@@ -28,12 +28,12 @@ module.exports = async function(req, res, next) {
       }
   
       // Loads display name or apply default
-      if ((typeof req.session.displayname == 'undefined')) {
+      if (typeof req.session.displayname == 'undefined') {
         var displayName = await DisplayName.findOne({ address: req.session.address });
         
         if (!displayName) {
           req.session.displayname = req.session.address.substring(0,10);
-          req.locals.displayname = req.session.address.substring(0,10);
+          res.locals.displayname = req.session.address.substring(0,10);
         } else {
           req.session.displayname = displayName.name;
           res.locals.displayname = displayName.name;
