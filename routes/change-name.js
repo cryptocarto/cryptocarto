@@ -7,7 +7,7 @@ const DisplayName = require('../utils/displayname')
 
 module.exports = async function(req, res, next) {
   try {
-    const newname = req.body.newname.substring(0,20);
+    var newname = req.body.newname.substring(0,20);
     const address = req.session.address;
 
     // Save this address/name couple to database or update if existing
@@ -16,7 +16,10 @@ module.exports = async function(req, res, next) {
       name: newname
     });
 
-    if (await DisplayName.countDocuments({ address: address })) {
+    if (newname == "") {
+      await DisplayName.deleteMany({ address: address });
+      newname = undefined;
+    } else if (await DisplayName.countDocuments({ address: address })) {
       await DisplayName.updateMany({ address: address }, { $set: { name: newname }})
     } else {
       await newDisplayName.save()
