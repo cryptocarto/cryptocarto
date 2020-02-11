@@ -37,8 +37,8 @@ module.exports = async function (latitude, longitude, userAddress) {
       tokenIds.push(tokensDataFromDB[objectKey]["tokenId"]);
 
       // Build an array of every unique addresses
-      if (allAddresses.indexOf(tokensDataFromDB[objectKey]["owner"]) == -1) {
-        allAddresses.push(tokensDataFromDB[objectKey]["owner"]);
+      if (allAddresses.indexOf(tokensDataFromDB[objectKey]["owner"].toLowerCase()) == -1) {
+        allAddresses.push(tokensDataFromDB[objectKey]["owner"].toLowerCase());
       }
     })
 

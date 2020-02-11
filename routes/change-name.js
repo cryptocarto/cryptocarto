@@ -8,11 +8,11 @@ const DisplayName = require('../utils/displayname')
 module.exports = async function(req, res, next) {
   try {
     var newname = req.body.newname.substring(0,20);
-    const address = req.session.address;
+    const address = req.session.address.toLowerCase();
 
     // Save this address/name couple to database or update if existing
     var newDisplayName = new DisplayName({
-      address : req.session.address,
+      address : address,
       name: newname
     });
 
