@@ -14,12 +14,22 @@
                 <% } %>
                 <p class="token-info">
                     <b><%= allTokensData[tokenIds[i]]['message'].substring(0,50) %><% if (allTokensData[tokenIds[i]]['message'].length > 50) { %>...<% } %></b><br/>
-                    From <a target="_blank" href="https://cypress.explore.bitcrystals.com/address/?address=<%= allTokensData[tokenIds[i]]['owner'] %>"><%= allTokensData[tokenIds[i]]['owner'].substring(0,7) %></a>
+                    From <a target="_blank" href="https://cypress.explore.bitcrystals.com/address/?address=<%= allTokensData[tokenIds[i]]['owner'] %>"><% if (typeof displayNames != 'undefined' && displayNames[allTokensData[tokenIds[i]]['owner']]) { %>
+                        <%= displayNames[allTokensData[tokenIds[i]]['owner']] %>
+                    <% } else { %>
+                        <%= allTokensData[tokenIds[i]]['owner'].substring(0,10) %>
+                    <% } %></a>
                 </p>
                 <div class="token-data">
                     <b><span id="token-<%= i %>-message"><%= allTokensData[tokenIds[i]]['message'] %></span></b><br/>
                     Pin #<span id="token-<%= i %>-id" class="global-pin-id"><%= allTokensData[tokenIds[i]]['tokenId'] %></span><br />
-                    Owned by <a target="_blank" href="https://cypress.explore.bitcrystals.com/address/?address=<%= allTokensData[tokenIds[i]]['owner'] %>"><%= allTokensData[tokenIds[i]]['owner'].substring(0,10) %>...<%= allTokensData[tokenIds[i]]['owner'].substring(34,42) %></a><span id="token-<%= i %>-owner" class="token-owner-fulladdress"><%= allTokensData[tokenIds[i]]['owner'] %></span>
+                    Owned by <a target="_blank" id="token-<%= i %>-displayname" href="https://cypress.explore.bitcrystals.com/address/?address=<%= allTokensData[tokenIds[i]]['owner'] %>">
+                        <% if (typeof displayNames != 'undefined' && displayNames[allTokensData[tokenIds[i]]['owner']]) { %>
+                            <%= displayNames[allTokensData[tokenIds[i]]['owner']] %>
+                        <% } else { %>
+                            <%= allTokensData[tokenIds[i]]['owner'].substring(0,10) %>
+                        <% } %>
+                    </a><span id="token-<%= i %>-owner" class="token-owner-fulladdress"><%= allTokensData[tokenIds[i]]['owner'] %></span>
                     (<a target="_blank" href="https://scope.klaytn.com/account/<%= allTokensData[tokenIds[i]]['owner'] %>">details</a>)<br />
                     Latitude: <span id="token-<%= i %>-latitude" class="global-pin-lat"><%= allTokensData[tokenIds[i]]['latitude'] / 10000 %></span>
                     / Longitude: <span id="token-<%= i %>-longitude" class="global-pin-lng"><%= allTokensData[tokenIds[i]]['longitude'] / 10000 %></span><br />

@@ -4,6 +4,7 @@
 
 // Get required interfaces
 const PinToken = require('./pintoken')
+const DisplayName = require('./displayname')
 
 module.exports = async function (latitude, longitude, userAddress) {
     // Get pins from DB (incuding new ones)
@@ -28,11 +29,26 @@ module.exports = async function (latitude, longitude, userAddress) {
 
     var tokenIds = new Array;
     var allTokensData = new Array;
+    var allAddresses = new Array;
 
     // Create array indexed by tokenId and tokenIds array
     Object.keys(tokensDataFromDB).map(function (objectKey) {
       allTokensData[tokensDataFromDB[objectKey]["tokenId"]] = tokensDataFromDB[objectKey];
       tokenIds.push(tokensDataFromDB[objectKey]["tokenId"]);
+
+      // Build an array of every unique addresses
+      if (allAddresses.indexOf(tokensDataFromDB[objectKey]["owner"]) == -1) {
+        allAddresses.push(tokensDataFromDB[objectKey]["owner"]);
+      }
+    })
+
+    // Lookup display names for displayed tokens
+    var displayNamesFromDB = await DisplayName.find({'address' : { $in : allAddresses }});
+    var displayNames = new Array;
+
+    // Create display name array
+    Object.keys(displayNamesFromDB).map(function (objectKey) {
+      displayNames[displayNamesFromDB[objectKey]["address"]] = displayNamesFromDB[objectKey]["name"];
     })
 
     // Get tokens for this specific user
@@ -46,5 +62,5 @@ module.exports = async function (latitude, longitude, userAddress) {
       userTokenIds.push(userTokensDataFromDB[objectKey]["tokenId"]);
     })
     
-    return [allTokensData, tokenIds, userTokensData, userTokenIds];
+    return [allTokensData, tokenIds, userTokensData, userTokenIds, displayNames];
 }
