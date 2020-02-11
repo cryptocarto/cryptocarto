@@ -48,7 +48,8 @@ module.exports = async function (latitude, longitude, userAddress) {
 
     // Create display name array
     Object.keys(displayNamesFromDB).map(function (objectKey) {
-      displayNames[displayNamesFromDB[objectKey]["address"]] = displayNamesFromDB[objectKey]["name"];
+      displayNames[displayNamesFromDB[objectKey]["address"]] = displayNamesFromDB[objectKey]["name"] + 
+      " (" + displayNamesFromDB[objectKey]["address"].substring(2,8) + ")";
     })
 
     // Get tokens for this specific user
