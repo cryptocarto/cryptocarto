@@ -6,6 +6,7 @@
 
     var nbTokens = parseInt(jQuery('.token').length);
     var markers = new Array;
+    var rectangles = new Array;
 
     for (i = 0; i< nbTokens; i++) {
         lat = parseFloat(jQuery('#token-'+i+'-latitude').text());
@@ -59,7 +60,7 @@
         markers[jQuery('#token-'+i+'-id').text()] = L.marker([lat,lng]).addTo(map).bindPopup(popUpContent);
 
         // Create a rectangle for the reserved spot around the pin
-        L.rectangle([[lat-0.00005,lng-0.00005], [lat+0.00005,lng+0.00005]], {color: '#4054b2', weight: 1}).addTo(map).bindPopup(popUpContent);
+        rectangles[jQuery('#token-'+i+'-id').text()] = L.rectangle([[lat-0.00005,lng-0.00005], [lat+0.00005,lng+0.00005]], {color: '#4054b2', weight: 1}).addTo(map).bindPopup(popUpContent);
     
         // Open popup if needed
         if (jQuery('#viewPinId').text() != "" && jQuery('#token-'+i+'-id').text() == jQuery('#viewPinId').text()) {
@@ -177,6 +178,12 @@
             }  
             markers = []
 
+            //Remove current rectangles
+            for (let tokenIdToRemove in rectangles) { 
+                map.removeLayer(rectangles[tokenIdToRemove]);
+            }  
+            rectangles = []
+
             //Display markers on map
             nbTokens = parseInt(jQuery('.token').length);
 
@@ -232,7 +239,7 @@
                 markers[jQuery('#token-'+i+'-id').text()] = L.marker([lat,lng]).addTo(map).bindPopup(popUpContent);
 
                 // Create a rectangle for the reserved spot around the pin
-                L.rectangle([[lat-0.00005,lng-0.00005], [lat+0.00005,lng+0.00005]], {color: '#4054b2', weight: 1}).addTo(map).bindPopup(popUpContent);
+                rectangles[jQuery('#token-'+i+'-id').text()] = L.rectangle([[lat-0.00005,lng-0.00005], [lat+0.00005,lng+0.00005]], {color: '#4054b2', weight: 1}).addTo(map).bindPopup(popUpContent);
 
                 // Open popup if needed
                 if (jQuery('#viewPinId').text() != "" && jQuery('#token-'+i+'-id').text() == jQuery('#viewPinId').text()) {
