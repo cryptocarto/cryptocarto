@@ -137,12 +137,15 @@ contract CryptoCartoPinTokenContract is ERC721Full {
         _pinTokenList[tokenId] = newPinToken;
         _existingTokenIdList.push(tokenId);
 
-        // Sets token URI
-        _setTokenURI(tokenId, string(abi.encodePacked(_baseURL, _numericTokenIdToString(tokenId))));
-
         emit PinTokenEmitted(tokenId, latitude, longitude, message, now);
     }
 
+    // Returns URI for a givne tokenId
+    function tokenURI(uint256 tokenId) external view returns (string memory) {
+        return string(abi.encodePacked(_baseURL, _numericTokenIdToString(tokenId)));
+    }
+
+    // Updates PinToken message. Consumes a consumption right
     function updatePinToken(uint256 tokenId, string memory newMessage) public {
         require(ownerOf(tokenId) == msg.sender, "Cannot update a token that is not own");
 
