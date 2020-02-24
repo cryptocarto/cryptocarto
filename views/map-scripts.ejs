@@ -41,7 +41,8 @@
                             '<div class="metadata">' +
                                 '<br />Pin #' + jQuery('#token-'+i+'-id').text() + '<br/>' +
                                 'Latitude: ' + lat + ' / Longitude: ' + lng + '<br/>' +
-                                'Created on ' + jQuery('#token-'+i+'-timestamp').text() + 
+                                'Created on ' + jQuery('#token-'+i+'-creation-timestamp').text() + 
+                                '<br/>Modified on ' + jQuery('#token-'+i+'-modification-timestamp').text() + 
                                 '<br/>' +'Tile coordinates: x = ' + xtile + ' ; y = ' + ytile +
                                 '<br/>' +'<a target="_blank" href="/token/' + jQuery('#token-'+i+'-id').text() + '.png">View token image</a>' +
                                 '<br/>' +'<a target="_blank" href="/token-metadata/' + jQuery('#token-'+i+'-id').text() + '">View token metadata JSON</a>' +
@@ -220,7 +221,8 @@
                                     '<div class="metadata">' +
                                         '<br />Pin #' + jQuery('#token-'+i+'-id').text() + '<br/>' +
                                         'Latitude: ' + lat + ' / Longitude: ' + lng + '<br/>' +
-                                        'Created on ' + jQuery('#token-'+i+'-timestamp').text() + 
+                                        'Created on ' + jQuery('#token-'+i+'-creation-timestamp').text() + 
+                                        '<br/>Modified on ' + jQuery('#token-'+i+'-modification-timestamp').text() +
                                         '<br/>' +'Tile coordinates: x = ' + xtile + ' ; y = ' + ytile +
                                         '<br/>' +'<a target="_blank" href="/token/' + jQuery('#token-'+i+'-id').text() + '.png">View token image</a>' +
                                         '<br/>' +'<a target="_blank" href="/token-metadata/' + jQuery('#token-'+i+'-id').text() + '">View token metadata JSON</a>' +

@@ -11,7 +11,8 @@ var pinTokenSchema = new db.Schema({
   latitude : Number,
   longitude : Number,
   message : String,
-  timestamp : String
+  creationTimestamp : String,
+  modificationTimestamp : String
 });
 
 var PinToken = db.model(process.env.PINTOKEN_COLLECTION_NAME, pinTokenSchema);

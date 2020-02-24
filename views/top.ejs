@@ -26,7 +26,7 @@
 	<% if (typeof allTokensData[openPinId] != 'undefined' && allTokensData[openPinId]) { %>
 		<meta property="og:description" content="This claimed spot is located at latitude <%= allTokensData[openPinId]['latitude'] / 10000 %> and longitude <%= allTokensData[openPinId]['longitude'] / 10000 %>.
 		It displays the message '<%= allTokensData[openPinId]['message'] %>' and is owned by address <%= allTokensData[openPinId]['owner'] %>.
-		Created on <%= new Date(parseInt(allTokensData[openPinId]['timestamp'] * 1000)).toUTCString() %> with ID <%= openPinId %> on CryptoCarto." />
+		Created on <%= new Date(parseInt(allTokensData[openPinId]['creationTimestamp'] * 1000)).toUTCString() %> with ID <%= openPinId %> on CryptoCarto." />
 	<% } else { %>
 		<meta property="og:description" content="View claimed spot with ID <%= openPinId %> on CryptoCarto." />
 	<% } %>
