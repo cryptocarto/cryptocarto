@@ -55,11 +55,6 @@ contract CryptoCartoPinTokenContract is ERC721Full {
         _baseURL = "https://app.cryptocarto.xyz/metadata/pin-token/";
     }
 
-    // Returns URI for a given token ID
-    function tokenURI(string memory tokenId) public view returns (string memory) {
-        return string(abi.encodePacked(_baseURL, tokenId));
-    }
-
     // Internal function to consume 1 cunsumption right. Also manages rights creation and refill
     function _useOneConsumptionRight(address consummingAddress) internal {
 
@@ -141,6 +136,9 @@ contract CryptoCartoPinTokenContract is ERC721Full {
 
         _pinTokenList[tokenId] = newPinToken;
         _existingTokenIdList.push(tokenId);
+
+        // Sets token URI
+        _setTokenURI(tokenId, string(abi.encodePacked(_baseURL, _numericTokenIdToString(tokenId))));
 
         emit PinTokenEmitted(tokenId, latitude, longitude, message, now);
     }
@@ -234,6 +232,27 @@ contract CryptoCartoPinTokenContract is ERC721Full {
     // Admin function to return all known addresses
     function getAllKnownAddresses() public view _ownerOnly returns(address[] memory) {
         return _allKnownAddresses;
+    }
+
+    // Helper function to transform a PinTokenID to a string
+    function _numericTokenIdToString (uint256 numericTokenId) internal pure returns (string memory) {
+            if (numericTokenId == 0) {
+                return "0";
+            }
+            uint i = numericTokenId;
+            uint j = numericTokenId;
+            uint len;
+            while (j != 0) {
+                len++;
+                j /= 10;
+            }
+            bytes memory stringTokenId = new bytes(len);
+            uint k = len - 1;
+            while (i != 0) {
+                stringTokenId[k--] = byte(uint8(48 + i % 10));
+                i /= 10;
+            }
+            return string(stringTokenId);
     }
 
 }
