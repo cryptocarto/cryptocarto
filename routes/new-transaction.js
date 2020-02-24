@@ -90,8 +90,8 @@ module.exports = async function(req, res, next) {
     })
     .on('error', function(error){
       // On error, delete the pin in DB and log
-      PinToken.deleteMany({ tokenId: newPinToken.tokenId });
-      console.error(error);
+      await PinToken.deleteMany({ tokenId: newPinToken.tokenId });
+      console.error("Error on creation transaction for token #" + newPinToken.tokenId + ": temp token in DB deleted.");
     });
 
     req.session.generalMessage = 'Token #' + newPinToken.tokenId + ' created.';
