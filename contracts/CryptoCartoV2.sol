@@ -2,18 +2,30 @@ pragma solidity ^0.5.6;
 
 import "./ERC721/ERC721Full.sol";
 
-contract CryptoCarto is ERC721Full {
+contract CryptoCartoPinTokenContract is ERC721Full {
+
+    // Owner address and base URL to be set in constructor
+    address private _owner;
+    string private _baseURL;
+
+    modifier _ownerOnly() {
+      require(msg.sender == _owner, "Function restricted to contract owner");
+      _;
+    }
 
     // Events
     event PinTokenEmitted (uint256 indexed tokenId, int256 latitude, int256 longitude, string message, uint256 timestamp);
     event PinTokenModified (uint256 indexed tokenId, string message, uint256 timestamp);
     event ConsumptionRightsChanged (address owner, int256 newConsumptionRights, uint256 timestamp);
 
-    // List of PinToken objects indexed by tokenId 
+    // List of PinToken objects indexed by tokenId
     mapping (uint256 => PinToken) private _pinTokenList;
 
     // Simple list of all existing token Ids
     uint256[] private _existingTokenIdList;
+
+    // Simple list of all known addresses (which had interactions with consumption rights)
+    address[] _allKnownAddresses;
 
     // Consumption rights per user address
     mapping (address => ConsumptionRight) private _consumptionRights;
@@ -37,6 +49,17 @@ contract CryptoCarto is ERC721Full {
         uint256 lastRefillTimestamp;   // Timestamp of last refill
     }
 
+    // Constructor: sets metadata and contract owner
+    constructor() ERC721Full("CryptoCarto PinToken", "CARTO") public {
+        _owner = msg.sender;
+        _baseURL = "https://app.cryptocarto.xyz/metadata/pin-token/";
+    }
+
+    // Returns URI for a given token ID
+    function tokenURI(string memory tokenId) public view returns (string memory) {
+        return string(abi.encodePacked(_baseURL, tokenId));
+    }
+
     // Internal function to consume 1 cunsumption right. Also manages rights creation and refill
     function _useOneConsumptionRight(address consummingAddress) internal {
 
@@ -48,6 +71,7 @@ contract CryptoCarto is ERC721Full {
             });
 
             _consumptionRights[consummingAddress] = newConsumptionRight;
+            _allKnownAddresses.push(consummingAddress);
             emit ConsumptionRightsChanged(consummingAddress, _consumptionRights[consummingAddress].rights, now);
         }
 
@@ -123,7 +147,7 @@ contract CryptoCarto is ERC721Full {
 
     function updatePinToken(uint256 tokenId, string memory newMessage) public {
         require(ownerOf(tokenId) == msg.sender, "Cannot update a token that is not own");
-        
+
         _useOneConsumptionRight(msg.sender);
 
         _pinTokenList[tokenId].message = newMessage;
@@ -151,7 +175,7 @@ contract CryptoCarto is ERC721Full {
     }
 
     // Retrieve a PinToken by ID
-    function getPinToken (uint tokenId) public view
+    function getPinToken(uint tokenId) public view
     returns(uint256, address, int256, int256, string memory, uint256, uint256) {
         require(_pinTokenList[tokenId].tokenId != 0, "PinToken doesnt exist");
         return (
@@ -166,8 +190,50 @@ contract CryptoCarto is ERC721Full {
 
     // Retrieve remaining consumption rights by address
     function getConsumptionRightsForAddress(address addressToCheck) public view returns(int256, uint256) {
-        require(_consumptionRights[addressToCheck].lastRefillTimestamp != 0, "No consumption right for this address");
+        require(_consumptionRights[addressToCheck].lastRefillTimestamp != 0, "Address unknowned by consumption rights system");
         return (_consumptionRights[addressToCheck].rights, _consumptionRights[addressToCheck].lastRefillTimestamp);
+    }
+
+    // Admin function to trigger refill rights for an address (ignores timestamp control and does not reset it)
+    // Cannot refill over the _DAILY_CONSUMPTION_RIGHTS limit
+    function refillConsumptionRightsForAddress(address addressToRefill) public _ownerOnly {
+        // Need to know the address and to ensure rights are not over daily refill value
+        require(_consumptionRights[addressToRefill].lastRefillTimestamp != 0, "Address unknowned by consumption rights system");
+        require(_consumptionRights[addressToRefill].rights < _DAILY_CONSUMPTION_RIGHTS,
+            "Address has more consumption rights than the daily refill value");
+
+        _consumptionRights[addressToRefill].rights = _DAILY_CONSUMPTION_RIGHTS;
+        emit ConsumptionRightsChanged(addressToRefill, _consumptionRights[addressToRefill].rights, now);
+    }
+
+    // Admin function to trigger refill rights for all known addresses (ignores timestamp control and does not reset it)
+    // Cannot refill over the _DAILY_CONSUMPTION_RIGHTS limit
+    function refillConsumptionRightsForAll() public _ownerOnly {
+        for (uint i = 0; i<_allKnownAddresses.length; i++) {
+            if (_consumptionRights[_allKnownAddresses[i]].rights < _DAILY_CONSUMPTION_RIGHTS ) {
+                _consumptionRights[_allKnownAddresses[i]].rights = _DAILY_CONSUMPTION_RIGHTS;
+                emit ConsumptionRightsChanged(_allKnownAddresses[i], _consumptionRights[_allKnownAddresses[i]].rights, now);
+            }
+        }
+    }
+
+    // Admin function to add a given rights number for an address (does not reset refill timestamp)
+    function addConsumptionRightsForAddress(address addressToRecharge, int256 numberOfRights) public _ownerOnly {
+        _consumptionRights[addressToRecharge].rights = _consumptionRights[addressToRecharge].rights + numberOfRights;
+        emit ConsumptionRightsChanged(addressToRecharge, _consumptionRights[addressToRecharge].rights, now);
+    }
+
+    // Admin function to add a given rights number for all known addresses (does not reset refill timestamp)
+    function addConsumptionRightsForAll(int256 numberOfRights) public _ownerOnly {
+        for (uint i = 0; i<_allKnownAddresses.length; i++) {
+            _consumptionRights[_allKnownAddresses[i]].rights = _consumptionRights[_allKnownAddresses[i]].rights + numberOfRights;
+            emit ConsumptionRightsChanged(_allKnownAddresses[i], _consumptionRights[_allKnownAddresses[i]].rights, now);
+        }
+    }
+
+    // Admin function to return all known addresses
+    function getAllKnownAddresses() public view _ownerOnly returns(address[] memory) {
+        return _allKnownAddresses;
     }
 
 }
