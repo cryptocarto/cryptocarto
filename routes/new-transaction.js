@@ -88,7 +88,7 @@ module.exports = async function(req, res, next) {
           console.log("PinToken #" + newPinToken.tokenId + " swapped with blockchain values in DB (new timestamp: " + newPinTokenFromBC.timestamp + ").")
         });
     })
-    .on('error', function(error){
+    .on('error', async function(error){
       // On error, delete the pin in DB and log
       await PinToken.deleteMany({ tokenId: newPinToken.tokenId });
       console.error("Error on creation transaction for token #" + newPinToken.tokenId + ": temp token in DB deleted.");
