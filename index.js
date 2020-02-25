@@ -61,6 +61,20 @@ setInterval(async function() {
           });
         } catch (error) { console.error("Error while crawling events.") }
       })
+      CryptoCartoContract.getPastEvents('ConsumptionRightsChanged', {
+        fromBlock: latestBlockNumber - 35, // Get events for last 35 blocks (30 for 30sec + margin)
+        toBlock: 'latest'}
+      , function(error, events){
+        try {
+          events.forEach(event => {
+
+            // TODO: change consumption right record in DB: max val for oldest TS
+
+            console.log("Consumption right for address " + event.returnValues.owner + " changed to " 
+            + event.returnValues.newConsumptionRights + " (new TS: " + event.returnValues.lastRefillTimestamp + ") ")
+          });
+        } catch (error) { console.error("Error while crawling events.") }
+      })
     })
     updatePinTokensDB();
   } catch (error) { console.error("Error while watching ERC-20 transfers.") }
