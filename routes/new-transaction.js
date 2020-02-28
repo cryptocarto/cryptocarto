@@ -6,6 +6,7 @@
 const caver = require('../utils/caver')
 const CryptoCartoContract = require('../utils/cryptocarto-contract')
 const PinToken = require('../utils/pintoken')
+updateConsumptionRights = require('../utils/update-consumption-rights')
 
 module.exports = async function(req, res, next) {
   try {
@@ -58,6 +59,8 @@ module.exports = async function(req, res, next) {
     
     // Saves if not existing
     if (!await PinToken.countDocuments({ tokenId: newPinToken.tokenId })) {
+      // Decreases consumption rights
+      await updateConsumptionRights(req, -1);
       await newPinToken.save();
       console.log("PinToken #" + newPinToken.tokenId + " saved to DB (temporary timestamp: " + newPinToken.creationTimestamp + ").")
     } else {
@@ -95,6 +98,8 @@ module.exports = async function(req, res, next) {
     .on('error', async function(error){
       // On error, delete the pin in DB and log
       await PinToken.deleteMany({ tokenId: newPinToken.tokenId });
+      // Increases consumption rights
+      await updateConsumptionRights(req, 1);
       console.error("Error on creation transaction for token #" + newPinToken.tokenId + ": temp token in DB deleted.");
     });
 

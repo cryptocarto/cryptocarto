@@ -28,6 +28,14 @@ module.exports = function (req, res, next) {
         res.locals.displayname = req.session.displayname;
     }
 
+    if (typeof req.session.consumptionrights != 'undefined') {
+        res.locals.consumptionrights = req.session.consumptionrights;
+    }
+
+    if (typeof req.session.consumptionrightslastrefill != 'undefined') {
+        res.locals.consumptionrightslastrefill = req.session.consumptionrightslastrefill;
+    }
+
     if (typeof req.session.openPinId != 'undefined') {
         res.locals.openPinId = req.session.openPinId;
         req.session.openPinId = "";

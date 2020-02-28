@@ -5,6 +5,7 @@
 // Get required interfaces
 const caver = require('../utils/caver')
 const DisplayName = require('../utils/displayname')
+const ConsumptionRight = require('../utils/consumptionright')
 getPinTokensAround = require('../utils/get-pin-tokens-around')
 
 module.exports = async function(req, res, next) {
@@ -37,6 +38,23 @@ module.exports = async function(req, res, next) {
         } else {
           req.session.displayname = displayName.name;
           res.locals.displayname = displayName.name;
+        }
+      }
+
+      // Loads consumption rights or apply default
+      if (typeof req.session.consumptionrights == 'undefined') {
+        var consumptionRights = await ConsumptionRight.findOne({ address: req.session.address });
+        
+        if (!consumptionRights) {
+          req.session.consumptionrights = 5;
+          res.locals.consumptionrights = 5;
+          req.session.consumptionrightslastrefill = Math.round(Date.now() / 1000);
+          res.locals.consumptionrightslastrefill = Math.round(Date.now() / 1000);
+        } else {
+          req.session.consumptionrights = consumptionRights.rights;
+          res.locals.consumptionrights = consumptionRights.rights;
+          req.session.consumptionrightslastrefill = consumptionRights.lastRefillTimestamp;
+          res.locals.consumptionrightslastrefill = consumptionRights.lastRefillTimestamp;
         }
       }
 

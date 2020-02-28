@@ -20,6 +20,11 @@
 					</p>
 					<div class="spacer"></div>
 					<p>Click on map to create a new pin - <a href="https://cryptocarto.xyz/how-to/" target="_blank">Check how to use</a></p>
+					<p>Consumption rights:
+						<% if (typeof consumptionrights != 'undefined' && consumptionrights) { %><%= consumptionrights %><% } %>
+						- TS:
+						<% if (typeof consumptionrightslastrefill != 'undefined' && consumptionrightslastrefill) { %><%= consumptionrightslastrefill %><% } %>
+					</p>
 					<div id="user-keys">
 						<label for="address">Address: </label>
 						<input type="text" disabled="disabled" class="form-control" placeholder="..." name="address" id="address" 
