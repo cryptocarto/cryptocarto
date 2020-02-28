@@ -15,6 +15,8 @@ module.exports = async function(req, res, next) {
 
     // Formatting metadata
     tokenMetadata = {
+      'legacy': "This token metadata is legacy, please point to 'current_metadata_uri'",
+      'current_metadata_uri': "https://app.cryptocarto.xyz/metadata/pin-token/" + tokenData['tokenId'],
       'id': tokenData['tokenId'],
       'latitude': parseFloat(tokenData['latitude']) / 10000,
       'longitude': parseFloat(tokenData['longitude']) / 10000,
