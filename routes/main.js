@@ -42,20 +42,18 @@ module.exports = async function(req, res, next) {
       }
 
       // Loads consumption rights or apply default
-      if (typeof req.session.consumptionrights == 'undefined') {
-        var consumptionRights = await ConsumptionRight.findOne({ address: req.session.address });
-        
-        if (!consumptionRights) {
-          req.session.consumptionrights = 5;
-          res.locals.consumptionrights = 5;
-          req.session.consumptionrightslastrefill = Math.round(Date.now() / 1000);
-          res.locals.consumptionrightslastrefill = Math.round(Date.now() / 1000);
-        } else {
-          req.session.consumptionrights = consumptionRights.rights;
-          res.locals.consumptionrights = consumptionRights.rights;
-          req.session.consumptionrightslastrefill = consumptionRights.lastRefillTimestamp;
-          res.locals.consumptionrightslastrefill = consumptionRights.lastRefillTimestamp;
-        }
+      var consumptionRights = await ConsumptionRight.findOne({ address: req.session.address });
+      
+      if (!consumptionRights) {
+        req.session.consumptionrights = 5;
+        res.locals.consumptionrights = 5;
+        req.session.consumptionrightslastrefill = Math.round(Date.now() / 1000);
+        res.locals.consumptionrightslastrefill = Math.round(Date.now() / 1000);
+      } else {
+        req.session.consumptionrights = consumptionRights.rights;
+        res.locals.consumptionrights = consumptionRights.rights;
+        req.session.consumptionrightslastrefill = consumptionRights.lastRefillTimestamp;
+        res.locals.consumptionrightslastrefill = consumptionRights.lastRefillTimestamp;
       }
 
       // Get PinToken data from DB for current position

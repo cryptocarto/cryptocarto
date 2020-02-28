@@ -22,8 +22,14 @@
 					<p>Click on map to create a new pin - <a href="https://cryptocarto.xyz/how-to/" target="_blank">Check how to use</a></p>
 					<p>Consumption rights:
 						<% if (typeof consumptionrights != 'undefined' && consumptionrights) { %><%= consumptionrights %><% } %>
-						- TS:
-						<% if (typeof consumptionrightslastrefill != 'undefined' && consumptionrightslastrefill) { %><%= consumptionrightslastrefill %><% } %>
+						<% if (typeof consumptionrightslastrefill != 'undefined' && consumptionrightslastrefill) { %>
+							<% var timeBeforeRefill = new Date(new Date((parseInt(consumptionrightslastrefill) + 79200) * 1000) - new Date()); %>
+							<% if (timeBeforeRefill < 0) { %>
+								<b>(+5)<br/>(Free refill is available! Create a new token now!)</b>
+							<% } else { %>
+								<br/><i>(time remaining before free refill: <%= timeBeforeRefill.getUTCHours() + "h" + timeBeforeRefill.getUTCMinutes() + "m" %>)</i>
+							<% } %>
+						<% } %>
 					</p>
 					<div id="user-keys">
 						<label for="address">Address: </label>
