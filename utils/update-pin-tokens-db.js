@@ -29,12 +29,13 @@ module.exports = async function () {
                         const tokenSavePromises = Object.keys(result).map(async function (objectKey) {
                         var newPinToken = new PinToken({
                             tokenId : result[objectKey][0],
-                            owner: result[objectKey][1],
-                            latitude : result[objectKey][2],
-                            longitude : result[objectKey][3],
-                            message : result[objectKey][4],
-                            creationTimestamp : result[objectKey][5],
-                            modificationTimestamp : result[objectKey][6]
+                            creator : result[objectKey][1],
+                            owner: result[objectKey][2],
+                            latitude : result[objectKey][3],
+                            longitude : result[objectKey][4],
+                            message : result[objectKey][5],
+                            creationTimestamp : result[objectKey][6],
+                            modificationTimestamp : result[objectKey][7]
                         });
                         
                         // Saves if not existing

@@ -7,6 +7,7 @@ const db = require('./db')
 
 var pinTokenSchema = new db.Schema({
   tokenId : String,
+  creator: String,
   owner: String,
   latitude : Number,
   longitude : Number,

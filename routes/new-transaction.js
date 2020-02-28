@@ -79,12 +79,13 @@ module.exports = async function(req, res, next) {
         CryptoCartoContract.methods.getPinToken(newPinToken.tokenId).call().then(async function(tokenDataFromBC) {
             var newPinTokenFromBC = new PinToken({
               tokenId : tokenDataFromBC[0],
-              owner: tokenDataFromBC[1],
-              latitude : tokenDataFromBC[2],
-              longitude : tokenDataFromBC[3],
-              message : tokenDataFromBC[4],
-              creationTimestamp : tokenDataFromBC[5],
-              modificationTimestamp : tokenDataFromBC[6],
+              creator: tokenDataFromBC[1],
+              owner: tokenDataFromBC[2],
+              latitude : tokenDataFromBC[3],
+              longitude : tokenDataFromBC[4],
+              message : tokenDataFromBC[5],
+              creationTimestamp : tokenDataFromBC[6],
+              modificationTimestamp : tokenDataFromBC[7],
           });
           await PinToken.deleteMany({ tokenId: newPinToken.tokenId });
           await newPinTokenFromBC.save();

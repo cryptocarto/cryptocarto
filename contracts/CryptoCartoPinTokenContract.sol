@@ -178,16 +178,18 @@ contract CryptoCartoPinTokenContract is ERC721Full {
 
     // Retrieve a PinToken by ID
     function getPinToken(uint tokenId) public view
-    returns(uint256, address, int256, int256, string memory, uint256, uint256) {
+    returns(uint256, address, address, int256, int256, string memory, uint256, uint256) {
         require(_pinTokenList[tokenId].tokenId != 0, "PinToken doesnt exist");
+        PinToken memory pinToken = _pinTokenList[tokenId];
         return (
-            _pinTokenList[tokenId].tokenId,
-            _pinTokenList[tokenId].owner,
-            _pinTokenList[tokenId].latitude,
-            _pinTokenList[tokenId].longitude,
-            _pinTokenList[tokenId].message,
-            _pinTokenList[tokenId].creationTimestamp,
-            _pinTokenList[tokenId].modificationTimestamp);
+            pinToken.tokenId,
+            pinToken.creator,
+            pinToken.owner,
+            pinToken.latitude,
+            pinToken.longitude,
+            pinToken.message,
+            pinToken.creationTimestamp,
+            pinToken.modificationTimestamp);
     }
 
     // Retrieve remaining consumption rights by address
