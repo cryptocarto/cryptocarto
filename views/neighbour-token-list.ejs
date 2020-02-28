@@ -8,7 +8,7 @@
                 jQuery('#viewPinId').text($(this).children('.token-data').children('.global-pin-id').text());
                 loadPinTokens();" >
                 <% if (i < 40) { %>
-                    <img class="token-image" src="/token/<%= allTokensData[tokenIds[i]]['tokenId'] %>.png" />
+                    <img class="token-image" src="/img/pin-token/<%= allTokensData[tokenIds[i]]['tokenId'] %>.png" />
                 <% } else { %>
                     <img class="token-default-image" src="/leaflet/images/marker-icon-2x.png" />
                 <% } %>

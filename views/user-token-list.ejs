@@ -15,7 +15,7 @@
     
 <% for(var j=0; j < userTokenIds.length; j++) { %>
     <div class="user-token">
-        <img class="token-image" src="/token/<%= userTokensData[userTokenIds[j]]['tokenId'] %>.png" onclick="
+        <img class="token-image" src="/img/pin-token/<%= userTokensData[userTokenIds[j]]['tokenId'] %>.png" onclick="
             jQuery('#currentlat').text($(this).siblings('.token-data').children('.user-pin-lat').text());
             jQuery('#currentlng').text($(this).siblings('.token-data').children('.user-pin-lng').text());
             map.setView([$(this).siblings('.token-data').children('.user-pin-lat').text(), $(this).siblings('.token-data').children('.user-pin-lng').text()],16);
