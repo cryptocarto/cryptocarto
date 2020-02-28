@@ -14,8 +14,9 @@ router.post('/change-name', require('./change-name'));
 router.post('/transfer-pin', require('./transfer-pin'));
 router.get('/save-user-info', require('./save-user-info'));
 router.get('/token/:tokenaddress', require('./token-image-generation'));
+router.get('/metadata/pin-token/:tokenid', require('./token-metadata'));
 
-
+// Legacy routes
 router.get('/token-metadata/:tokenid', require('./token-metadata-legacy'));
 
 module.exports = router;
