@@ -62,13 +62,7 @@ contract CryptoCartoPinTokenContract is ERC721Full {
 
         // Creation of consumption rights record for address if not existing
         if (_consumptionRights[consummingAddress].lastRefillTimestamp == 0) {
-            ConsumptionRight memory newConsumptionRight = ConsumptionRight({
-                rights : _DAILY_CONSUMPTION_RIGHTS,
-                lastRefillTimestamp : now
-            });
-
-            _consumptionRights[consummingAddress] = newConsumptionRight;
-            _allKnownAddresses.push(consummingAddress);
+            _createConsumptionRightsForAddress(consummingAddress);
         }
 
         // Refill rights if no refill since at least 22h (1 day with 2h margin)
@@ -85,6 +79,20 @@ contract CryptoCartoPinTokenContract is ERC721Full {
 
         emit ConsumptionRightsChanged(consummingAddress, _consumptionRights[consummingAddress].rights,
                 _consumptionRights[consummingAddress].lastRefillTimestamp, now);
+    }
+
+    // Internal function to create new cunsumption rights for a given address
+    function _createConsumptionRightsForAddress(address newAddress) internal {
+
+        // Creation of consumption rights record for address if not existing
+        require(_consumptionRights[newAddress].lastRefillTimestamp == 0, "Need an unknown address to create consumption rights");
+        ConsumptionRight memory newConsumptionRight = ConsumptionRight({
+            rights : _DAILY_CONSUMPTION_RIGHTS,
+            lastRefillTimestamp : now
+        });
+
+        _consumptionRights[newAddress] = newConsumptionRight;
+        _allKnownAddresses.push(newAddress);
     }
 
     // Function to mint a new PinToken. Consumes a consumption right
@@ -225,6 +233,13 @@ contract CryptoCartoPinTokenContract is ERC721Full {
 
     // Admin function to add a given rights number for an address (does not reset refill timestamp)
     function addConsumptionRightsForAddress(address addressToRecharge, int256 numberOfRights) public _ownerOrAdminOnly {
+        require(numberOfRights > 0, "Need a positive number of rights");
+
+        // Creation of consumption rights record for address if not existing
+        if (_consumptionRights[addressToRecharge].lastRefillTimestamp == 0) {
+            _createConsumptionRightsForAddress(addressToRecharge);
+        }
+
         _consumptionRights[addressToRecharge].rights = _consumptionRights[addressToRecharge].rights + numberOfRights;
         emit ConsumptionRightsChanged(addressToRecharge, _consumptionRights[addressToRecharge].rights,
                 _consumptionRights[addressToRecharge].lastRefillTimestamp, now);
@@ -232,6 +247,7 @@ contract CryptoCartoPinTokenContract is ERC721Full {
 
     // Admin function to add a given rights number for all known addresses (does not reset refill timestamp)
     function addConsumptionRightsForAll(int256 numberOfRights) public _ownerOrAdminOnly {
+        require(numberOfRights > 0, "Need a positive number of rights");
         for (uint i = 0; i<_allKnownAddresses.length; i++) {
             _consumptionRights[_allKnownAddresses[i]].rights = _consumptionRights[_allKnownAddresses[i]].rights + numberOfRights;
             emit ConsumptionRightsChanged(_allKnownAddresses[i], _consumptionRights[_allKnownAddresses[i]].rights,

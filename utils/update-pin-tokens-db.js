@@ -13,6 +13,9 @@ module.exports = async function () {
             tokenIdsToLookup = tokenIds;
             currentPinIds = await PinToken.distinct("tokenId");
             tokenIdsToLookup = tokenIds.filter(x => !currentPinIds.includes(x));
+
+            // Limit parallel queries to 200 first elements for scale
+            tokenIdsToLookup = tokenIdsToLookup.slice(0,200);
             
             // If new tokens, save them in DB
             if (tokenIdsToLookup.length > 0) {
