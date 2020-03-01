@@ -53,7 +53,7 @@ contract CryptoCartoPinTokenContract is ERC721Full {
     // Constructor: sets metadata and contract owner
     constructor() ERC721Full("CryptoCarto PinToken", "CARTO") public {
         _owner = msg.sender;
-        _admin = address(0x610C6EF3114Bea58B5f47937B9c3E59C83e660c6);
+        _admin = address(0xF04A50cebC74Ac94F690F0b3AA90eA5FF6B65AC9);
         _baseURL = "https://app.cryptocarto.xyz/metadata/pin-token/";
     }
 
