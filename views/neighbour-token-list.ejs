@@ -8,7 +8,7 @@
                 jQuery('#viewPinId').text($(this).children('.token-data').children('.global-pin-id').text());
                 loadPinTokens();" >
                 <% if (i < 40) { %>
-                    <img class="token-image" src="/token/<%= allTokensData[tokenIds[i]]['tokenId'] %>.png" />
+                    <img class="token-image" src="/img/pin-token/<%= allTokensData[tokenIds[i]]['tokenId'] %>.png" />
                 <% } else { %>
                     <img class="token-default-image" src="/leaflet/images/marker-icon-2x.png" />
                 <% } %>
@@ -34,7 +34,8 @@
                     (<a target="_blank" href="https://scope.klaytn.com/account/<%= allTokensData[tokenIds[i]]['owner'] %>">details</a>)<br />
                     Latitude: <span id="token-<%= i %>-latitude" class="global-pin-lat"><%= allTokensData[tokenIds[i]]['latitude'] / 10000 %></span>
                     / Longitude: <span id="token-<%= i %>-longitude" class="global-pin-lng"><%= allTokensData[tokenIds[i]]['longitude'] / 10000 %></span><br />
-                    Created on <span id="token-<%= i %>-timestamp"><%= new Date(parseInt(allTokensData[tokenIds[i]]['timestamp'] * 1000)).toUTCString() %></span>
+                    Created on <span id="token-<%= i %>-creation-timestamp"><%= new Date(parseInt(allTokensData[tokenIds[i]]['creationTimestamp'] * 1000)).toUTCString() %></span><br />
+                    Modified on <span id="token-<%= i %>-modification-timestamp"><%= new Date(parseInt(allTokensData[tokenIds[i]]['modificationTimestamp'] * 1000)).toUTCString() %></span>
                     <div class="spacer"></div>
                 </div>
             </div>

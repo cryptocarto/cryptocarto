@@ -7,11 +7,13 @@ const db = require('./db')
 
 var pinTokenSchema = new db.Schema({
   tokenId : String,
+  creator: String,
   owner: String,
   latitude : Number,
   longitude : Number,
   message : String,
-  timestamp : String
+  creationTimestamp : String,
+  modificationTimestamp : String
 });
 
 var PinToken = db.model(process.env.PINTOKEN_COLLECTION_NAME, pinTokenSchema);

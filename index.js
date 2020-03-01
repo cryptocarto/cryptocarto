@@ -4,8 +4,9 @@ dotenv.config();
 var port = process.env.PORT || 4210;
 var app = express();
 
-// Get a PinToken DB interface
+// Get required DB interfaces
 var PinToken = require('./utils/pintoken')
+var ConsumptionRight = require('./utils/consumptionright')
 
 // Configure view engine to render EJS templates.
 app.set('views', __dirname + '/views');
@@ -61,9 +62,55 @@ setInterval(async function() {
           });
         } catch (error) { console.error("Error while crawling events.") }
       })
+      CryptoCartoContract.getPastEvents('ConsumptionRightsChanged', {
+        fromBlock: latestBlockNumber - 35, // Get events for last 35 blocks (30 for 30sec + margin)
+        toBlock: 'latest'}
+      , function(error, events){
+        try {
+          events.map(async function(event){
+            var address = event.returnValues.owner.toLowerCase();
+            var currentRights = await ConsumptionRight.findOne({ address: address });
+
+            if (!currentRights) {
+
+              //If no DB record, create one with received values and proceed
+              var newConsumptionRights = new ConsumptionRight({
+                address: address,
+                rights: event.returnValues.newConsumptionRights,
+                lastRefillTimestamp: event.returnValues.lastRefillTimestamp,
+                lastChangeTimestamp: event.returnValues.eventTimestamp
+              });
+              await newConsumptionRights.save();
+
+              console.log("Consumption right for address " + address + " created: " 
+                + event.returnValues.newConsumptionRights + " (with TS: " + event.returnValues.lastRefillTimestamp + ") ");
+
+            } else if (currentRights.lastChangeTimestamp < event.returnValues.eventTimestamp) {
+
+              //If the event is more recent than last change, update DB
+              await ConsumptionRight.updateMany({ address: address }, { $set: {
+                rights: event.returnValues.newConsumptionRights,
+                lastRefillTimestamp: event.returnValues.lastRefillTimestamp,
+                lastChangeTimestamp: event.returnValues.eventTimestamp,
+              }});
+
+              console.log("Consumption right for address " + address + " changed to " 
+                + event.returnValues.newConsumptionRights + " (new TS: " + event.returnValues.lastRefillTimestamp + ") ");
+
+            } else if (currentRights.lastChangeTimestamp == event.returnValues.eventTimestamp) {
+              //In this case, state is unknown: reload data from BC
+              //TODO: reload from BC
+              console.log("Consumption right for address " + address + " reloaded from blockchain (TODO)");
+            } else {
+              console.log("Consumption right for address " + address + " unchanged, old event received (TS: " + event.returnValues.eventTimestamp +
+              ") - event values are " + event.returnValues.newConsumptionRights + " (new TS: " + event.returnValues.lastRefillTimestamp + ") ");
+            }
+          });
+        } catch (error) { console.error("Error while crawling events.") }
+      })
     })
     updatePinTokensDB();
-  } catch (error) { console.error("Error while watching ERC-20 transfers.") }
+  } catch (error) { console.error("Error while watching ERC-721 transfers") }
   // Getting pin data
 }, 30000); // 30sec
 

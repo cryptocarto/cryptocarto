@@ -15,17 +15,13 @@ module.exports = async function(req, res, next) {
 
     // Formatting metadata
     tokenMetadata = {
-      "description": "CryptoCarto PinToken #" + tokenData['tokenId'],
-      "name": "#" + tokenData['tokenId'],
-      "image": "https://app.cryptocarto.xyz/img/pin-token/" + tokenData['tokenId'],
-      'token_id': tokenData['tokenId'],
-      'creator': tokenData['creator'],
-      'owner': tokenData['owner'],
+      'legacy': "This token metadata is legacy, please point to 'current_metadata_uri'",
+      'current_metadata_uri': "https://app.cryptocarto.xyz/metadata/pin-token/" + tokenData['tokenId'],
+      'id': tokenData['tokenId'],
       'latitude': parseFloat(tokenData['latitude']) / 10000,
       'longitude': parseFloat(tokenData['longitude']) / 10000,
       'message': tokenData['message'],
-      'created_at_utc_timestamp': tokenData['creation_timestamp'],
-      'modified_at_utc_timestamp': tokenData['modification_timestamp']
+      'created_at_utc_timestamp': tokenData['timestamp']
     };
     
     // Render view

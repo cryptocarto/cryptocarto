@@ -3,5 +3,6 @@
 /dist
 .env
 /token-images/*.png
+/img/pin-token/*.png
 pinIdsList.json
 pinDataList.json

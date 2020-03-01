@@ -6,6 +6,7 @@
 const caver = require('../utils/caver')
 const CryptoCartoContract = require('../utils/cryptocarto-contract')
 const PinToken = require('../utils/pintoken')
+updateConsumptionRights = require('../utils/update-consumption-rights')
 
 module.exports = async function(req, res, next) {
   try {
@@ -45,19 +46,23 @@ module.exports = async function(req, res, next) {
     newTokenId = (idFormattedLatitude * 100000000) + idFormattedLongitude;
     
     // Create token in DB (before blockchain confirm, will be erased if needed)
+    var currentTimestamp = Math.round(Date.now() / 1000);
     var newPinToken = new PinToken({
         tokenId : newTokenId,
         owner: req.session.address,
         latitude : latitude,
         longitude : longitude,
         message : message,
-        timestamp : Math.round(Date.now() / 1000)
+        creationTimestamp : currentTimestamp,
+        modificationTimestamp : currentTimestamp,
     });
     
     // Saves if not existing
     if (!await PinToken.countDocuments({ tokenId: newPinToken.tokenId })) {
+      // Decreases consumption rights
+      await updateConsumptionRights(req, -1);
       await newPinToken.save();
-      console.log("PinToken #" + newPinToken.tokenId + " saved to DB (temporary timestamp: " + newPinToken.timestamp + ").")
+      console.log("PinToken #" + newPinToken.tokenId + " saved to DB (temporary timestamp: " + newPinToken.creationTimestamp + ").")
     } else {
       throw new Error("Token #" + newPinToken.tokenId + " already exists.")
     };
@@ -77,21 +82,25 @@ module.exports = async function(req, res, next) {
         CryptoCartoContract.methods.getPinToken(newPinToken.tokenId).call().then(async function(tokenDataFromBC) {
             var newPinTokenFromBC = new PinToken({
               tokenId : tokenDataFromBC[0],
-              owner: tokenDataFromBC[1],
-              latitude : tokenDataFromBC[2],
-              longitude : tokenDataFromBC[3],
-              message : tokenDataFromBC[4],
-              timestamp : tokenDataFromBC[5]
+              creator: tokenDataFromBC[1],
+              owner: tokenDataFromBC[2],
+              latitude : tokenDataFromBC[3],
+              longitude : tokenDataFromBC[4],
+              message : tokenDataFromBC[5],
+              creationTimestamp : tokenDataFromBC[6],
+              modificationTimestamp : tokenDataFromBC[7],
           });
           await PinToken.deleteMany({ tokenId: newPinToken.tokenId });
           await newPinTokenFromBC.save();
-          console.log("PinToken #" + newPinToken.tokenId + " swapped with blockchain values in DB (new timestamp: " + newPinTokenFromBC.timestamp + ").")
+          console.log("PinToken #" + newPinToken.tokenId + " swapped with blockchain values in DB (new timestamp: " + newPinTokenFromBC.creationTimestamp + ").")
         });
     })
-    .on('error', function(error){
+    .on('error', async function(error){
       // On error, delete the pin in DB and log
-      PinToken.deleteMany({ tokenId: newPinToken.tokenId });
-      console.error(error);
+      await PinToken.deleteMany({ tokenId: newPinToken.tokenId });
+      // Increases consumption rights
+      await updateConsumptionRights(req, 1);
+      console.error("Error on creation transaction for token #" + newPinToken.tokenId + ": temp token in DB deleted.");
     });
 
     req.session.generalMessage = 'Token #' + newPinToken.tokenId + ' created.';

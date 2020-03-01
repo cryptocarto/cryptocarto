@@ -20,6 +20,17 @@
 					</p>
 					<div class="spacer"></div>
 					<p>Click on map to create a new pin - <a href="https://cryptocarto.xyz/how-to/" target="_blank">Check how to use</a></p>
+					<p>Consumption rights:
+						<% if (typeof consumptionrights != 'undefined' && consumptionrights) { %><%= consumptionrights %><% } %>
+						<% if (typeof consumptionrightslastrefill != 'undefined' && consumptionrightslastrefill) { %>
+							<% var timeBeforeRefill = new Date(new Date((parseInt(consumptionrightslastrefill) + 79200) * 1000) - new Date()); %>
+							<% if (timeBeforeRefill < 0) { %>
+								<b>(+5)<br/>(Free refill is available! Create a new token now!)</b>
+							<% } else { %>
+								<br/><i>(time remaining before free refill: <%= timeBeforeRefill.getUTCHours() + "h" + timeBeforeRefill.getUTCMinutes() + "m" %>)</i>
+							<% } %>
+						<% } %>
+					</p>
 					<div id="user-keys">
 						<label for="address">Address: </label>
 						<input type="text" disabled="disabled" class="form-control" placeholder="..." name="address" id="address" 
@@ -59,8 +70,8 @@
 						</form>
 					</div>
 
-					CryptoCarto 2020 - Contract <a target="_blank" href="https://scope.klaytn.com/account/0xf4bc8ccb22e3c1466df53bbd2dc94c03ec4c300f">0xf4bc...300f</a>
-					(rev <a target="_blank" href="https://github.com/cryptocarto/cryptocarto/commit/b44181a10ff670e52958819965fae861c5abe66a">b44181a</a>)
+					CryptoCarto 2020 - Contract <a target="_blank" href="https://scope.klaytn.com/account/0xe3656452c8238334efdfc811d6f98e5962fe4461">0xe365...4461</a>
+					(rev <a target="_blank" href="https://github.com/cryptocarto/cryptocarto/blob/8de892dd04f0349d5296bb4520b7b45a9f78a90a/contracts/CryptoCartoPinTokenContract.sol">8de892d</a>)
 
 				</div>
 			</div>

@@ -53,7 +53,7 @@ module.exports = async function (latitude, longitude, userAddress) {
     })
 
     // Get tokens for this specific user
-    var userTokensDataFromDB = await PinToken.find({ owner: { '$regex': new RegExp(userAddress,"i")} }).sort({timestamp:-1});
+    var userTokensDataFromDB = await PinToken.find({ owner: { '$regex': new RegExp(userAddress,"i")} }).sort({modificationTimestamp:-1});
     var userTokenIds = new Array;
     var userTokensData = new Object;
 

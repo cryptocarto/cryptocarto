@@ -16,6 +16,8 @@ module.exports = async function(req, res, next) {
     req.session.address = retrievedAccount.address;
     req.session.privatekey = retrievedAccount.privateKey;
     req.session.displayname = undefined;
+    req.session.consumptionrights = undefined;
+    req.session.consumptionrightslastrefill = undefined;
 
     req.session.generalMessage = 'Account with address ' + retrievedAccount.address.substring(0,10) + '... was succesfully retrieved.';
     res.redirect('/');

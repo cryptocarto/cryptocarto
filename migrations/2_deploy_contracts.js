@@ -1,4 +1,4 @@
-const CryptoCarto = artifacts.require('./CryptoCarto.sol')
+const CryptoCarto = artifacts.require('./CryptoCartoPinTokenContract.sol')
 const fs = require('fs')
 
 module.exports = function (deployer) {
