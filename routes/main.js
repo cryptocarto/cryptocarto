@@ -42,7 +42,7 @@ module.exports = async function(req, res, next) {
       }
 
       // Loads consumption rights or apply default
-      var consumptionRights = await ConsumptionRight.findOne({ address: req.session.address });
+      var consumptionRights = await ConsumptionRight.findOne({ address: req.session.address.toLowerCase() });
       
       if (!consumptionRights) {
         req.session.consumptionrights = 5;
