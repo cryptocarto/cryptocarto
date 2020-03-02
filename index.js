@@ -57,11 +57,25 @@ setInterval(async function() {
           // Updating owner for token
           events.forEach(event => {
             tokenIdToRemove = event.returnValues.tokenId;
-            console.log("Updating token ID #" + event.returnValues.tokenId);
+            console.log("Updating token ID #" + event.returnValues.tokenId + " (transfer detected)");
             PinToken.updateMany({ tokenId: event.returnValues.tokenId }, { $set: { owner: event.returnValues.to } })
           });
         } catch (error) { console.error("Error while crawling events.") }
       })
+
+      CryptoCartoContract.getPastEvents('PinTokenModified', {
+        fromBlock: latestBlockNumber - 35, // Get events for last 35 blocks (30 for 30sec + margin)
+        toBlock: 'latest'}
+      , function(error, events){
+        try {
+          // Updating message and modification date for token
+          events.forEach(event => {
+            console.log("Updating token ID #" + event.returnValues.tokenId + " (message updated)");
+            PinToken.updateMany({ tokenId: event.returnValues.tokenId }, { $set: { message: event.returnValues.message, modificationTimestamp: event.returnValues.timestamp } })
+          });
+        } catch (error) { console.error("Error while crawling events.") }
+      })
+
       CryptoCartoContract.getPastEvents('ConsumptionRightsChanged', {
         fromBlock: latestBlockNumber - 35, // Get events for last 35 blocks (30 for 30sec + margin)
         toBlock: 'latest'}
