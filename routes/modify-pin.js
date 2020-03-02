@@ -15,6 +15,12 @@ module.exports = async function(req, res, next) {
     const newMessage  = req.body.modifiedmessage;
     const tokenId     = req.body.tokenidtomodify;
 
+    if (newMessage.length >= 200) {
+      req.session.generalMessage = 'Message must be less than 200 characters';
+      res.redirect('/');
+      return;
+    }
+
     // sign transaction
     const { rawTransaction: senderRawTransaction } = await caver.klay.accounts.signTransaction({
       type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',

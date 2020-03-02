@@ -22,7 +22,13 @@ module.exports = async function(req, res, next) {
 
     if (!latitudeReq || !longitudeReq) {
       req.session.generalMessage = 'Lat/lon out of bounds';
-      res.redirect('/new-transaction');
+      res.redirect('/');
+      return;
+    }
+
+    if (message.length >= 200) {
+      req.session.generalMessage = 'Message must be less than 200 chars';
+      res.redirect('/');
       return;
     }
 
