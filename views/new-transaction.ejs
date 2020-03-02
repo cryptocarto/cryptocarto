@@ -1,20 +1,28 @@
 <div class="new-transaction">
       <h2>Claim this space as a token</h2>
       <div>
-      <form class="new-transaction-form" action="/new-transaction" method="post">
-            <label for="message">Message:</label><br />
-            <textarea class="form-control message" name="message" rows="3" placeholder="Message" required="true"></textarea>
-            <br />
-            <div class="coordinates-form">
-                  <label for="message">Latitude (4 decimals - click on map to fill):</label><br />
-                  <input type="text" class="form-control latitude" placeholder="Latitude" name="latitude" required="true" />
+      <% var notEnoughRights = !((consumptionrights > 0)  || ((new Date(new Date((parseInt(consumptionrightslastrefill) + 79200) * 1000) - new Date())) < 0)); %>
+
+      <% if (notEnoughRights) { %>
+            <p>You don't have enough rights to create a new token (see "General Info" in bottom left area).</p>
+            <p>A free refill is available every 22h!</p>
+      <% } else { %>
+            <form class="new-transaction-form" action="/new-transaction" method="post">
+                  <label for="message">Message:</label><br />
+                  <textarea class="form-control message" name="message" rows="3" placeholder="Message" required="true"></textarea>
                   <br />
-                  <label for="message">Longitude (4 decimals - click on map to fill):</label><br />
-                  <input type="text" class="form-control longitude" placeholder="Longitude" name="longitude" required="true" />
-                  <br />
-            </div>
-            <br /><button type="submit" class="submit-transaction" onclick="checkTransactionForm();">Claim token</button>
-            <span class="loader"><br /><img src="/img/loader.gif" /> creating token...</span>
-      </form>
+                  <div class="coordinates-form">
+                        <label for="message">Latitude (4 decimals - click on map to fill):</label><br />
+                        <input type="text" class="form-control latitude" placeholder="Latitude" name="latitude" required="true" />
+                        <br />
+                        <label for="message">Longitude (4 decimals - click on map to fill):</label><br />
+                        <input type="text" class="form-control longitude" placeholder="Longitude" name="longitude" required="true" />
+                        <br />
+                  </div>
+            
+                  <br /><button type="submit" class="submit-transaction" onclick="checkTransactionForm();">Claim token</button>
+                  <span class="loader"><br /><img src="/img/loader.gif" /> creating token...</span>
+            </form>
+      <% } %>
       </div>
 </div>

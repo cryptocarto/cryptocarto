@@ -21,7 +21,7 @@
 					<div class="spacer"></div>
 					<p>Click on map to create a new pin - <a href="https://cryptocarto.xyz/how-to/" target="_blank">Check how to use</a></p>
 					<p>Consumption rights:
-						<% if (typeof consumptionrights != 'undefined' && consumptionrights) { %><%= consumptionrights %><% } %>
+						<% if (typeof consumptionrights != 'undefined') { %><%= consumptionrights %><% } %>
 						<% if (typeof consumptionrightslastrefill != 'undefined' && consumptionrightslastrefill) { %>
 							<% var timeBeforeRefill = new Date(new Date((parseInt(consumptionrightslastrefill) + 79200) * 1000) - new Date()); %>
 							<% if (timeBeforeRefill < 0) { %>
