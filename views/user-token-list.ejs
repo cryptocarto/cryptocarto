@@ -24,12 +24,22 @@
         
         <p class="token-info">
             <b><%= userTokensData[userTokenIds[j]]['message'].substring(0,50) %><% if (userTokensData[userTokenIds[j]]['message'].length > 50) { %>...<% } %></b><br/>
-            <a class="transfer-link" onclick="
-                jQuery('#viewPinId').text($(this).parent().siblings('.token-data').children('.user-pin-id').text());
-                jQuery('#viewPinId').addClass('transfer')
-                map.setView([$(this).parent().siblings('.token-data').children('.user-pin-lat').text(), $(this).parent().siblings('.token-data').children('.user-pin-lng').text()],16);
-            ">
-            Transfer</a>
+            <% if (notEnoughRights) { %>
+                <span class="unavailable" title="Not enough rights to transfer/update a token">Transfer / Modify</span>
+            <% } else { %>
+                <a class="transfer-link" onclick="
+                    jQuery('#viewPinId').text($(this).parent().siblings('.token-data').children('.user-pin-id').text());
+                    jQuery('#viewPinId').addClass('transfer')
+                    map.setView([$(this).parent().siblings('.token-data').children('.user-pin-lat').text(), $(this).parent().siblings('.token-data').children('.user-pin-lng').text()],16);
+                ">
+                Transfer</a> / 
+                <a class="modify-link" onclick="
+                    jQuery('#viewPinId').text($(this).parent().siblings('.token-data').children('.user-pin-id').text());
+                    jQuery('#viewPinId').addClass('modify')
+                    map.setView([$(this).parent().siblings('.token-data').children('.user-pin-lat').text(), $(this).parent().siblings('.token-data').children('.user-pin-lng').text()],16);
+                ">
+                Modify</a>
+            <% } %>
         </p>
         <div class="token-data">
             <b><%= userTokensData[userTokenIds[j]]['message'] %></b><br/>

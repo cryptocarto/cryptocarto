@@ -49,11 +49,20 @@
                             '</div>' +
                             '<div class="transfer-pin" id="transfer-pin-' + jQuery('#token-'+i+'-id').text() + '">' +
                                 '<form class="transfer-pin-form" action="/transfer-pin" method="post">' +
-                                    '<br /><label for="transferaddress">Transfer token to address:</label><br />' +
+                                    '<br /><label for="transferaddress">Transfer token to address:</label><br />(uses 1 consumption right)<br />' +
                                     '<input type="text" class="form-control transferaddress" placeholder="0x..." name="transferaddress" required="true" />' +
                                     '<input type="hidden" class="form-control tokenidtotransfer" placeholder="id" name="tokenidtotransfer" required="true" value="' + jQuery('#token-'+i+'-id').text() + '"/>' +
                                     '<br /><button type="submit" class="submit-transfer" onclick="checkTransferForm();">Transfer token</button>' +
-                                    '<span class="loader"><br /><img src="/img/loader.gif" /> creating token...</span>' +
+                                    '<span class="loader"><br /><img src="/img/loader.gif" /> transferring token...</span>' +
+                                '</form>' +
+                            '</div>' +
+                            '<div class="modify-pin" id="modify-pin-' + jQuery('#token-'+i+'-id').text() + '">' +
+                                '<form class="modify-pin-form" action="/modify-pin" method="post">' +
+                                    '<br /><label for="modifiedmessage">New message for this token:</label><br />(uses 1 consumption right)<br />' +
+                                    '<input type="text" class="form-control modifiedmessage" value="' + jQuery('#token-'+i+'-message').text() + '" name="modifiedmessage" required="true" />' +
+                                    '<input type="hidden" class="form-control tokenidtomodify" placeholder="id" name="tokenidtomodify" required="true" value="' + jQuery('#token-'+i+'-id').text() + '"/>' +
+                                    '<br /><button type="submit" class="submit-modify" onclick="checkModifyForm();">Modify token</button>' +
+                                    '<span class="loader"><br /><img src="/img/loader.gif" /> modifying token...</span>' +
                                 '</form>' +
                             '</div>' +
                         '</div>';
@@ -128,6 +137,10 @@
                     $('#transfer-pin-'+ jQuery('#viewPinId').text()).slideDown();
                     jQuery('#viewPinId').removeClass('transfer');
                 }
+                if (jQuery('#viewPinId').hasClass('modify')){
+                    $('#modify-pin-'+ jQuery('#viewPinId').text()).slideDown();
+                    jQuery('#viewPinId').removeClass('modify');
+                }
                 jQuery('#viewPinId').text("");
             }
         }
@@ -148,6 +161,15 @@
         if ($('.leaflet-popup').find(".transfer-pin-form").valid()) {
             $('.leaflet-popup').find(".transfer-pin-form").submit();
             $('.leaflet-popup').find(".submit-transfer").attr('disabled', true);
+            $('.leaflet-popup').find('.loader').show();
+        }
+    };
+
+    // Modification form validator
+    checkModifyForm = function() {
+        if ($('.leaflet-popup').find(".modify-pin-form").valid()) {
+            $('.leaflet-popup').find(".modify-pin-form").submit();
+            $('.leaflet-popup').find(".submit-modify").attr('disabled', true);
             $('.leaflet-popup').find('.loader').show();
         }
     };

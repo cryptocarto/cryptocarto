@@ -49,11 +49,23 @@ module.exports = async function(req, res, next) {
         res.locals.consumptionrights = 5;
         req.session.consumptionrightslastrefill = Math.round(Date.now() / 1000);
         res.locals.consumptionrightslastrefill = Math.round(Date.now() / 1000);
+        req.session.notEnoughRights = false;
+        res.locals.notEnoughRights = false;
+
       } else {
         req.session.consumptionrights = consumptionRights.rights;
         res.locals.consumptionrights = consumptionRights.rights;
         req.session.consumptionrightslastrefill = consumptionRights.lastRefillTimestamp;
         res.locals.consumptionrightslastrefill = consumptionRights.lastRefillTimestamp;
+
+        // Check if has consumption rights
+        timestampTimeRemaining = new Date((parseInt(consumptionRights.lastRefillTimestamp) + 79200) * 1000).getTime();
+        timestampCurrent = new Date().getTime();
+        timestampTimeBeforeNextRefill = new Date(timestampTimeRemaining - timestampCurrent).getTime();
+        hasEnoughRights = (consumptionRights.rights > 0) || ((timestampTimeBeforeNextRefill) < 0);
+  
+        req.session.notEnoughRights = !hasEnoughRights;
+        res.locals.notEnoughRights = !hasEnoughRights;
       }
 
       // Get PinToken data from DB for current position

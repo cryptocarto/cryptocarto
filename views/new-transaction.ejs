@@ -1,8 +1,7 @@
 <div class="new-transaction">
       <h2>Claim this space as a token</h2>
       <div>
-      <% var notEnoughRights = !((consumptionrights > 0)  || ((new Date(new Date((parseInt(consumptionrightslastrefill) + 79200) * 1000) - new Date())) < 0)); %>
-
+      
       <% if (notEnoughRights) { %>
             <p>You don't have enough rights to create a new token (see "General Info" in bottom left area).</p>
             <p>A free refill is available every 22h!</p>

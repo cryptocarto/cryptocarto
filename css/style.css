@@ -7,15 +7,19 @@ a{color:#00961e}
 .new-transaction-form input {width:100%;}
 .new-transaction-form textarea {width:90%;}
 .transfer-pin-form input {width:90%;}
+.modify-pin-form input {width:90%;}
 .spacer{clear:both}
 .token-message{font-size: 18px}
 .metadata{display:none}
 .share-pin{display:none}
 .transfer-pin{display:none}
+.modify-pin{display:none}
 .transfer-link{cursor:pointer;text-decoration:underline}
+.modify-link{cursor:pointer;text-decoration:underline}
 .share-pin textarea {position: absolute; left:-9999px;}
 #copied-message-conf {display: none;}
 .maptiler-geocoder-results {z-index: 10000 !important;}
+.unavailable{text-decoration: line-through;}
 
 p {margin: 0 0 10px 0;}
 

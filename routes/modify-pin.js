@@ -1,5 +1,5 @@
 /*
-* Transfers a pin token to a new user
+* Modify a pin token message
 */
 
 // Get required interfaces
@@ -12,8 +12,8 @@ updateConsumptionRightsFromBlockchain = require('../utils/update-consumption-rig
 module.exports = async function(req, res, next) {
   try {
 
-    const newAddress  = req.body.transferaddress;
-    const tokenId     = req.body.tokenidtotransfer;
+    const newMessage  = req.body.modifiedmessage;
+    const tokenId     = req.body.tokenidtomodify;
 
     // sign transaction
     const { rawTransaction: senderRawTransaction } = await caver.klay.accounts.signTransaction({
@@ -21,13 +21,13 @@ module.exports = async function(req, res, next) {
       from: req.session.address,
       to: process.env.SMART_CONTRACT_ADDRESS, //Contract on mainnet
       gas: '50000000',
-      data: CryptoCartoContract.methods.transferFrom(req.session.address, newAddress, tokenId).encodeABI(),
+      data: CryptoCartoContract.methods.updatePinToken(tokenId, newMessage).encodeABI(),
       value: caver.utils.toPeb('0', 'KLAY'),
     }, req.session.privatekey);
-    
+
     // Uses 1 consumption right
     await updateConsumptionRights(req, -1);
-
+    
     // Send transaction through fee delegation
     await caver.klay.sendTransaction({
       senderRawTransaction: senderRawTransaction,
@@ -46,11 +46,11 @@ module.exports = async function(req, res, next) {
         await updateConsumptionRightsFromBlockchain(req.session.address);
     });
 
-    req.session.generalMessage = 'Token #' + tokenId + ' was transferred to ' + newAddress;
+    req.session.generalMessage = 'Message of Token #' + tokenId + ' changed to ' + newMessage;
 
     // Updating token owner
     console.log("Updating token ID #" + tokenId);
-    await PinToken.updateMany({ tokenId: tokenId }, { $set: { owner: newAddress } })
+    await PinToken.updateMany({ tokenId: tokenId }, { $set: { message: newMessage, modificationTimestamp: Math.round(Date.now() / 1000) } })
 
     res.redirect('/');
 

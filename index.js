@@ -99,8 +99,9 @@ setInterval(async function() {
 
             } else if (currentRights.lastChangeTimestamp == event.returnValues.eventTimestamp) {
               //In this case, state is unknown: reload data from BC
-              //TODO: reload from BC
-              console.log("Consumption right for address " + address + " reloaded from blockchain (TODO)");
+              updateConsumptionRightsFromBlockchain = require('./utils/update-consumption-rights-from-blockchain')
+              updateConsumptionRightsFromBlockchain(address);
+              console.log("Consumption right for address " + address + " reloading from blockchain");
             } else {
               console.log("Consumption right for address " + address + " unchanged, old event received (TS: " + event.returnValues.eventTimestamp +
               ") - event values are " + event.returnValues.newConsumptionRights + " (new TS: " + event.returnValues.lastRefillTimestamp + ") ");
