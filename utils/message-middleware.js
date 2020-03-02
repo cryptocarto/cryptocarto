@@ -28,6 +28,10 @@ module.exports = function (req, res, next) {
         res.locals.displayname = req.session.displayname;
     }
 
+    if (typeof req.session.userlevel != 'undefined') {
+        res.locals.userlevel = req.session.userlevel;
+    }
+
     if (typeof req.session.consumptionrights != 'undefined') {
         res.locals.consumptionrights = req.session.consumptionrights;
     }

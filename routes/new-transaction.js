@@ -50,6 +50,7 @@ module.exports = async function(req, res, next) {
     var currentTimestamp = Math.round(Date.now() / 1000);
     var newPinToken = new PinToken({
         tokenId : newTokenId,
+        creator: req.session.address,
         owner: req.session.address,
         latitude : latitude,
         longitude : longitude,

@@ -7,6 +7,7 @@ const caver = require('../utils/caver')
 const DisplayName = require('../utils/displayname')
 const ConsumptionRight = require('../utils/consumptionright')
 getPinTokensAround = require('../utils/get-pin-tokens-around')
+getUserLevel = require('../utils/get-user-level')
 
 module.exports = async function(req, res, next) {
     try {
@@ -40,6 +41,11 @@ module.exports = async function(req, res, next) {
           res.locals.displayname = displayName.name;
         }
       }
+
+      // Get user level
+      var userLevel = await getUserLevel(req.session.address);
+      req.session.userlevel = userLevel;
+      res.locals.userlevel = userLevel;
 
       // Loads consumption rights or apply default
       var consumptionRights = await ConsumptionRight.findOne({ address: req.session.address.toLowerCase() });
