@@ -10,6 +10,7 @@ router.get('/', require('./main'));
 router.post('/get-pin-tokens', require('./get-pin-tokens'));
 router.post('/new-transaction', require('./new-transaction'));
 router.post('/import-pk', require('./import-pk'));
+router.get('/wipe-key', require('./wipe-key'));
 router.post('/change-name', require('./change-name'));
 router.post('/transfer-pin', require('./transfer-pin'));
 router.post('/modify-pin', require('./modify-pin'));
