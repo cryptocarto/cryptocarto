@@ -22,6 +22,7 @@
   "homepage": "https://github.com/cryptocarto/cryptocarto#readme",
   "dependencies": {
     "caver-js": "^1.2.0",
+    "connect-mongo": "^3.2.0",
     "cookie-parser": "^1.4.4",
     "dotenv": "^8.2.0",
     "dynamic-watermark": "^1.0.0",
