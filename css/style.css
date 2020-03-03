@@ -285,3 +285,40 @@ input, textarea {
     margin: 2px;
     border-radius: 3px;
 }
+
+.welcome {
+    position: absolute;
+    width:100%;
+    height:100%;
+    z-index: 11000;
+}
+
+.welcome-information {
+    position: absolute;
+    top:50%;
+    left:50%;
+    width:80%;
+    height:80vh;
+    margin-left:-42%;
+    margin-top:-42vh;
+    z-index: 12000;
+    background-color: #333;
+    opacity: 0.9;
+    border: solid 1px #fff;
+    padding: 1%;
+    text-align: center;
+    overflow-y: scroll;
+}
+
+.new-user-guide, .returning-user-guide {
+    display: none;
+}
+
+#close-welcome-information {
+    position: absolute;
+    top:0%;
+    left:100%;
+    margin-left:-28px;
+    width: 24px;
+    height: 26px;
+}

@@ -1,0 +1,59 @@
+<% if (typeof welcome != 'undefined' && welcome) { %>
+
+<div class="welcome">
+      <div class="welcome-information">
+            
+            <button id="close-welcome-information" type="button" onclick="$('.welcome').hide();">&#10006;</button>
+
+            <h2>Welcome to CryptoCarto!</h2>
+
+            <div class="choose-new-or-returning">
+                  <p>Is it your first visit ?</p>
+                  <button type="button" onclick="$('.choose-new-or-returning').hide();$('.new-user-guide').show();">Start with a new account</button>
+
+                  <br /><br /><br />
+
+                  <p>Or are you coming back ?<br />(and have access to your user info)</p>
+                  <button type="button" onclick="$('.choose-new-or-returning').hide();$('.returning-user-guide').show();">Load an account</button>
+            </div>
+
+            <div class="new-user-guide">
+                  <p>Welcome! Your new address is:</p>
+                  <p><b><%= address %></b></p>
+                  <p>
+                        You need to save your user details to be able to restore your account. 
+                        <br />Let's do it now! Use the following button to download it:
+                        <br /><br /><button onclick="window.location.href = '/save-user-info';">Save user info to disk</button>
+
+                        <br /><br />You can access all your user data in the bottom right panel "General Info".
+                        <br /><br />Let's start! You can check out <a href="https://cryptocarto.xyz/how-to/" target="_blank">a tutorial here</a>
+                        <br />or click anywhere on the map to reserve your first space!
+                        
+                        <br /><br /><button type="button" onclick="$('.welcome').hide();">Let's go!</button>
+
+                  </p>
+            </div>
+
+            <div class="returning-user-guide">
+
+                  <p>Welcome back! Please type-in your private key saved from your previous visit:</p>
+
+                  <form class="import-pk-form" action="/import-pk" method="post">
+                        <label for="privatekey">PrivateKey to import: </label>
+                        <input type="password" autocomplete="off" required="true" class="form-control" placeholder="0x..." name="newprivatekey" />
+                        <br /><button type="submit">Import this private key</button>
+                        <button type="button" onclick="$('.returning-user-guide').hide();$('.choose-new-or-returning').show();">Cancel</button>
+                  </form>
+
+                  <br />
+
+                  <p>
+                        If you saved your user info file last time, the Private Key looks like this:<br /><br />
+                        <img src="/img/private-key-file-example.png" style="height:200px;"/>
+                  </p>
+            </div>
+
+      </div>
+</div>
+
+<% } %>

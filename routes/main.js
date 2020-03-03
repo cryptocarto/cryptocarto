@@ -19,6 +19,9 @@ module.exports = async function(req, res, next) {
         res.locals.address = newAccount.address;
         req.session.privatekey = newAccount.privateKey;
         res.locals.privatekey = newAccount.privateKey;
+        res.locals.welcome = true;
+      } else {
+        res.locals.welcome = false;
       }
   
       // Default position of the map, Paris if not existing
