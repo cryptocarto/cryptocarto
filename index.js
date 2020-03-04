@@ -25,11 +25,21 @@ app.use('/js', express.static(__dirname + '/node_modules/jquery-validation/dist/
 app.use('/token', express.static(__dirname + '/token-images')); // redirect token images
 app.use(require('cookie-parser')());
 app.use(require('body-parser').urlencoded({ extended: true }));
+
+if (process.env.ENVIRONMENT != 'dev') {
+  app.set('trust proxy', 1); // Trusts 1 proxy for secure HHTPS cookiein production
+};
+
 app.use(session({ 
   secret: process.env.SESSION_SECRET, 
   resave: false, 
   saveUninitialized: false, 
-  store: new MongoStore({ mongooseConnection: db.connection, secret: process.env.SESSION_SECRET }) 
+  store: new MongoStore({ mongooseConnection: db.connection, secret: process.env.SESSION_SECRET }),
+  rolling: true,
+  cookie: { 
+    secure: (process.env.ENVIRONMENT != 'dev'), // Use a secure HTTPS-only cookie if not in dev
+    maxAge: 1209600000 // 2 weeks duration
+  }
 }));
 
 // Redirect to HTTPS
