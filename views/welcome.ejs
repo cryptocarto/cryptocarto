@@ -26,7 +26,16 @@
                         <br /><br /><button onclick="window.location.href = '/save-user-info';">Save user info to disk</button>
 
                         <br /><br />You can access all your user data in the bottom right panel "General Info".
-                        <br /><br />Let's start! You can check out <a href="https://cryptocarto.xyz/how-to/" target="_blank">a tutorial here</a>
+
+                        <br /><br />You can also change your display name if you'd like others to easily recognise you!
+                        <br />(you don't have to do it: by default, you are known as "<%= address.substr(0,10) %>")
+                        <form class="change-name-form" action="/change-name" method="post">
+                              <label for="new-name">Choose your display name: </label>
+                              <input type="text" autocomplete="off" required="true" class="form-control" placeholder="name..." name="newname" />
+                              <br /><button type="submit">Change your display name</button>
+                        </form>
+
+                        <br />Let's start! You can check out <a href="https://cryptocarto.xyz/how-to/" target="_blank">a tutorial here</a>
                         <br />or click anywhere on the map to reserve your first space!
                         
                         <br /><br /><button type="button" onclick="$('.welcome').hide();">Let's go!</button>
