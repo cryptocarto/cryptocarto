@@ -1,5 +1,5 @@
 <div class="new-transaction">
-      <h2>Claim this space as a token</h2>
+      <h2>Reserve this spot for 1 &#127757;</h2>
       <div>
       
       <% if (notEnoughRights) { %>
@@ -16,10 +16,11 @@
                         <br />
                         <label for="message">Longitude (4 decimals - click on map to fill):</label><br />
                         <input type="text" class="form-control longitude" placeholder="Longitude" name="longitude" required="true" />
-                        <br />
                   </div>
+
+                  <p>You have <%= consumptionrights %> &#127757; remaining</p>
             
-                  <br /><button type="submit" class="submit-transaction" onclick="checkTransactionForm();">Claim token</button>
+                  <button type="submit" class="submit-transaction" onclick="checkTransactionForm();">Reserve spot</button>
                   <span class="loader"><br /><img src="/img/loader.gif" /> creating token...</span>
             </form>
       <% } %>

@@ -49,7 +49,7 @@
                             '</div>' +
                             '<div class="transfer-pin" id="transfer-pin-' + jQuery('#token-'+i+'-id').text() + '">' +
                                 '<form class="transfer-pin-form" action="/transfer-pin" method="post">' +
-                                    '<br /><label for="transferaddress">Transfer token to address:</label><br />(uses 1 consumption right)<br />' +
+                                    '<br /><label for="transferaddress">Transfer token to address:</label><br />(uses 1 &#127757;)<br />' +
                                     '<input type="text" class="form-control transferaddress" placeholder="0x..." name="transferaddress" required="true" />' +
                                     '<input type="hidden" class="form-control tokenidtotransfer" placeholder="id" name="tokenidtotransfer" required="true" value="' + jQuery('#token-'+i+'-id').text() + '"/>' +
                                     '<br /><button type="submit" class="submit-transfer" onclick="checkTransferForm();">Transfer token</button>' +
@@ -58,7 +58,7 @@
                             '</div>' +
                             '<div class="modify-pin" id="modify-pin-' + jQuery('#token-'+i+'-id').text() + '">' +
                                 '<form class="modify-pin-form" action="/modify-pin" method="post">' +
-                                    '<br /><label for="modifiedmessage">New message for this token:</label><br />(uses 1 consumption right)<br />' +
+                                    '<br /><label for="modifiedmessage">New message for this token:</label><br />(uses 1 &#127757;)<br />' +
                                     '<input type="text" class="form-control modifiedmessage" value="' + jQuery('#token-'+i+'-message').text() + '" name="modifiedmessage" required="true" />' +
                                     '<input type="hidden" class="form-control tokenidtomodify" placeholder="id" name="tokenidtomodify" required="true" value="' + jQuery('#token-'+i+'-id').text() + '"/>' +
                                     '<br /><button type="submit" class="submit-modify" onclick="checkModifyForm();">Modify token</button>' +
@@ -251,7 +251,7 @@
                                     '</div>' +
                                     '<div class="transfer-pin" id="transfer-pin-' + jQuery('#token-'+i+'-id').text() + '">' +
                                         '<form class="transfer-pin-form" action="/transfer-pin" method="post">' +
-                                            '<br /><label for="transferaddress">Transfer token to address:</label><br />(uses 1 consumption right)<br />' +
+                                            '<br /><label for="transferaddress">Transfer token to address:</label><br />(uses 1 &#127757;)<br />' +
                                             '<input type="text" class="form-control transferaddress" placeholder="0x..." name="transferaddress" required="true" />' +
                                             '<input type="hidden" class="form-control tokenidtotransfer" placeholder="id" name="tokenidtotransfer" required="true" value="' + jQuery('#token-'+i+'-id').text() + '"/>' +
                                             '<br /><button type="submit" class="submit-transfer" onclick="checkTransferForm();">Transfer token</button>' +
@@ -260,7 +260,7 @@
                                     '</div>' +
                                     '<div class="modify-pin" id="modify-pin-' + jQuery('#token-'+i+'-id').text() + '">' +
                                         '<form class="modify-pin-form" action="/modify-pin" method="post">' +
-                                            '<br /><label for="modifiedmessage">New message for this token:</label><br />(uses 1 consumption right)<br />' +
+                                            '<br /><label for="modifiedmessage">New message for this token:</label><br />(uses 1 &#127757;)<br />' +
                                             '<input type="text" class="form-control modifiedmessage" value="' + jQuery('#token-'+i+'-message').text() + '" name="modifiedmessage" required="true" />' +
                                             '<input type="hidden" class="form-control tokenidtomodify" placeholder="id" name="tokenidtomodify" required="true" value="' + jQuery('#token-'+i+'-id').text() + '"/>' +
                                             '<br /><button type="submit" class="submit-modify" onclick="checkModifyForm();">Modify token</button>' +

@@ -11,18 +11,19 @@
 						- Level <%= userlevel %>
 					</p>
 					<div class="spacer"></div>
-					<p>Click on map to create a new pin - <a href="https://cryptocarto.xyz/how-to/" target="_blank">Check how to use</a></p>
-					<p>Consumption rights:
+					<p>&#127757;
 						<% if (typeof consumptionrights != 'undefined') { %><%= consumptionrights %><% } %>
 						<% if (typeof consumptionrightslastrefill != 'undefined' && consumptionrightslastrefill) { %>
 							<% var timeBeforeRefill = new Date(new Date((parseInt(consumptionrightslastrefill) + 79200) * 1000) - new Date()); %>
 							<% if (timeBeforeRefill < 0) { %>
-								<b>(+5)<br/>(Free refill is available! Create a new token now!)</b>
+								<b>(+5) - Free refill is available! Create a new pin to activate!</b>
 							<% } else { %>
-								<br/><i>(time remaining before free refill: <%= timeBeforeRefill.getUTCHours() + "h" + timeBeforeRefill.getUTCMinutes() + "m" %>)</i>
+								<i>(free refill in <%= timeBeforeRefill.getUTCHours() + "h" + timeBeforeRefill.getUTCMinutes() + "m" %>)</i>
 							<% } %>
 						<% } %>
 					</p>
+					<p>Click on map to create a new pin - <a href="https://cryptocarto.xyz/how-to/" target="_blank">Check how to use</a></p>
+					
 					<div id="user-keys">
 						<label for="address">Address: </label>
 						<input type="text" disabled="disabled" class="form-control" placeholder="..." name="address" id="address" 
@@ -38,10 +39,6 @@
 						<button onclick="window.location.href = '/save-user-info';">Save to disk</button>
 						<button onclick="$('#user-keys').hide();$('#user-new-pk').show();$('#newprivatekey').focus()">Import other key</button>
 						<button onclick="$('#user-keys').hide();$('#user-change-name').show();$('#newname').focus()">Change name</button>
-						<p class="note">
-							A new blockchain account is generated and saved in session at your first visit.<br />
-							Save your info, and re-use it with the "Import other key" feature when you come back!
-						</p>
 					</div>
 			
 					<div id="user-new-pk">
