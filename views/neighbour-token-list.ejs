@@ -14,7 +14,7 @@
                 <% } %>
                 <p class="token-info">
                     <b><%= allTokensData[tokenIds[i]]['message'].substring(0,50) %><% if (allTokensData[tokenIds[i]]['message'].length > 50) { %>...<% } %></b><br/>
-                    From <a target="_blank" href="https://cypress.explore.bitcrystals.com/address/?address=<%= allTokensData[tokenIds[i]]['owner'] %>">
+                    From <a target="_blank" href="https://scope.klaytn.com/account/<%= allTokensData[tokenIds[i]]['owner'] %>">
                     <% if (typeof displayNames != 'undefined' && displayNames[allTokensData[tokenIds[i]]['owner'].toLowerCase()]) { %>
                         <%= displayNames[allTokensData[tokenIds[i]]['owner'].toLowerCase()] %>
                     <% } else { %>
@@ -24,7 +24,7 @@
                 <div class="token-data">
                     <b><span id="token-<%= i %>-message"><%= allTokensData[tokenIds[i]]['message'] %></span></b><br/>
                     Pin #<span id="token-<%= i %>-id" class="global-pin-id"><%= allTokensData[tokenIds[i]]['tokenId'] %></span><br />
-                    Owned by <a target="_blank" id="token-<%= i %>-displayname" href="https://cypress.explore.bitcrystals.com/address/?address=<%= allTokensData[tokenIds[i]]['owner'] %>">
+                    Owned by <a target="_blank" id="token-<%= i %>-displayname" href="https://scope.klaytn.com/account/<%= allTokensData[tokenIds[i]]['owner'] %>">
                         <% if (typeof displayNames != 'undefined' && displayNames[allTokensData[tokenIds[i]]['owner'].toLowerCase()]) { %>
                             <%= displayNames[allTokensData[tokenIds[i]]['owner'].toLowerCase()] %>
                         <% } else { %>
