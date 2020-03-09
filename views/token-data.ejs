@@ -6,7 +6,7 @@
 
 <% if (tokenIds.length && tokenIds.length > 0) { %>
     <% for(var i=0; i < tokenIds.length; i++) { %>
-        <div class="token" onclick="
+        <div class="explored-token" onclick="
             jQuery('.pin-explorer').hide();
             jQuery('#currentlat').text($(this).children('.token-data').children('.global-pin-lat').text());
             jQuery('#currentlng').text($(this).children('.token-data').children('.global-pin-lng').text());

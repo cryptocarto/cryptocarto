@@ -101,7 +101,7 @@ p {margin: 0 0 10px 0;}
     display: none;
 }
 
-.user-token, .token{
+.user-token, .token, .explored-token{
     font-size: 11px;
 }
 
@@ -156,7 +156,7 @@ p {margin: 0 0 10px 0;}
     display: block;
 }
 
-div.token, div.user-token{
+div.token, div.user-token, div.explored-token{
     max-width: 70%;
     float: left;
     border: 1px solid #888;

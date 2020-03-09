@@ -28,15 +28,21 @@
                 <span class="unavailable" title="Not enough rights to transfer/update a token">Transfer / Modify</span>
             <% } else { %>
                 <a class="transfer-link" onclick="
-                    jQuery('#viewPinId').text($(this).parent().siblings('.token-data').children('.user-pin-id').text());
-                    jQuery('#viewPinId').addClass('transfer')
+                    jQuery('#currentlat').text($(this).parent().siblings('.token-data').children('.user-pin-lat').text());
+                    jQuery('#currentlng').text($(this).parent().siblings('.token-data').children('.user-pin-lng').text());
                     map.setView([$(this).parent().siblings('.token-data').children('.user-pin-lat').text(), $(this).parent().siblings('.token-data').children('.user-pin-lng').text()],16);
+                    jQuery('#viewPinId').text($(this).parent().siblings('.token-data').children('.user-pin-id').text());
+                    jQuery('#viewPinId').addClass('transfer');
+                    loadPinTokens();
                 ">
                 Transfer</a> / 
                 <a class="modify-link" onclick="
-                    jQuery('#viewPinId').text($(this).parent().siblings('.token-data').children('.user-pin-id').text());
-                    jQuery('#viewPinId').addClass('modify')
+                    jQuery('#currentlat').text($(this).parent().siblings('.token-data').children('.user-pin-lat').text());
+                    jQuery('#currentlng').text($(this).parent().siblings('.token-data').children('.user-pin-lng').text());
                     map.setView([$(this).parent().siblings('.token-data').children('.user-pin-lat').text(), $(this).parent().siblings('.token-data').children('.user-pin-lng').text()],16);
+                    jQuery('#viewPinId').text($(this).parent().siblings('.token-data').children('.user-pin-id').text());
+                    jQuery('#viewPinId').addClass('modify');
+                    loadPinTokens();
                 ">
                 Modify</a>
             <% } %>

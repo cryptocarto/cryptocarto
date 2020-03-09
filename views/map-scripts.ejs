@@ -47,7 +47,7 @@
                                 '<br/>' +'<a target="_blank" href="/img/pin-token/' + jQuery('#token-'+i+'-id').text() + '.png">View token image</a>' +
                                 '<br/>' +'<a target="_blank" href="/metadata/pin-token/' + jQuery('#token-'+i+'-id').text() + '">View token metadata JSON</a>' +
                             '</div>' +
-                            '<div class="transfer-pin" id="transfer-pin-' + jQuery('#token-'+i+'-id').text() + '">' +
+                            '<div class="transfer-pin transfer-pin-' + jQuery('#token-'+i+'-id').text() + '" id="transfer-pin-' + jQuery('#token-'+i+'-id').text() + '">' +
                                 '<form class="transfer-pin-form" action="/transfer-pin" method="post">' +
                                     '<br /><label for="transferaddress">Transfer token to address:</label><br />(uses 1 &#127757;)<br />' +
                                     '<input type="text" class="form-control transferaddress" placeholder="0x..." name="transferaddress" required="true" />' +
@@ -56,7 +56,7 @@
                                     '<span class="loader"><br /><img src="/img/loader.gif" /> transferring token...</span>' +
                                 '</form>' +
                             '</div>' +
-                            '<div class="modify-pin" id="modify-pin-' + jQuery('#token-'+i+'-id').text() + '">' +
+                            '<div class="modify-pin modify-pin-' + jQuery('#token-'+i+'-id').text() + '" id="modify-pin-' + jQuery('#token-'+i+'-id').text() + '">' +
                                 '<form class="modify-pin-form" action="/modify-pin" method="post">' +
                                     '<br /><label for="modifiedmessage">New message for this token:</label><br />(uses 1 &#127757;)<br />' +
                                     '<input type="text" class="form-control modifiedmessage" value="' + jQuery('#token-'+i+'-message').text() + '" name="modifiedmessage" required="true" />' +
@@ -81,14 +81,14 @@
     function openNeededPopup() {
         var tokenId = jQuery('#viewPinId').text();
         jQuery('#viewPinId').text("");
-
+        
         markers[tokenId].openPopup();
         if (jQuery('#viewPinId').hasClass('transfer')){
-            $('#transfer-pin-'+ tokenId).slideDown();
+            $('.transfer-pin-'+ tokenId).slideDown();
             jQuery('#viewPinId').removeClass('transfer');
         }
         if (jQuery('#viewPinId').hasClass('modify')){
-            $('#modify-pin-'+ tokenId).slideDown();
+            $('.modify-pin-'+ tokenId).slideDown();
             jQuery('#viewPinId').removeClass('modify');
         }
     }
@@ -142,11 +142,6 @@
             $('#currentlat').text(newLat);
             $('#currentlng').text(newLng);
             loadPinTokens();
-        } else {
-            // Open popup if needed
-            if (jQuery('#viewPinId') && jQuery('#viewPinId').text() && (jQuery('#viewPinId').text() in markers)) {
-                openNeededPopup();
-            }
         }
     
     });
@@ -182,7 +177,7 @@
     loadPinTokens = function() {
         currentLat = jQuery('#currentlat').text();
         currentLng = jQuery('#currentlng').text();
-
+        
         //Display loader and scroll to top
         jQuery('.ajax-loader').show();
         jQuery('#tokens').scrollTop(0);
@@ -253,7 +248,7 @@
                                         '<br/>' +'<a target="_blank" href="/img/pin-token/' + jQuery('#token-'+i+'-id').text() + '.png">View token image</a>' +
                                         '<br/>' +'<a target="_blank" href="/metadata/pin-token/' + jQuery('#token-'+i+'-id').text() + '">View token metadata JSON</a>' +
                                     '</div>' +
-                                    '<div class="transfer-pin" id="transfer-pin-' + jQuery('#token-'+i+'-id').text() + '">' +
+                                    '<div class="transfer-pin transfer-pin-' + jQuery('#token-'+i+'-id').text() + '" id="transfer-pin-' + jQuery('#token-'+i+'-id').text() + '">' +
                                         '<form class="transfer-pin-form" action="/transfer-pin" method="post">' +
                                             '<br /><label for="transferaddress">Transfer token to address:</label><br />(uses 1 &#127757;)<br />' +
                                             '<input type="text" class="form-control transferaddress" placeholder="0x..." name="transferaddress" required="true" />' +
@@ -262,7 +257,7 @@
                                             '<span class="loader"><br /><img src="/img/loader.gif" /> transferring token...</span>' +
                                         '</form>' +
                                     '</div>' +
-                                    '<div class="modify-pin" id="modify-pin-' + jQuery('#token-'+i+'-id').text() + '">' +
+                                    '<div class="modify-pin modify-pin-' + jQuery('#token-'+i+'-id').text() + '" id="modify-pin-' + jQuery('#token-'+i+'-id').text() + '">' +
                                         '<form class="modify-pin-form" action="/modify-pin" method="post">' +
                                             '<br /><label for="modifiedmessage">New message for this token:</label><br />(uses 1 &#127757;)<br />' +
                                             '<input type="text" class="form-control modifiedmessage" value="' + jQuery('#token-'+i+'-message').text() + '" name="modifiedmessage" required="true" />' +
