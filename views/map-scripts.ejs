@@ -74,11 +74,24 @@
     
         // Open popup if needed
         if (jQuery('#viewPinId').text() != "" && jQuery('#token-'+i+'-id').text() == jQuery('#viewPinId').text()) {
-            markers[jQuery('#viewPinId').text()].openPopup();
-            jQuery('#viewPinId').text("");
+            openNeededPopup();
         }
     }
 
+    function openNeededPopup() {
+        var tokenId = jQuery('#viewPinId').text();
+        jQuery('#viewPinId').text("");
+
+        markers[tokenId].openPopup();
+        if (jQuery('#viewPinId').hasClass('transfer')){
+            $('#transfer-pin-'+ tokenId).slideDown();
+            jQuery('#viewPinId').removeClass('transfer');
+        }
+        if (jQuery('#viewPinId').hasClass('modify')){
+            $('#modify-pin-'+ tokenId).slideDown();
+            jQuery('#viewPinId').removeClass('modify');
+        }
+    }
 
     function onMapClick(e) {
 
@@ -132,16 +145,7 @@
         } else {
             // Open popup if needed
             if (jQuery('#viewPinId') && jQuery('#viewPinId').text() && (jQuery('#viewPinId').text() in markers)) {
-                markers[jQuery('#viewPinId').text()].openPopup();
-                if (jQuery('#viewPinId').hasClass('transfer')){
-                    $('#transfer-pin-'+ jQuery('#viewPinId').text()).slideDown();
-                    jQuery('#viewPinId').removeClass('transfer');
-                }
-                if (jQuery('#viewPinId').hasClass('modify')){
-                    $('#modify-pin-'+ jQuery('#viewPinId').text()).slideDown();
-                    jQuery('#viewPinId').removeClass('modify');
-                }
-                jQuery('#viewPinId').text("");
+                openNeededPopup();
             }
         }
     
@@ -276,8 +280,7 @@
 
                 // Open popup if needed
                 if (jQuery('#viewPinId').text() != "" && jQuery('#token-'+i+'-id').text() == jQuery('#viewPinId').text()) {
-                    markers[jQuery('#viewPinId').text()].openPopup();
-                    jQuery('#viewPinId').text("");
+                    openNeededPopup();
                 }
             }
 
