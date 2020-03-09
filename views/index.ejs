@@ -19,7 +19,7 @@
         <% if (userTokenIds.length) { %>
             <%- include('user-token-list') -%>
         <% } %>
-
+        
         <h2>Neighbour pins<span class="ajax-loader"><img src="/img/loader.gif" /> reloading...</span></h2>
         <%- include('neighbour-token-list') -%>
 
@@ -40,5 +40,7 @@
 <%- include('map-scripts') -%>
 
 <%- include('welcome') -%>
+
+<%- include('pin-explorer') -%>
 
 <%- include('bottom') -%>

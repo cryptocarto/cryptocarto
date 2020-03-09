@@ -1,0 +1,47 @@
+<% if (queryInfo) { %>
+    <h3>for owner <%= queryInfo %></h3>
+<% } %>   
+
+
+<% if (tokenIds.length && tokenIds.length > 0) { %>
+    <% for(var i=0; i < tokenIds.length; i++) { %>
+        <div class="token" onclick="
+            jQuery('.pin-explorer').hide();
+            jQuery('#currentlat').text($(this).children('.token-data').children('.global-pin-lat').text());
+            jQuery('#currentlng').text($(this).children('.token-data').children('.global-pin-lng').text());
+            map.setView([$(this).children('.token-data').children('.global-pin-lat').text(), $(this).children('.token-data').children('.global-pin-lng').text()],16);
+            jQuery('#viewPinId').text($(this).children('.token-data').children('.global-pin-id').text());
+            loadPinTokens();" >
+            <% if (i < 40) { %>
+                <img class="token-image" src="/img/pin-token/<%= tokensData[tokenIds[i]]['tokenId'] %>.png" />
+            <% } else { %>
+                <img class="token-default-image" src="/leaflet/images/marker-icon-2x.png" />
+            <% } %>
+            <p class="token-info">
+                <b><%= tokensData[tokenIds[i]]['message'].substring(0,50) %><% if (tokensData[tokenIds[i]]['message'].length > 50) { %>...<% } %></b><br/>
+                From <a href="https://klaytn.orbexplorer.com/address/?address=<%= address %>" target="_blank">
+                    <%= tokensData[tokenIds[i]]['displayName'] %></a>
+            </p>
+            <div class="token-data">
+                <b><span id="token-<%= i %>-message"><%= tokensData[tokenIds[i]]['message'] %></span></b><br/>
+                Pin #<span id="token-<%= i %>-id" class="global-pin-id"><%= tokensData[tokenIds[i]]['tokenId'] %></span><br />
+                Owned by <a target="_blank" class="pin-explorer-link" onclick="explorePinTokens({owner: $(this).siblings('.global-pin-id').text() })" ></a>
+                    <% if (typeof displayNames != 'undefined' && displayNames[tokensData[tokenIds[i]]['owner'].toLowerCase()]) { %>
+                        <%= displayNames[tokensData[tokenIds[i]]['owner'].toLowerCase()] %>
+                    <% } else { %>
+                        <%= tokensData[tokenIds[i]]['owner'].substring(0,10) %>
+                    <% } %>
+                </a><span id="token-<%= i %>-owner" class="token-owner-fulladdress"><%= tokensData[tokenIds[i]]['owner'] %></span>
+                (<a target="_blank" href="https://scope.klaytn.com/account/<%= tokensData[tokenIds[i]]['owner'] %>">details</a>)<br />
+                Latitude: <span id="token-<%= i %>-latitude" class="global-pin-lat"><%= tokensData[tokenIds[i]]['latitude'] / 10000 %></span>
+                / Longitude: <span id="token-<%= i %>-longitude" class="global-pin-lng"><%= tokensData[tokenIds[i]]['longitude'] / 10000 %></span><br />
+                Created on <span id="token-<%= i %>-creation-timestamp"><%= new Date(parseInt(tokensData[tokenIds[i]]['creationTimestamp'] * 1000)).toUTCString() %></span><br />
+                Modified on <span id="token-<%= i %>-modification-timestamp"><%= new Date(parseInt(tokensData[tokenIds[i]]['modificationTimestamp'] * 1000)).toUTCString() %></span>
+                <div class="spacer"></div>
+            </div>
+        </div>
+    <% } %>
+<% } else { %>
+    <p>No tokens around here... why not create a new one?<br />
+        Click anywhere on the map!</p>
+<% } %>

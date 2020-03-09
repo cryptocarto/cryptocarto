@@ -173,6 +173,7 @@ div.token, div.user-token{
 
 .token-info {
     margin: 0 0 0 40px;
+    text-align: left;
 }
 
 .token-image {
@@ -191,6 +192,13 @@ div.token, div.user-token{
 .orb-explorer {
     font-weight: 600;
     font-size: 13px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.pin-explorer-link {
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 .coordinates-form {
@@ -286,20 +294,24 @@ input, textarea {
     border-radius: 3px;
 }
 
-.welcome {
+.welcome, .pin-explorer {
     position: absolute;
     width:100%;
     height:100%;
     z-index: 11000;
 }
 
-.welcome-information {
+.pin-explorer {
+    display: none;
+}
+
+.welcome-information, .pin-explorer-main {
     position: absolute;
     top:50%;
     left:50%;
-    width:80%;
+    width:60%;
     height:80vh;
-    margin-left:-42%;
+    margin-left:-32%;
     margin-top:-42vh;
     z-index: 12000;
     background-color: #333;
@@ -314,7 +326,7 @@ input, textarea {
     display: none;
 }
 
-#close-welcome-information {
+#close-welcome-information, #close-pin-explorer {
     position: absolute;
     top:0%;
     left:100%;
