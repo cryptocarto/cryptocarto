@@ -164,8 +164,8 @@ async function(req, res, next) {
     tokenData = await CryptoCartoContract.methods.getPinToken(tokenId).call();
 
     // Set poition session variables
-    req.session.currentlat = parseFloat(tokenData[2]) / 10000;
-    req.session.currentlng = parseFloat(tokenData[3]) / 10000;
+    req.session.currentlat = parseFloat(tokenData[3]) / 10000;
+    req.session.currentlng = parseFloat(tokenData[4]) / 10000;
     req.session.openPinId = tokenId;
 
     req.session.generalMessage = 'Viewing Pin #' + tokenId;
