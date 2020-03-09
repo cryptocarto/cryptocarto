@@ -1,5 +1,6 @@
 <% if (queryInfo) { %>
-    <h3>for owner <%= queryInfo %></h3>
+    <h3>for <%= queryInfo.substring(0,10) %> (<a href="https://klaytn.orbexplorer.com/address/?address=<%= queryInfo %>" target="_blank">view on Orb Explorer</a>)</h3>
+    
 <% } %>   
 
 
