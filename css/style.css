@@ -182,7 +182,7 @@ div.token, div.user-token, div.explored-token{
     float: left;
 }
 
-.token img.token-default-image {
+img.token-default-image {
     height:32px;
     padding: 0 6px 0 7px;
     float: left;
