@@ -12,8 +12,8 @@
             <button onclick="map.setView([46.2043,6.1431],16);">Geneva</button>
             <br />
             ...or to 
-            Latitude <input type="text" onClick="this.select();" placeholder="Latitude" name="teleport-latitude" id="teleport-latitude" required="true" value="42.6886" />
-            Longitude <input type="text" onClick="this.select();" placeholder="Longitude" name="teleport-longitude" id="teleport-longitude" required="true" value="2.8948" />
+            Lat <input type="text" onClick="this.select();" placeholder="Latitude" name="teleport-latitude" id="teleport-latitude" required="true" value="42.6886" />
+            Lng <input type="text" onClick="this.select();" placeholder="Longitude" name="teleport-longitude" id="teleport-longitude" required="true" value="2.8948" />
             <button onclick="cryptocartoTeleporter()">Go</button>
             <script>
                 // Geocoding function: fill input with result and teleport to center of matched item
@@ -33,6 +33,7 @@
                 $('#teleport-longitude').keypress(function(e){if(e.which == 13){ cryptocartoTeleporter() }});
 
             </script>
+            <br />...or <button onclick="window.location.href = '/view-random-pin'">View a random pin</a>
         </div>
     </div>
 </div>

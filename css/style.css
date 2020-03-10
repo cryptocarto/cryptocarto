@@ -232,6 +232,7 @@ img.token-default-image {
 
 #teleport-zone {
     line-height: 30px;
+    min-width:330px;
 }
 
 .leaflet-popup-content-wrapper {
