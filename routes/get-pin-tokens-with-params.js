@@ -12,13 +12,29 @@ module.exports = async function(req, res, next) {
       throw new Error('Params are needed.')
     }
     
-    var params   = req.body.params;
+    var requestParams   = req.body.params;
+    var params = new Object;
     var queryInfo = "";
 
-    // Add case insensitive filter on owner param is present
-    if ('owner' in params) {
-      queryInfo = params["owner"];
-      params["owner"] = { '$regex': new RegExp(params["owner"],"i")};
+    // Pins by owner
+    if ('owner' in requestParams) {
+      queryInfo = requestParams["owner"];
+      params = {
+        "filter" : {owner: { '$regex': new RegExp(requestParams["owner"],"i") }},
+        "sort" : {modificationTimestamp: -1},
+        "limit": 0
+      }
+    }
+
+    // Recent pins
+    if ('recent' in requestParams) {
+      queryInfo = "recent pins";
+      params = {
+        "filter" : {},
+        "sort" : {creationTimestamp: -1},
+        "limit": 100
+      }
+      params["creationTimestamp"] = { '$gt': new RegExp(params["owner"],"i")};
     }
     
     [tokensData, tokenIds] = await getPinTokensWithParams(params);

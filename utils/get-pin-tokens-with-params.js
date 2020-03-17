@@ -8,7 +8,7 @@ const DisplayName = require('./displayname')
 
 module.exports = async function (params) {
     // Get pins from DB
-    var tokensDataFromDB = await PinToken.find(params).sort({modificationTimestamp: -1});
+    var tokensDataFromDB = await PinToken.find(params.filter).sort(params.sort).limit(params.limit);
 
     var tokenIds = new Array;
     var tokensData = new Array;
