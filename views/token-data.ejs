@@ -23,7 +23,7 @@
             <% } %>
             <p class="token-info">
                 <b><%= tokensData[tokenIds[i]]['message'].substring(0,50) %><% if (tokensData[tokenIds[i]]['message'].length > 50) { %>...<% } %></b><br/>
-                From <a href="https://klaytn.orbexplorer.com/address/?address=<%= address %>" target="_blank">
+                From <a href="https://klaytn.orbexplorer.com/address/?address=<%= tokensData[tokenIds[i]]['owner'] %>" target="_blank">
                     <%= tokensData[tokenIds[i]]['displayName'] %></a>
             </p>
             <div class="token-data">
