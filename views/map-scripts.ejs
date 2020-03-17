@@ -76,6 +76,8 @@
         if (jQuery('#viewPinId').text() != "" && jQuery('#token-'+i+'-id').text() == jQuery('#viewPinId').text()) {
             openNeededPopup();
         }
+
+        updateMiniMap();
     }
 
     function openNeededPopup() {
@@ -311,5 +313,16 @@
         });
 
     };
+
+    // Update minimap red square position
+    function updateMiniMap() {
+        lat = parseFloat($('#currentlat').text());
+        lng = parseFloat($('#currentlng').text());
+        topVal = Math.round((1 - (Math.log(Math.tan(lat / 180 * Math.PI) + (1/Math.cos(lat / 180 * Math.PI))) / Math.PI)) / 2 * 60) - 3;
+        leftVal = Math.round((lng + 180) / 360 * 60) - 3;
+        $('.square').css({"top": topVal + "px", "left": leftVal + "px"});
+    };
+
+    $('body').on("click", updateMiniMap);
 
 </script>

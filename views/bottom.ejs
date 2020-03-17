@@ -10,7 +10,6 @@
 						Hello <b><% if (typeof displayname != 'undefined' && displayname) { %><%= displayname %><% } %></b>
 						- Level <%= userlevel %>
 					</p>
-					<div class="spacer"></div>
 					<p>&#127757;
 						<% if (typeof consumptionrights != 'undefined') { %><%= consumptionrights %><% } %>
 						<% if (typeof consumptionrightslastrefill != 'undefined' && consumptionrightslastrefill) { %>
@@ -22,6 +21,7 @@
 							<% } %>
 						<% } %>
 					</p>
+					<div class="spacer"></div>
 					<p>Click on map to create a new pin - <a href="https://cryptocarto.xyz/how-to/" target="_blank">Check how to use</a></p>
 					
 					<div id="user-keys">
