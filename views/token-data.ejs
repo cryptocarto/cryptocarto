@@ -1,9 +1,12 @@
 <% if (queryInfo) { %>
     <% if (queryInfo.substring(0,2) == "0x") { %>
-        <h3>for <%= queryInfo.substring(0,10) %> (<a href="https://klaytn.orbexplorer.com/address/?address=<%= queryInfo %>" target="_blank">view on Orb Explorer</a>)</h3>
+        <h3>for <%= queryInfo.substring(0,10) %>
+            (browse on <a href="https://klaytn.orbexplorer.com/address/?address=<%= queryInfo %>" target="_blank">Orb Explorer</a>
+            or on <a href="https://scope.klaytn.com/account/<%= queryInfo %>" target="_blank">Klaytn Scope</a>)
+        </h3>
     <% } else { %>
         <h3>for <%= queryInfo %></h3>
-    <% } %>   
+    <% } %>
 <% } %>   
 
 
@@ -23,8 +26,16 @@
             <% } %>
             <p class="token-info">
                 <b><%= tokensData[tokenIds[i]]['message'].substring(0,50) %><% if (tokensData[tokenIds[i]]['message'].length > 50) { %>...<% } %></b><br/>
-                From <a href="https://klaytn.orbexplorer.com/address/?address=<%= tokensData[tokenIds[i]]['owner'] %>" target="_blank">
-                    <%= tokensData[tokenIds[i]]['displayName'] %></a>
+                <% if (address.toLowerCase() == tokensData[tokenIds[i]]['owner'].toLowerCase()) { %>
+                    <% if (notEnoughRights) { %>
+                        <span class="unavailable" title="Not enough rights to transfer/update a token">Transfer / Modify</span>
+                    <% } else { %>
+                        <a class="transfer-link" onclick="jQuery('#viewPinId').addClass('transfer');">Transfer</a> / 
+                        <a class="modify-link" onclick="jQuery('#viewPinId').addClass('modify');">Modify</a>
+                    <% } %>
+                <% } else { %>
+                    From <%= tokensData[tokenIds[i]]['displayName'] %>
+                <% } %>
             </p>
             <div class="token-data">
                 <b><span id="token-<%= i %>-message"><%= tokensData[tokenIds[i]]['message'] %></span></b><br/>

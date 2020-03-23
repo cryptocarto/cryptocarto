@@ -16,14 +16,14 @@ module.exports = async function(req, res, next) {
     const longitude  = parseFloat(req.body.longitude);
 
     // Get PinToken data from DB for current position
-    [allTokensData, tokenIds, userTokensData, userTokenIds, displayNames] = await getPinTokensAround(latitude, longitude, req.session.address);
+    [allTokensData, tokenIds, displayNames] = await getPinTokensAround(latitude, longitude);
 
     // Set position session variables
     req.session.currentlat = latitude;
     req.session.currentlng = longitude;
 
     // Return data
-    res.render('neighbour-token-list', { allTokensData: allTokensData, userTokensData: userTokensData, tokenIds: tokenIds, userTokenIds: userTokenIds, displayNames: displayNames } );
+    res.render('neighbour-token-list', { allTokensData: allTokensData, tokenIds: tokenIds, displayNames: displayNames } );
   } catch (error) { next(error) }
 
 };

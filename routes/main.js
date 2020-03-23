@@ -78,9 +78,9 @@ module.exports = async function(req, res, next) {
       }
 
       // Get PinToken data from DB for current position
-      [allTokensData, tokenIds, userTokensData, userTokenIds, displayNames] = await getPinTokensAround(req.session.currentlat, req.session.currentlng, req.session.address);
+      [allTokensData, tokenIds, displayNames] = await getPinTokensAround(req.session.currentlat, req.session.currentlng);
       // Render view
-      res.render('index', { allTokensData: allTokensData, userTokensData: userTokensData, tokenIds: tokenIds, userTokenIds: userTokenIds, displayNames: displayNames });
+      res.render('index', { allTokensData: allTokensData, tokenIds: tokenIds, displayNames: displayNames });
   
     } catch (error) { next(error) }
 

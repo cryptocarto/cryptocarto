@@ -6,7 +6,7 @@
 const PinToken = require('./pintoken')
 const DisplayName = require('./displayname')
 
-module.exports = async function (latitude, longitude, userAddress) {
+module.exports = async function (latitude, longitude) {
     // Get pins from DB (incuding new ones)
     var params = { 
       latitude: { $lt: latitude*10000+1000, $gt: latitude*10000-1000},
@@ -52,16 +52,5 @@ module.exports = async function (latitude, longitude, userAddress) {
       " (" + displayNamesFromDB[objectKey]["address"].substring(2,8) + ")";
     })
 
-    // Get tokens for this specific user
-    var userTokensDataFromDB = await PinToken.find({ owner: { '$regex': new RegExp(userAddress,"i")} }).sort({modificationTimestamp:-1});
-    var userTokenIds = new Array;
-    var userTokensData = new Object;
-
-    // Create array indexed by tokenId and userTokenIds array
-    Object.keys(userTokensDataFromDB).map(function (objectKey) {
-      userTokensData[userTokensDataFromDB[objectKey]["tokenId"]] = userTokensDataFromDB[objectKey];
-      userTokenIds.push(userTokensDataFromDB[objectKey]["tokenId"]);
-    })
-    
-    return [allTokensData, tokenIds, userTokensData, userTokenIds, displayNames];
+    return [allTokensData, tokenIds, displayNames];
 }

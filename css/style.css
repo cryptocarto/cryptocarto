@@ -104,6 +104,7 @@ p {margin: 0 0 10px 0;}
 
 .user-token, .token, .explored-token{
     font-size: 11px;
+    cursor: pointer;
 }
 
 .tokens-info-collapser {
@@ -320,6 +321,10 @@ input, textarea {
     font-size: 13px;
     margin: 2px;
     border-radius: 3px;
+}
+
+.lat-lng-helper {
+    font-size: 10px;
 }
 
 .welcome, .pin-explorer {

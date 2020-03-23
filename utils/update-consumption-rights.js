@@ -41,7 +41,7 @@ module.exports = async function (req, rightsToAdd) {
         }
     }
   
-    return [allTokensData, tokenIds, userTokensData, userTokenIds, displayNames];
+    return [allTokensData, tokenIds, displayNames];
   } catch (error) {
     console.error(error);
   }  

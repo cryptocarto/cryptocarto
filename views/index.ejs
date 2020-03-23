@@ -15,12 +15,11 @@
         <% if (typeof generalMessage != 'undefined' && generalMessage) { %>
             <p class="general-message">Message: <%= generalMessage %></p>
         <% } %>
+        <h2>Browse CryptoCarto pins</h2>
 
-        <% if (userTokenIds.length) { %>
-            <%- include('user-token-list') -%>
-        <% } %>
-        
-        <h2>Recent pins &rarr; <a target="_blank" class="pin-explorer-link" onclick="explorePinTokens({recent: 'recent' })" >browse</a></h2>
+        <button onclick="explorePinTokens({owner: $('#address').val().toLowerCase() })" >Browse your pins</button>
+        <button onclick="explorePinTokens({recent: 'recent' })" >Browse recent pins</button>
+        <button onclick="window.location.href = '/view-random-pin'">View a random pin</button>
 
         <h2>Neighbour pins<span class="ajax-loader"><img src="/img/loader.gif" /> reloading...</span></h2>
         <%- include('neighbour-token-list') -%>

@@ -40,6 +40,10 @@ module.exports = function (req, res, next) {
         res.locals.consumptionrightslastrefill = req.session.consumptionrightslastrefill;
     }
 
+    if (typeof req.session.notEnoughRights != 'undefined') {
+        res.locals.notEnoughRights = req.session.notEnoughRights;
+    }
+
     if (typeof req.session.openPinId != 'undefined') {
         res.locals.openPinId = req.session.openPinId;
         req.session.openPinId = "";
