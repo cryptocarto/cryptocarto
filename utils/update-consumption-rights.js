@@ -40,8 +40,6 @@ module.exports = async function (req, rightsToAdd) {
           req.session.consumptionrights = currentRights.rights + rightsToAdd;
         }
     }
-  
-    return [allTokensData, tokenIds, displayNames];
   } catch (error) {
     console.error(error);
   }  
