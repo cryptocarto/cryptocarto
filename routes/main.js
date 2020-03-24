@@ -8,6 +8,7 @@ const DisplayName = require('../utils/displayname')
 const ConsumptionRight = require('../utils/consumptionright')
 getPinTokensAround = require('../utils/get-pin-tokens-around')
 getUserLevel = require('../utils/get-user-level')
+createNewToken = require('../utils/create-new-token')
 
 module.exports = async function(req, res, next) {
     try {
@@ -20,6 +21,12 @@ module.exports = async function(req, res, next) {
         req.session.privatekey = newAccount.privateKey;
         res.locals.privatekey = newAccount.privateKey;
         res.locals.welcome = true;
+
+        // Create a new randomly placed pintoken for this new account
+        latitude = (Math.round(Math.random() * 166) - 83) * 10000 + (Math.round(Math.random() * 9999));
+        longitude = (Math.round(Math.random() * 328) - 164) * 10000 + (Math.round(Math.random() * 9999));
+        message = "This is my first spot!"
+        newPinToken = await createNewToken(latitude, longitude, message, req);
       } else {
         res.locals.welcome = false;
       }
