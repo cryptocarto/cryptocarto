@@ -6,6 +6,7 @@
 const caver = require('../utils/caver')
 const DisplayName = require('../utils/displayname')
 const ConsumptionRight = require('../utils/consumptionright')
+const PinToken = require('../utils/pintoken');
 getPinTokensAround = require('../utils/get-pin-tokens-around')
 getUserLevel = require('../utils/get-user-level')
 createNewToken = require('../utils/create-new-token')
@@ -22,10 +23,16 @@ module.exports = async function(req, res, next) {
         res.locals.privatekey = newAccount.privateKey;
         res.locals.welcome = true;
 
-        // Create a new randomly placed pintoken for this new account
-        latitude = (Math.round(Math.random() * 166) - 83) * 10000 + (Math.round(Math.random() * 9999));
-        longitude = (Math.round(Math.random() * 328) - 164) * 10000 + (Math.round(Math.random() * 9999));
-        message = "This is my first spot!"
+        // Create a new pintoken close to a pre-existing one for this new account
+        randomLocationNotFound = true;
+        while (randomLocationNotFound) {
+          randomPinToken = await PinToken.aggregate([ { $sample: { size: 1 } } ]);
+          latitude = randomPinToken[0].latitude + (Math.round(Math.random() * 200) - 100);
+          longitude = randomPinToken[0].longitude + (Math.round(Math.random() * 200) - 100);
+          randomLocationNotFound = await PinToken.exists({"latitude" : latitude, "longitude" : longitude});
+        }
+
+        message = "This is my first spot!";
         newPinToken = await createNewToken(latitude, longitude, message, req);
       } else {
         res.locals.welcome = false;
