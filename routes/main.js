@@ -7,6 +7,7 @@ const caver = require('../utils/caver')
 const DisplayName = require('../utils/displayname')
 const ConsumptionRight = require('../utils/consumptionright')
 const PinToken = require('../utils/pintoken');
+const {Crawler, middleware} = require('es6-crawler-detect/src')
 getPinTokensAround = require('../utils/get-pin-tokens-around')
 getUserLevel = require('../utils/get-user-level')
 createNewToken = require('../utils/create-new-token')
@@ -15,6 +16,10 @@ addConsumptionRights = require('../utils/add-consumption-rights')
 module.exports = async function(req, res, next) {
     try {
   
+      // Crawler detection
+      var CrawlerDetector = new Crawler();
+      var isCrawler = CrawlerDetector.isCrawler(req.headers['user-agent']);
+
       // Create a new account on the fly if not in session
       if ((typeof req.session.address == 'undefined') || (typeof req.session.privatekey == 'undefined')) {
         const newAccount = caver.klay.accounts.create();
@@ -22,21 +27,25 @@ module.exports = async function(req, res, next) {
         res.locals.address = newAccount.address;
         req.session.privatekey = newAccount.privateKey;
         res.locals.privatekey = newAccount.privateKey;
-        res.locals.welcome = true;
 
-        // Create a new pintoken close to a pre-existing one for this new account
-        randomLocationNotFound = true;
-        while (randomLocationNotFound) {
-          randomPinToken = await PinToken.aggregate([ { $sample: { size: 1 } } ]);
-          latitude = randomPinToken[0].latitude + (Math.round(Math.random() * 200) - 100);
-          longitude = randomPinToken[0].longitude + (Math.round(Math.random() * 200) - 100);
-          randomLocationNotFound = await PinToken.exists({"latitude" : latitude, "longitude" : longitude});
+        // Create a new pintoken close to a pre-existing one for this new account (excludes crawlers)
+        if (!isCrawler) {
+          randomLocationNotFound = true;
+          while (randomLocationNotFound) {
+            randomPinToken = await PinToken.aggregate([ { $sample: { size: 1 } } ]);
+            latitude = randomPinToken[0].latitude + (Math.round(Math.random() * 200) - 100);
+            longitude = randomPinToken[0].longitude + (Math.round(Math.random() * 200) - 100);
+            randomLocationNotFound = await PinToken.exists({"latitude" : latitude, "longitude" : longitude});
+          }
+          message = "This is my first spot!";
+          newPinToken = await createNewToken(latitude, longitude, message, req);
+
+          // Add 6 bonus consumption rights for new users
+          addConsumptionRights(newAccount.address, 6);
+          res.locals.welcome = true;
+        } else {
+          res.locals.welcome = false;
         }
-        message = "This is my first spot!";
-        newPinToken = await createNewToken(latitude, longitude, message, req);
-
-        // Add 6 bonus consumption rights for new users
-        addConsumptionRights(newAccount.address, 6);
       } else {
         res.locals.welcome = false;
       }
@@ -77,7 +86,7 @@ module.exports = async function(req, res, next) {
         res.locals.consumptionrightslastrefill = Math.round(Date.now() / 1000);
         req.session.notEnoughRights = false;
         res.locals.notEnoughRights = false;
-
+        
       } else {
         req.session.consumptionrights = consumptionRights.rights;
         res.locals.consumptionrights = consumptionRights.rights;
