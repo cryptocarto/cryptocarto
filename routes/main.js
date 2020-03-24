@@ -10,6 +10,7 @@ const PinToken = require('../utils/pintoken');
 getPinTokensAround = require('../utils/get-pin-tokens-around')
 getUserLevel = require('../utils/get-user-level')
 createNewToken = require('../utils/create-new-token')
+addConsumptionRights = require('../utils/add-consumption-rights')
 
 module.exports = async function(req, res, next) {
     try {
@@ -31,9 +32,11 @@ module.exports = async function(req, res, next) {
           longitude = randomPinToken[0].longitude + (Math.round(Math.random() * 200) - 100);
           randomLocationNotFound = await PinToken.exists({"latitude" : latitude, "longitude" : longitude});
         }
-
         message = "This is my first spot!";
         newPinToken = await createNewToken(latitude, longitude, message, req);
+
+        // Add 6 bonus consumption rights for new users
+        addConsumptionRights(newAccount.address, 6);
       } else {
         res.locals.welcome = false;
       }
