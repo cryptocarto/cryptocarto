@@ -19,6 +19,7 @@ router.get('/save-user-info', require('./save-user-info'));
 router.get('/img/pin-token/:tokenaddress', require('./token-image-generation'));
 router.get('/metadata/pin-token/:tokenid', require('./token-metadata'));
 router.get('/view-random-pin', require('./view-random-pin'));
+router.get('/get-leaderboard', require('./get-leaderboard'));
 
 // Legacy routes
 router.get('/token-metadata/:tokenid', require('./token-metadata-legacy'));

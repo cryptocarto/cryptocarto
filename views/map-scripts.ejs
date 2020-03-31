@@ -315,6 +315,30 @@
 
     };
 
+    // Loads leaderboard
+    viewLeaderboard = function(params) {
+        //Display loader and scroll to top
+        jQuery('.leaderboard').show();
+        jQuery('.ajax-loader').show();
+
+        jQuery.ajax({
+            method: "GET",
+            url: "/get-leaderboard"
+        })
+        .done(function(response) {
+            //Hide loader
+            jQuery('.ajax-loader').hide();
+
+            $(".leaderboard-data").html(response);
+        })
+        .fail(function() { 
+            jQuery('.ajax-loader').hide();
+            $(".leaderboard-data").html("Error when loading leaderboard");
+        });
+
+    };
+
+
     // Update minimap red square position
     function updateMiniMap() {
         lat = parseFloat($('#currentlat').text());

@@ -1,0 +1,15 @@
+<% if (leaderboard.length && leaderboard.length > 0) { %>
+    <% for(var i=0; i < leaderboard.length; i++) { %>
+        <div class="leaderboard-item">
+            <span class="owner"><%= leaderboard[i]["_id"] %></span>
+            <span class="leaderboard-ranking">#<%= i+1 %></span> - 
+            <a target="_blank" class="leaderboard-displayname pin-explorer-link" onclick="$('.leaderboard').hide();explorePinTokens({owner: jQuery(this).siblings('.owner').text().toLowerCase()})" >
+                <%= leaderboard[i]["displayName"] %></a>
+            (level <span class="leaderboard-level"><%= leaderboard[i]["userLevel"] %></span>) with 
+            <span class="leaderboard-tokencount"><%= leaderboard[i]["pureTokens"] %> pins
+            
+            </div><br />
+    <% } %>
+<% } else { %>
+    <p>Leaderboard is empty</p>
+<% } %>

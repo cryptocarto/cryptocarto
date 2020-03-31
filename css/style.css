@@ -327,18 +327,18 @@ input, textarea {
     font-size: 10px;
 }
 
-.welcome, .pin-explorer {
+.welcome, .pin-explorer, .cc-popup {
     position: absolute;
     width:100%;
     height:100%;
     z-index: 11000;
 }
 
-.pin-explorer {
+.pin-explorer, .cc-popup {
     display: none;
 }
 
-.welcome-information, .pin-explorer-main {
+.welcome-information, .pin-explorer-main, .cc-popup-main {
     position: absolute;
     top:50%;
     left:50%;
@@ -359,11 +359,24 @@ input, textarea {
     display: none;
 }
 
-#close-welcome-information, #close-pin-explorer {
+#close-welcome-information, #close-pin-explorer, .close-cc-popup {
     position: absolute;
     top:0%;
     left:100%;
     margin-left:-28px;
     width: 24px;
     height: 26px;
+}
+
+.leaderboard-item {
+    vertical-align: middle;
+    font-size: 15px;
+}
+
+.leaderboard-ranking {
+    font-weight: bold;
+}
+
+.leaderboard-item .owner {
+    display: none;
 }
