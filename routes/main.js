@@ -47,7 +47,7 @@ module.exports = async function(req, res, next) {
           res.locals.currentlng = longitude / 10000;
 
           // Add 6 bonus consumption rights for new users
-          addConsumptionRights(newAccount.address, 6);
+          addConsumptionRights(newAccount.address, process.env.BONUS_RIGHTS_NEW_USERS);
           res.locals.welcome = true;
         } else {
           res.locals.welcome = false;
