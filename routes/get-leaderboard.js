@@ -14,7 +14,7 @@ module.exports = async function(req, res, next) {
       { $match: { $expr: {$eq: ['$creator','$owner'] }}},
       { $group: { _id: {$toLower:'$owner'}, pureTokens: {$sum: 1} }},
       { $sort: { pureTokens : -1 }},
-      { $limit: 20 }
+      { $limit: 100 }
     ]);
 
     // Create an array for all addresses and assigns levels

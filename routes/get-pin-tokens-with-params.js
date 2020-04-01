@@ -32,7 +32,7 @@ module.exports = async function(req, res, next) {
       params = {
         "filter" : {},
         "sort" : {creationTimestamp: -1},
-        "limit": 100
+        "limit": 200
       }
       params["creationTimestamp"] = { '$gt': new RegExp(params["owner"],"i")};
     }
