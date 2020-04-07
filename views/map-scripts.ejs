@@ -4,10 +4,24 @@
     var markers = new Array;
     var rectangles = new Array;
 
+    var map = L.map('map').setView([parseFloat(jQuery('#currentlat').text()),parseFloat(jQuery('#currentlng').text())],16);
+    var rectangleToReserve = null;
+
+    L.tileLayer('https://map.cryptocarto.xyz/osm/{z}/{x}/{y}.png',{maxZoom:18, minZoom:14}).addTo(map);
+
+    // Click on map handle 
+    map.on('click', onMapClick);
+
+    // Popup open handle
+    map.on('popupopen', function (event) {
+        if (event.popup.tokenIteratorId != undefined) {
+            loadPopupContents(event.popup);
+        }
+    });
+
     // Load map markers for current view
     loadMarkers = function() {
         var nbTokens = parseInt(jQuery('.token').length);
-
 
         for (i = 0; i< nbTokens; i++) {
             lat = parseFloat(jQuery('#token-'+i+'-latitude').text());
@@ -18,78 +32,87 @@
             xtile = n * ((lng + 180) / 360) // xtile = n * ((lon_deg + 180) / 360)
             ytile = n * (1 - (Math.log(Math.tan(lat / 180 * Math.PI) + (1/Math.cos(lat / 180 * Math.PI))) / Math.PI)) / 2
 
-            popUpContent =  '<div id="popup-token-'+i+'">' +
-                '<span class="token-message">' + jQuery('#token-'+i+'-message').text() + '</span><br/>' +
-                '<img src="' + blockies.create({ seed: jQuery('#token-'+i+'-owner').text().toLowerCase() ,size: 8,scale: 3}).toDataURL() + '" class="blockies-avatar" />' +
-                '<span class="token-message-author">by <a target="_blank" class="pin-explorer-link" onclick="explorePinTokens({owner: \'' + jQuery('#token-'+i+'-owner').text() + '\'})" >' +
-                    jQuery('#token-'+i+'-displayname').text() + '</a>' + 
+            // Defines a popup object with content and iterator ID
+            popupObject = L.popup({minWidth: 255}).setContent('Loading...');
+            popupObject.tokenIteratorId = i;
+
+            markers[jQuery('#token-'+i+'-id').text()] = L.marker([lat,lng]).addTo(map).bindPopup(popupObject);
+
+            // Create a rectangle for the reserved spot around the pin
+            rectangles[jQuery('#token-'+i+'-id').text()] = L.rectangle([[lat-0.00005,lng-0.00005], [lat+0.00005,lng+0.00005]], {color: '#4054b2', weight: 1}).addTo(map).bindPopup(popupObject);
+        }
+        
+        // Open popup if needed
+        if (jQuery('#viewPinId').text() != "" && (jQuery('#viewPinId').text() in markers)) {
+            openNeededPopup();
+        }
+    }
+
+    loadPopupContents = function(popup) {
+
+        tokenIteratorId = popup.tokenIteratorId;
+
+        popupContent =  '<div id="popup-token-'+tokenIteratorId+'">' +
+                '<span class="token-message">' + jQuery('#token-'+tokenIteratorId+'-message').text() + '</span><br/>' +
+                '<img src="' + blockies.create({ seed: jQuery('#token-'+tokenIteratorId+'-owner').text().toLowerCase() ,size: 8,scale: 3}).toDataURL() + '" class="blockies-avatar" />' +
+                '<span class="token-message-author">by <a target="_blank" class="pin-explorer-link" onclick="explorePinTokens({owner: \'' + jQuery('#token-'+tokenIteratorId+'-owner').text() + '\'})" >' +
+                    jQuery('#token-'+tokenIteratorId+'-displayname').text() + '</a>' + 
                 '</span><div class="spacer"></div>' +
                 '<button onclick="' + 
-                    '$(\'#popup-token-'+i+'\').children(\'.share-pin\').slideToggle();'+
-                    '$(\'#popup-token-'+i+'\').children(\'.metadata\').slideUp();'+
+                    '$(\'#popup-token-'+tokenIteratorId+'\').children(\'.share-pin\').slideToggle();'+
+                    '$(\'#popup-token-'+tokenIteratorId+'\').children(\'.metadata\').slideUp();'+
                 '">Share this pin</button>' +
                 '<button onclick="' + 
-                    '$(\'#popup-token-'+i+'\').children(\'.metadata\').slideToggle();'+
-                    '$(\'#popup-token-'+i+'\').children(\'.share-pin\').slideUp();'+
+                    '$(\'#popup-token-'+tokenIteratorId+'\').children(\'.metadata\').slideToggle();'+
+                    '$(\'#popup-token-'+tokenIteratorId+'\').children(\'.share-pin\').slideUp();'+
                 '">Show Metadata</button>' +
                 '<div class="share-pin">' +
-                    '<br />Shareable link: <a target="_blank" href="https://app.cryptocarto.xyz/view-pin/' + jQuery('#token-'+i+'-id').text() + '">https://app.cryptocarto.xyz/view-pin/' + jQuery('#token-'+i+'-id').text() + '</a><br/>' + 
-                    '<textarea id="share-link" class="share-link">https://app.cryptocarto.xyz/view-pin/' + jQuery('#token-'+i+'-id').text() + '</textArea>' +
-                    '<a class="button-style" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=app.cryptocarto.xyz/view-pin/' + jQuery('#token-'+i+'-id').text() + '">Share on Facebook</a>' +
+                    '<br />Shareable link: <a target="_blank" href="https://app.cryptocarto.xyz/view-pin/' + jQuery('#token-'+tokenIteratorId+'-id').text() + '">https://app.cryptocarto.xyz/view-pin/' + jQuery('#token-'+tokenIteratorId+'-id').text() + '</a><br/>' + 
+                    '<textarea id="share-link" class="share-link">https://app.cryptocarto.xyz/view-pin/' + jQuery('#token-'+tokenIteratorId+'-id').text() + '</textArea>' +
+                    '<a class="button-style" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=app.cryptocarto.xyz/view-pin/' + jQuery('#token-'+tokenIteratorId+'-id').text() + '">Share on Facebook</a>' +
                     '<button onclick="document.getElementById(\'share-link\').select(); document.execCommand(\'copy\'); $(\'#copied-message-conf\').show().fadeOut(2000);">Copy link to clipboard</button>' +
                     '<span id="copied-message-conf"> Copied</span>' +
                 '</div>' +
                 '<div class="metadata">' +
-                    '<br />Pin #' + jQuery('#token-'+i+'-id').text() + '<br/>' +
+                    '<br />Pin #' + jQuery('#token-'+tokenIteratorId+'-id').text() + '<br/>' +
                     'Latitude: ' + lat + ' / Longitude: ' + lng + '<br/>' +
-                    'Created on ' + jQuery('#token-'+i+'-creation-timestamp').text() + 
-                    '<br/>Modified on ' + jQuery('#token-'+i+'-modification-timestamp').text() +
+                    'Created on ' + jQuery('#token-'+tokenIteratorId+'-creation-timestamp').text() + 
+                    '<br/>Modified on ' + jQuery('#token-'+tokenIteratorId+'-modification-timestamp').text() +
                     '<br/>' +'Tile coordinates: x = ' + xtile + ' ; y = ' + ytile +
-                    '<br/>' +'<a target="_blank" href="/img/pin-token/' + jQuery('#token-'+i+'-id').text() + '.png">View token image</a>' +
-                    '<br/>' +'<a target="_blank" href="/metadata/pin-token/' + jQuery('#token-'+i+'-id').text() + '">View token metadata JSON</a>' +
+                    '<br/>' +'<a target="_blank" href="/img/pin-token/' + jQuery('#token-'+tokenIteratorId+'-id').text() + '.png">View token image</a>' +
+                    '<br/>' +'<a target="_blank" href="/metadata/pin-token/' + jQuery('#token-'+tokenIteratorId+'-id').text() + '">View token metadata JSON</a>' +
                 '</div>' +
-                '<div class="transfer-pin transfer-pin-' + jQuery('#token-'+i+'-id').text() + '" id="transfer-pin-' + jQuery('#token-'+i+'-id').text() + '">' +
+                '<div class="transfer-pin transfer-pin-' + jQuery('#token-'+tokenIteratorId+'-id').text() + '" id="transfer-pin-' + jQuery('#token-'+tokenIteratorId+'-id').text() + '">' +
                     '<form class="transfer-pin-form" action="/transfer-pin" method="post">' +
                         '<br /><label for="transferaddress">Transfer token to address:</label><br />(uses 1 &#127757;)<br />' +
                         '<input type="text" class="form-control transferaddress" placeholder="0x..." name="transferaddress" required="true" />' +
-                        '<input type="hidden" class="form-control tokenidtotransfer" placeholder="id" name="tokenidtotransfer" required="true" value="' + jQuery('#token-'+i+'-id').text() + '"/>' +
+                        '<input type="hidden" class="form-control tokenidtotransfer" placeholder="id" name="tokenidtotransfer" required="true" value="' + jQuery('#token-'+tokenIteratorId+'-id').text() + '"/>' +
                         '<br /><button type="submit" class="submit-transfer" onclick="checkTransferForm();">Transfer token</button>' +
                         '<span class="loader"><br /><img src="/img/loader.gif" /> transferring token...</span>' +
                     '</form>' +
                 '</div>' +
-                '<div class="modify-pin modify-pin-' + jQuery('#token-'+i+'-id').text() + '" id="modify-pin-' + jQuery('#token-'+i+'-id').text() + '">' +
+                '<div class="modify-pin modify-pin-' + jQuery('#token-'+tokenIteratorId+'-id').text() + '" id="modify-pin-' + jQuery('#token-'+tokenIteratorId+'-id').text() + '">' +
                     '<form class="modify-pin-form" action="/modify-pin" method="post">' +
                         '<br /><label for="modifiedmessage">New message for this token:</label><br />(uses 1 &#127757;)<br />' +
-                        '<input type="text" class="form-control modifiedmessage" value="' + jQuery('#token-'+i+'-message').text() + '" name="modifiedmessage" required="true" />' +
-                        '<input type="hidden" class="form-control tokenidtomodify" placeholder="id" name="tokenidtomodify" required="true" value="' + jQuery('#token-'+i+'-id').text() + '"/>' +
+                        '<input type="text" class="form-control modifiedmessage" value="' + jQuery('#token-'+tokenIteratorId+'-message').text() + '" name="modifiedmessage" required="true" />' +
+                        '<input type="hidden" class="form-control tokenidtomodify" placeholder="id" name="tokenidtomodify" required="true" value="' + jQuery('#token-'+tokenIteratorId+'-id').text() + '"/>' +
                         '<br /><button type="submit" class="submit-modify" onclick="checkModifyForm();">Modify token</button>' +
                         '<span class="loader"><br /><img src="/img/loader.gif" /> modifying token...</span>' +
                     '</form>' +
                 '</div>' +
                 '</div>';
 
-            markers[jQuery('#token-'+i+'-id').text()] = L.marker([lat,lng]).addTo(map).bindPopup(popUpContent);
-
-            // Create a rectangle for the reserved spot around the pin
-            rectangles[jQuery('#token-'+i+'-id').text()] = L.rectangle([[lat-0.00005,lng-0.00005], [lat+0.00005,lng+0.00005]], {color: '#4054b2', weight: 1}).addTo(map).bindPopup(popUpContent);
-
-            // Open popup if needed
-            if (jQuery('#viewPinId').text() != "" && jQuery('#token-'+i+'-id').text() == jQuery('#viewPinId').text()) {
-                openNeededPopup();
-            }
-        }
+        popup.setContent(popupContent).update();
     }
 
-    var map = L.map('map').setView([parseFloat(jQuery('#currentlat').text()),parseFloat(jQuery('#currentlng').text())],16);
-    var rectangleToReserve = null;
 
-    L.tileLayer('https://map.cryptocarto.xyz/osm/{z}/{x}/{y}.png',{maxZoom:18, minZoom:14}).addTo(map);
 
     // Load markers for current area
     loadMarkers();
 
     updateMiniMap();
 
+    // Helper to open needed popup using viewPinId field
     function openNeededPopup() {
         var tokenId = jQuery('#viewPinId').text();
         jQuery('#viewPinId').text("");
@@ -141,8 +164,6 @@
         map.setView(map.unproject(coordinates));
     }
 
-    map.on('click', onMapClick);
-
     // Refresh tokens on move
     map.on('moveend', function(e){
         previousLat = $('#currentlat').text();
@@ -190,7 +211,8 @@
     loadPinTokens = function() {
         currentLat = jQuery('#currentlat').text();
         currentLng = jQuery('#currentlng').text();
-        
+        map.closePopup();
+
         //Display loader and scroll to top
         jQuery('.ajax-loader').show();
         jQuery('#tokens').scrollTop(0);
