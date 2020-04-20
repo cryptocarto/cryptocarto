@@ -33,7 +33,7 @@ module.exports = async function(req, res, next) {
 
     var optionsImageWatermark = {
       type: "image",
-      source: "http://ec2-3-8-193-219.eu-west-2.compute.amazonaws.com/osm/18/" + Math.floor(xtile) + "/" + Math.floor(ytile) + ".png",
+      source: "http://tile-manager.cryptocarto.xyz/osm/18/" + Math.floor(xtile) + "/" + Math.floor(ytile) + ".png",
       logo: __dirname + '/../img/cross.png',
       destination: __dirname + '/../token-images/' + tokenid + '.png',
       position: {
