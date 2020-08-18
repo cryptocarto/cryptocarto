@@ -1,7 +1,7 @@
 <% if (queryInfo) { %>
     <% if (queryInfo.substring(0,2) == "0x") { %>
         <h3>for <%= queryInfo.substring(0,10) %>
-            (browse on <a href="https://klaytn.orbexplorer.com/address/?address=<%= queryInfo %>" target="_blank">Orb Explorer</a>
+            (browse on <a href="https://orbexplorer.com/address/?address=<%= queryInfo %>" target="_blank">Orb Explorer</a>
             or on <a href="https://scope.klaytn.com/account/<%= queryInfo %>" target="_blank">Klaytn Scope</a>)
         </h3>
     <% } else { %>
