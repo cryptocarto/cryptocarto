@@ -62,13 +62,16 @@ const caver = require('./utils/caver')
 // Get CryptoCarto contract
 const CryptoCartoContract = require('./utils/cryptocarto-contract')
 
-// Watch ERC-721 transfers and update cache every minute
+// Watch ERC-721 transfers and update cache depending on BC_WATCHER_DELAY var
+var bcWatcherDelay = process.env.BC_WATCHER_DELAY || 30;
+var bcWatcherDelayWithMargin = parseInt(bcWatcherDelay) + Math.ceil(bcWatcherDelay / 10);
+console.log("Delays: " + bcWatcherDelay + " / " + bcWatcherDelayWithMargin);
 setInterval(async function() {
   try {
     await caver.klay.getBlockNumber().then(function(latestBlockNumber){
       console.log("Running transfer watcher at block " + latestBlockNumber);
       CryptoCartoContract.getPastEvents('Transfer', {
-        fromBlock: latestBlockNumber - 35, // Get events for last 35 blocks (30 for 30sec + margin)
+        fromBlock: latestBlockNumber - bcWatcherDelayWithMargin, // Get events since last watch
         toBlock: 'latest'}
       , function(error, events){
         try {
@@ -82,7 +85,7 @@ setInterval(async function() {
       })
 
       CryptoCartoContract.getPastEvents('PinTokenModified', {
-        fromBlock: latestBlockNumber - 35, // Get events for last 35 blocks (30 for 30sec + margin)
+        fromBlock: latestBlockNumber - bcWatcherDelayWithMargin, // Get events since last watch
         toBlock: 'latest'}
       , function(error, events){
         try {
@@ -95,7 +98,7 @@ setInterval(async function() {
       })
 
       CryptoCartoContract.getPastEvents('ConsumptionRightsChanged', {
-        fromBlock: latestBlockNumber - 35, // Get events for last 35 blocks (30 for 30sec + margin)
+        fromBlock: latestBlockNumber - bcWatcherDelayWithMargin, // Get events since last watch
         toBlock: 'latest'}
       , function(error, events){
         try {
@@ -145,7 +148,7 @@ setInterval(async function() {
     updatePinTokensDB();
   } catch (error) { console.error("Error while watching ERC-721 transfers") }
   // Getting pin data
-}, 30000); // 30sec
+}, bcWatcherDelay * 1000); // Convert sec to ms
 
 // Triggers an update at app launch
 updatePinTokensDB = require('./utils/update-pin-tokens-db')
