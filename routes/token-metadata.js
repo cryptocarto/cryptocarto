@@ -29,8 +29,10 @@ module.exports = async function(req, res, next) {
     };
     
     // Render view
+    res.set('Content-Type', 'application/json');
     res.render('token-metadata', { tokenMetadata: tokenMetadata });
   } catch (error) { 
+    res.set('Content-Type', 'application/json');
     res.render('token-metadata', { tokenMetadata: { 'error' : 'Invalid query' }}); 
   }
 };
