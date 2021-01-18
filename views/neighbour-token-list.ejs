@@ -1,10 +1,10 @@
 <div id="neighbour-token-list">
     <% if (tokenIds.length && tokenIds.length > 0) { %>
         <% for(var i=0; i < tokenIds.length; i++) { %>
-            <div class="token" onclick="
+            <div class="token<% if (i > 100) { %> hide<% } %>"  onclick="
                 jQuery('#currentlat').text($(this).children('.token-data').children('.global-pin-lat').text());
                 jQuery('#currentlng').text($(this).children('.token-data').children('.global-pin-lng').text());
-                map.setView(markers[$(this).children('.token-data').children('.global-pin-id').text()].getLatLng(),16);
+                map.setView(markers[$(this).children('.token-data').children('.global-pin-id').text()].getLatLng(),18);
                 jQuery('#viewPinId').text($(this).children('.token-data').children('.global-pin-id').text());
                 loadPinTokens();" >
                 <% if (i < 40) { %>

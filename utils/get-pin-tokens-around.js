@@ -9,8 +9,8 @@ const DisplayName = require('./displayname')
 module.exports = async function (latitude, longitude) {
     // Get pins from DB (incuding new ones)
     var params = { 
-      latitude: { $lt: latitude*10000+1000, $gt: latitude*10000-1000},
-      longitude: { $lt: longitude*10000+1000, $gt: longitude*10000-1000}
+      latitude: { $lt: latitude*10000+10000, $gt: latitude*10000-10000},
+      longitude: { $lt: longitude*10000+10000, $gt: longitude*10000-10000}
     };
 
     // Get tokens sorted by distance from center

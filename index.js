@@ -22,6 +22,7 @@ app.use('/css', express.static(__dirname + '/css')); // redirect css
 app.use('/js', express.static(__dirname + '/node_modules/jquery/dist')); // redirect JS jQuery
 app.use('/js', express.static(__dirname + '/node_modules/jquery-ui-dist/')); // redirect JS jQuery UI
 app.use('/js', express.static(__dirname + '/node_modules/jquery-validation/dist/')); // redirect JS jQuery validation
+app.use('/cluster', express.static(__dirname + '/node_modules/leaflet.markercluster/dist/')); // redirect JS cluster
 app.use('/token', express.static(__dirname + '/token-images')); // redirect token images
 app.use(require('cookie-parser')());
 app.use(require('body-parser').urlencoded({ extended: true }));

@@ -17,6 +17,9 @@
 		<script src="/js/jquery-ui.min.js"></script>
 		<script src="/js/jquery.validate.min.js"></script>
 		<script type="text/javascript" src="/js/blockies.min.js"></script>
+		<script type="text/javascript" src="/cluster/leaflet.markercluster.js"></script>
+		<link href="/cluster/MarkerCluster.Default.css" rel="stylesheet" />
+		<link href="/cluster/MarkerCluster.css" rel="stylesheet" />
 <% if (typeof openPinId != 'undefined' && openPinId) { %>
 		<meta property="og:title" content="<%= allTokensData[openPinId]['message'] %> - CryptoCarto Pin #<%= openPinId %>" />
 		<meta property="og:url" content="https://app.cryptocarto.xyz/view-pin/<%= openPinId %>" />

@@ -16,7 +16,7 @@
             jQuery('.pin-explorer').hide();
             jQuery('#currentlat').text($(this).children('.token-data').children('.global-pin-lat').text());
             jQuery('#currentlng').text($(this).children('.token-data').children('.global-pin-lng').text());
-            map.setView([$(this).children('.token-data').children('.global-pin-lat').text(), $(this).children('.token-data').children('.global-pin-lng').text()],16);
+            map.setView([$(this).children('.token-data').children('.global-pin-lat').text(), $(this).children('.token-data').children('.global-pin-lng').text()],18);
             jQuery('#viewPinId').text($(this).children('.token-data').children('.global-pin-id').text());
             loadPinTokens();" >
             <% if (i < 40) { %>
