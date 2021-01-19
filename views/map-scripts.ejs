@@ -228,8 +228,13 @@
 
         jQuery.ajax({
             method: "POST",
-            url: "/get-pin-tokens",
-            data: { latitude: currentLat, longitude: currentLng }
+            url: "/get-pin-tokens-in-bounds",
+            data: {
+                highLatitude: map.getBounds()._northEast.lat, 
+                highLongitude: map.getBounds()._northEast.lng,
+                lowLatitude: map.getBounds()._southWest.lat, 
+                lowLongitude: map.getBounds()._southWest.lng
+            }
         })
         .done(function(response) {
             //Hide loader
