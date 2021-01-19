@@ -14,8 +14,14 @@ module.exports = async function (lowLatitude, highLatitude, lowLongitude, highLo
 
     // Get pins from DB (incuding new ones)
     var params = { 
-      latitude: { $lt: highLatitude*10000+latMargin*10000, $gt: lowLatitude*10000-latMargin*10000},
-      longitude: { $lt: highLongitude*10000+lngMargin*10000, $gt: lowLongitude*10000-lngMargin*10000}
+      latitude: { 
+        $lt: highLatitude*10000+Math.max(latMargin*10000, 100), 
+        $gt: lowLatitude*10000-Math.max(latMargin*10000, 100)
+      },
+      longitude: { 
+        $lt: highLongitude*10000+Math.max(lngMargin*10000, 100), 
+        $gt: lowLongitude*10000-Math.max(lngMargin*10000, 100) 
+      }
     };
 
     // Calculate center point
@@ -24,7 +30,7 @@ module.exports = async function (lowLatitude, highLatitude, lowLongitude, highLo
 
     // Get tokens sorted by distance from center
     var tokensDataFromDB = await PinToken.find(params);
-    
+
     tokensDataFromDB.sort(function(doc1, doc2) { 
       doc1DistanceToCenter = Math.sqrt(
         Math.pow(Math.abs(Math.abs(doc1.latitude) - Math.abs(latitude*10000)), 2) + 
