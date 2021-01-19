@@ -6,11 +6,16 @@
 const PinToken = require('./pintoken')
 const DisplayName = require('./displayname')
 
-module.exports = async function (lowLatitude, highLatitude, lowLongitude, highLongitude, margin = 1000) {
+module.exports = async function (lowLatitude, highLatitude, lowLongitude, highLongitude) {
+
+    // Calculate margin as a 50% more than current map displayed
+    latMargin = Math.abs(highLatitude - lowLatitude) * 0.5;
+    lngMargin = Math.abs(highLongitude - lowLongitude) * 0.5;
+
     // Get pins from DB (incuding new ones)
     var params = { 
-      latitude: { $lt: highLatitude*10000+margin, $gt: lowLatitude*10000-margin},
-      longitude: { $lt: highLongitude*10000+margin, $gt: lowLongitude*10000-margin}
+      latitude: { $lt: highLatitude*10000+latMargin*10000, $gt: lowLatitude*10000-latMargin*10000},
+      longitude: { $lt: highLongitude*10000+lngMargin*10000, $gt: lowLongitude*10000-lngMargin*10000}
     };
 
     // Calculate center point
@@ -19,7 +24,7 @@ module.exports = async function (lowLatitude, highLatitude, lowLongitude, highLo
 
     // Get tokens sorted by distance from center
     var tokensDataFromDB = await PinToken.find(params);
-    console.log(tokensDataFromDB.length)
+    
     tokensDataFromDB.sort(function(doc1, doc2) { 
       doc1DistanceToCenter = Math.sqrt(
         Math.pow(Math.abs(Math.abs(doc1.latitude) - Math.abs(latitude*10000)), 2) + 

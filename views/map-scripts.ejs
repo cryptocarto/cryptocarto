@@ -12,7 +12,7 @@
         disableClusteringAtZoom : 18
     });;
 
-    L.tileLayer('https://tile-manager.cryptocarto.xyz/osm/{z}/{x}/{y}.png',{maxZoom:18, minZoom:10}).addTo(map);
+    L.tileLayer('https://tile-manager.cryptocarto.xyz/osm/{z}/{x}/{y}.png',{maxZoom:18, minZoom:6}).addTo(map);
 
     // Click on map handle 
     map.on('click', onMapClick);
@@ -180,13 +180,28 @@
         newLat = Math.round(map.getCenter().lat * 10000)/10000;
         newLng = Math.round(map.getCenter().lng * 10000)/10000;
 
-        // Perform only if moved more than 0.02 in coordinates
-        if (Math.abs(previousLat-newLat) > 0.02 || Math.abs(previousLng-newLng) > 0.02) {
+        // Calculate current lat/lng distance before needing to reload
+        latDiffToReload = Math.abs(map.getBounds()._northEast.lat - map.getBounds()._southWest.lat) / 2.0;
+        lngDiffToReload = Math.abs(map.getBounds()._northEast.lng - map.getBounds()._southWest.lng) / 2.0;
+
+        if (Math.abs(previousLat-newLat) > latDiffToReload || Math.abs(previousLng-newLng) > lngDiffToReload) {
             $('#currentlat').text(newLat);
             $('#currentlng').text(newLng);
             loadPinTokens();
         }
     
+    });
+
+    // Refresh tokens on move
+    map.on('zoomend', function(e){
+        previousZoom = $('#currentzoom').text();
+        newZoom = map.getZoom();
+        $('#currentzoom').text(newZoom);
+
+        // Perform only if moved more than 0.02 in coordinates
+        if (previousZoom > newZoom) {
+            loadPinTokens();
+        }
     });
 
     // Transaction form validator
