@@ -1,44 +1,66 @@
 <div id="neighbour-token-list">
     <% if (tokenIds.length && tokenIds.length > 0) { %>
         <% for(var i=0; i < tokenIds.length; i++) { %>
-            <div class="token<% if (i > 100) { %> hide<% } %>"  onclick="
-                jQuery('#currentlat').text($(this).children('.token-data').children('.global-pin-lat').text());
-                jQuery('#currentlng').text($(this).children('.token-data').children('.global-pin-lng').text());
-                map.setView(markers[$(this).children('.token-data').children('.global-pin-id').text()].getLatLng(),18);
-                jQuery('#viewPinId').text($(this).children('.token-data').children('.global-pin-id').text());
-                loadPinTokens();" >
-                <% if (i < 40) { %>
-                    <img class="token-image" src="/img/pin-token/<%= allTokensData[tokenIds[i]]['tokenId'] %>.png" />
-                <% } else { %>
-                    <img class="token-default-image" src="/leaflet/images/marker-icon-2x.png" />
-                <% } %>
-                <p class="token-info">
-                    <b><%= allTokensData[tokenIds[i]]['message'].substring(0,50) %><% if (allTokensData[tokenIds[i]]['message'].length > 50) { %>...<% } %></b><br/>
-                    From <a target="_blank" class="pin-explorer-link" onclick="explorePinTokens({owner: $(this).parent().parent().children('.token-data').children('.token-owner-fulladdress').text() })" >
-                    <% if (typeof displayNames != 'undefined' && displayNames[allTokensData[tokenIds[i]]['owner'].toLowerCase()]) { %>
-                        <%= displayNames[allTokensData[tokenIds[i]]['owner'].toLowerCase()] %>
+            <% if (i < 80) { %>
+                <div class="token"  onclick="
+                    jQuery('#currentlat').text($(this).children('.token-data').children('.global-pin-lat').text());
+                    jQuery('#currentlng').text($(this).children('.token-data').children('.global-pin-lng').text());
+                    map.setView(markers[$(this).children('.token-data').children('.global-pin-id').text()].getLatLng(),18);
+                    jQuery('#viewPinId').text($(this).children('.token-data').children('.global-pin-id').text());
+                    loadPinTokens();" >
+                    <% if (i < 30) { %>
+                        <img class="token-image" src="/img/pin-token/<%= allTokensData[tokenIds[i]]['tokenId'] %>.png" />
                     <% } else { %>
-                        <%= allTokensData[tokenIds[i]]['owner'].substring(0,10) %>
-                    <% } %></a>
-                </p>
-                <div class="token-data">
-                    <b><span id="token-<%= i %>-message"><%= allTokensData[tokenIds[i]]['message'] %></span></b><br/>
-                    Pin #<span id="token-<%= i %>-id" class="global-pin-id"><%= allTokensData[tokenIds[i]]['tokenId'] %></span><br />
-                    Owned by <a target="_blank" id="token-<%= i %>-displayname" class="pin-explorer-link" onload="explorePinTokens({owner: $(this).siblings('.global-pin-id').text() })" >
+                        <img class="token-default-image" src="/leaflet/images/marker-icon-2x.png" />
+                    <% } %>
+                    <p class="token-info">
+                        <b><%= allTokensData[tokenIds[i]]['message'].substring(0,50) %><% if (allTokensData[tokenIds[i]]['message'].length > 50) { %>...<% } %></b><br/>
+                        From <a target="_blank" class="pin-explorer-link" onclick="explorePinTokens({owner: $(this).parent().parent().children('.token-data').children('.token-owner-fulladdress').text() })" >
                         <% if (typeof displayNames != 'undefined' && displayNames[allTokensData[tokenIds[i]]['owner'].toLowerCase()]) { %>
                             <%= displayNames[allTokensData[tokenIds[i]]['owner'].toLowerCase()] %>
                         <% } else { %>
                             <%= allTokensData[tokenIds[i]]['owner'].substring(0,10) %>
-                        <% } %>
-                    </a><span id="token-<%= i %>-owner" class="token-owner-fulladdress"><%= allTokensData[tokenIds[i]]['owner'] %></span>
-                    (<a target="_blank" href="https://scope.klaytn.com/account/<%= allTokensData[tokenIds[i]]['owner'] %>">details</a>)<br />
-                    Latitude: <span id="token-<%= i %>-latitude" class="global-pin-lat"><%= allTokensData[tokenIds[i]]['latitude'] / 10000 %></span>
-                    / Longitude: <span id="token-<%= i %>-longitude" class="global-pin-lng"><%= allTokensData[tokenIds[i]]['longitude'] / 10000 %></span><br />
-                    Created on <span id="token-<%= i %>-creation-timestamp"><%= new Date(parseInt(allTokensData[tokenIds[i]]['creationTimestamp'] * 1000)).toUTCString() %></span><br />
-                    Modified on <span id="token-<%= i %>-modification-timestamp"><%= new Date(parseInt(allTokensData[tokenIds[i]]['modificationTimestamp'] * 1000)).toUTCString() %></span>
-                    <div class="spacer"></div>
+                        <% } %></a>
+                    </p>
+                    <div class="token-data">
+                        <b><span id="token-<%= i %>-message"><%= allTokensData[tokenIds[i]]['message'] %></span></b><br/>
+                        Pin #<span id="token-<%= i %>-id" class="global-pin-id"><%= allTokensData[tokenIds[i]]['tokenId'] %></span><br />
+                        Owned by <a target="_blank" id="token-<%= i %>-displayname" class="pin-explorer-link" onload="explorePinTokens({owner: $(this).siblings('.global-pin-id').text() })" >
+                            <% if (typeof displayNames != 'undefined' && displayNames[allTokensData[tokenIds[i]]['owner'].toLowerCase()]) { %>
+                                <%= displayNames[allTokensData[tokenIds[i]]['owner'].toLowerCase()] %>
+                            <% } else { %>
+                                <%= allTokensData[tokenIds[i]]['owner'].substring(0,10) %>
+                            <% } %>
+                        </a><span id="token-<%= i %>-owner" class="token-owner-fulladdress"><%= allTokensData[tokenIds[i]]['owner'] %></span>
+                        (<a target="_blank" href="https://scope.klaytn.com/account/<%= allTokensData[tokenIds[i]]['owner'] %>">details</a>)<br />
+                        Latitude: <span id="token-<%= i %>-latitude" class="global-pin-lat"><%= allTokensData[tokenIds[i]]['latitude'] / 10000 %></span>
+                        / Longitude: <span id="token-<%= i %>-longitude" class="global-pin-lng"><%= allTokensData[tokenIds[i]]['longitude'] / 10000 %></span><br />
+                        Created on <span id="token-<%= i %>-creation-timestamp"><%= new Date(parseInt(allTokensData[tokenIds[i]]['creationTimestamp'] * 1000)).toUTCString() %></span><br />
+                        Modified on <span id="token-<%= i %>-modification-timestamp"><%= new Date(parseInt(allTokensData[tokenIds[i]]['modificationTimestamp'] * 1000)).toUTCString() %></span>
+                        <div class="spacer"></div>
+                    </div>
                 </div>
-            </div>
+            <% } else { %>
+                <div class="token hide">
+                    <div class="token-data">
+                        <b><span id="token-<%= i %>-message"><%= allTokensData[tokenIds[i]]['message'] %></span></b><br/>
+                        Pin #<span id="token-<%= i %>-id" class="global-pin-id"><%= allTokensData[tokenIds[i]]['tokenId'] %></span><br />
+                        Owned by <a target="_blank" id="token-<%= i %>-displayname" class="pin-explorer-link" onload="explorePinTokens({owner: $(this).siblings('.global-pin-id').text() })" >
+                            <% if (typeof displayNames != 'undefined' && displayNames[allTokensData[tokenIds[i]]['owner'].toLowerCase()]) { %>
+                                <%= displayNames[allTokensData[tokenIds[i]]['owner'].toLowerCase()] %>
+                            <% } else { %>
+                                <%= allTokensData[tokenIds[i]]['owner'].substring(0,10) %>
+                            <% } %>
+                        </a><span id="token-<%= i %>-owner" class="token-owner-fulladdress"><%= allTokensData[tokenIds[i]]['owner'] %></span>
+                        (<a target="_blank" href="https://scope.klaytn.com/account/<%= allTokensData[tokenIds[i]]['owner'] %>">details</a>)<br />
+                        Latitude: <span id="token-<%= i %>-latitude" class="global-pin-lat"><%= allTokensData[tokenIds[i]]['latitude'] / 10000 %></span>
+                        / Longitude: <span id="token-<%= i %>-longitude" class="global-pin-lng"><%= allTokensData[tokenIds[i]]['longitude'] / 10000 %></span><br />
+                        Created on <span id="token-<%= i %>-creation-timestamp"><%= new Date(parseInt(allTokensData[tokenIds[i]]['creationTimestamp'] * 1000)).toUTCString() %></span><br />
+                        Modified on <span id="token-<%= i %>-modification-timestamp"><%= new Date(parseInt(allTokensData[tokenIds[i]]['modificationTimestamp'] * 1000)).toUTCString() %></span>
+                        <div class="spacer"></div>
+                    </div>
+                </div>
+            <% } %>
         <% } %>
     <% } else { %>
         <p>No tokens around here... why not create a new one?<br />
