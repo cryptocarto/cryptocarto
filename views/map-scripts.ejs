@@ -4,10 +4,15 @@
     var markers = new Array;
     var rectangles = new Array;
 
-    var map = L.map('map').setView([parseFloat(jQuery('#currentlat').text()),parseFloat(jQuery('#currentlng').text())],16);
+    var map = L.map('map').setView([parseFloat(jQuery('#currentlat').text()),parseFloat(jQuery('#currentlng').text())],18);
     var rectangleToReserve = null;
 
-    L.tileLayer('https://tile-manager.cryptocarto.xyz/osm/{z}/{x}/{y}.png',{maxZoom:18, minZoom:14}).addTo(map);
+    // Define clusters
+    var clusters = L.markerClusterGroup({
+        disableClusteringAtZoom : 18
+    });;
+
+    L.tileLayer('https://tile-manager.cryptocarto.xyz/osm/{z}/{x}/{y}.png',{maxZoom:18, minZoom:6}).addTo(map);
 
     // Click on map handle 
     map.on('click', onMapClick);
@@ -36,11 +41,16 @@
             popupObject = L.popup({minWidth: 255}).setContent('Loading...');
             popupObject.tokenIteratorId = i;
 
-            markers[jQuery('#token-'+i+'-id').text()] = L.marker([lat,lng]).addTo(map).bindPopup(popupObject);
+            markers[jQuery('#token-'+i+'-id').text()] = L.marker([lat,lng]).bindPopup(popupObject);
+            clusters.addLayer(markers[jQuery('#token-'+i+'-id').text()]);
 
             // Create a rectangle for the reserved spot around the pin
-            rectangles[jQuery('#token-'+i+'-id').text()] = L.rectangle([[lat-0.00005,lng-0.00005], [lat+0.00005,lng+0.00005]], {color: '#4054b2', weight: 1}).addTo(map).bindPopup(popupObject);
+            rectangles[jQuery('#token-'+i+'-id').text()] = L.rectangle([[lat-0.00005,lng-0.00005], [lat+0.00005,lng+0.00005]], {color: '#4054b2', weight: 1}).bindPopup(popupObject);
+            clusters.addLayer(rectangles[jQuery('#token-'+i+'-id').text()]);
+        
         }
+       
+        map.addLayer(clusters);
         
         // Open popup if needed
         if (jQuery('#viewPinId').text() != "" && (jQuery('#viewPinId').text() in markers)) {
@@ -105,8 +115,6 @@
         popup.setContent(popupContent).update();
     }
 
-
-
     // Load markers for current area
     loadMarkers();
 
@@ -114,6 +122,7 @@
 
     // Helper to open needed popup using viewPinId field
     function openNeededPopup() {
+        map.setZoom(18);
         var tokenId = jQuery('#viewPinId').text();
         jQuery('#viewPinId').text("");
         
@@ -171,13 +180,28 @@
         newLat = Math.round(map.getCenter().lat * 10000)/10000;
         newLng = Math.round(map.getCenter().lng * 10000)/10000;
 
-        // Perform only if moved more than 0.02 in coordinates
-        if (Math.abs(previousLat-newLat) > 0.02 || Math.abs(previousLng-newLng) > 0.02) {
+        // Calculate current lat/lng distance before needing to reload
+        latDiffToReload = Math.abs(map.getBounds()._northEast.lat - map.getBounds()._southWest.lat) / 2.0;
+        lngDiffToReload = Math.abs(map.getBounds()._northEast.lng - map.getBounds()._southWest.lng) / 2.0;
+
+        if (Math.abs(previousLat-newLat) > latDiffToReload || Math.abs(previousLng-newLng) > lngDiffToReload) {
             $('#currentlat').text(newLat);
             $('#currentlng').text(newLng);
             loadPinTokens();
         }
     
+    });
+
+    // Refresh tokens on move
+    map.on('zoomend', function(e){
+        previousZoom = $('#currentzoom').text();
+        newZoom = map.getZoom();
+        $('#currentzoom').text(newZoom);
+
+        // Perform only if moved more than 0.02 in coordinates
+        if (previousZoom > newZoom) {
+            loadPinTokens();
+        }
     });
 
     // Transaction form validator
@@ -219,8 +243,13 @@
 
         jQuery.ajax({
             method: "POST",
-            url: "/get-pin-tokens",
-            data: { latitude: currentLat, longitude: currentLng }
+            url: "/get-pin-tokens-in-bounds",
+            data: {
+                highLatitude: map.getBounds()._northEast.lat, 
+                highLongitude: map.getBounds()._northEast.lng,
+                lowLatitude: map.getBounds()._southWest.lat, 
+                lowLongitude: map.getBounds()._southWest.lng
+            }
         })
         .done(function(response) {
             //Hide loader
@@ -240,6 +269,9 @@
                 map.removeLayer(rectangles[tokenIdToRemove]);
             }  
             rectangles = []
+
+            //Remove clusters
+            clusters.clearLayers();
 
             // Load markers for current area
             loadMarkers();

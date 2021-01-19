@@ -9,6 +9,7 @@ var router = express.Router();
 router.get('/', require('./main'));
 router.post('/get-pin-tokens', require('./get-pin-tokens'));
 router.post('/get-pin-tokens-with-params', require('./get-pin-tokens-with-params'));
+router.post('/get-pin-tokens-in-bounds', require('./get-pin-tokens-in-bounds'));
 router.post('/new-transaction', require('./new-transaction'));
 router.post('/import-pk', require('./import-pk'));
 router.get('/wipe-key', require('./wipe-key'));

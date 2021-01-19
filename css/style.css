@@ -380,3 +380,11 @@ input, textarea {
 .leaderboard-item .owner {
     display: none;
 }
+
+.marker-cluster {
+    color: #333;
+}
+
+.hide {
+    display: none;
+}

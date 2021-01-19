@@ -1,20 +1,36 @@
 /*
-* Function to get PinTokens around given lat/lng - getPinTokensAround
+* Function to get PinTokens in given map bounds - getPinTokensInBounds
 */
 
 // Get required interfaces
 const PinToken = require('./pintoken')
 const DisplayName = require('./displayname')
 
-module.exports = async function (latitude, longitude) {
+module.exports = async function (lowLatitude, highLatitude, lowLongitude, highLongitude) {
+
+    // Calculate margin as a 50% more than current map displayed
+    latMargin = Math.abs(highLatitude - lowLatitude) * 0.5;
+    lngMargin = Math.abs(highLongitude - lowLongitude) * 0.5;
+
     // Get pins from DB (incuding new ones)
     var params = { 
-      latitude: { $lt: latitude*10000+10000, $gt: latitude*10000-10000},
-      longitude: { $lt: longitude*10000+10000, $gt: longitude*10000-10000}
+      latitude: { 
+        $lt: highLatitude*10000+Math.max(latMargin*10000, 100), 
+        $gt: lowLatitude*10000-Math.max(latMargin*10000, 100)
+      },
+      longitude: { 
+        $lt: highLongitude*10000+Math.max(lngMargin*10000, 100), 
+        $gt: lowLongitude*10000-Math.max(lngMargin*10000, 100) 
+      }
     };
+
+    // Calculate center point
+    latitude = (lowLatitude + highLatitude) / 2.0;
+    longitude = (lowLongitude + highLongitude) / 2.0;
 
     // Get tokens sorted by distance from center
     var tokensDataFromDB = await PinToken.find(params);
+
     tokensDataFromDB.sort(function(doc1, doc2) { 
       doc1DistanceToCenter = Math.sqrt(
         Math.pow(Math.abs(Math.abs(doc1.latitude) - Math.abs(latitude*10000)), 2) + 
