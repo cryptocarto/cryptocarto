@@ -4,7 +4,7 @@
 
 //Setting up Klaytn data
 const Caver = require('caver-js')
-const caver = new Caver('https://api.'+process.env.KLAYTN_NETWORK+'.klaytn.net:8651/')
+const caver = new Caver(process.env.CAVER_PROVIDER)
 
 // Setting up fee delegation structure
 caver.klay.accounts.wallet.add(process.env.FEE_PAYER_PRIVATE_KEY, process.env.FEE_PAYER_ADDRESS);
