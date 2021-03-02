@@ -10,6 +10,7 @@
 						Hello <b><% if (typeof displayname != 'undefined' && displayname) { %><%= displayname %><% } %></b>
 						- Level <%= userlevel %>
 					</p>
+
 					<p>&#127757;
 						<% if (typeof consumptionrights != 'undefined') { %><%= consumptionrights %><% } %>
 						<% if (typeof consumptionrightslastrefill != 'undefined' && consumptionrightslastrefill) { %>
@@ -27,18 +28,19 @@
 					<div id="user-keys">
 						<label for="address">Address: </label>
 						<input type="text" disabled="disabled" class="form-control" placeholder="..." name="address" id="address" 
-						value="<% if (typeof address != 'undefined' && address) { %><%= address %><% } %>" />
-						<br />
-						<label for="privatekey">PrivateKey: </label>
-						<input type="password" disabled="disabled" class="form-control" placeholder="..." name="privatekey" id="privatekey" 
+						value="<% if (typeof address != 'undefined' && address) { %><%= address %><% } %>" /><br/>
+						<label class="hide-for-kaikas" for="privatekey">PrivateKey: </label>
+						<input class="hide-for-kaikas" type="password" disabled="disabled" class="form-control" placeholder="..." name="privatekey" id="privatekey" 
 						value="<% if (typeof privatekey != 'undefined' && privatekey) { %><%= privatekey %><% } %>" />
-						<br />
-						<button onclick="
+						<div class="spacer"></div>
+						<button class="hide-for-kaikas" onclick="
 							if ($('#privatekey').attr('type') == 'password') { $('#privatekey').attr('type', 'text') }
 							else { $('#privatekey').attr('type', 'password') }">Show/Hide</button>
-						<button onclick="window.location.href = '/save-user-info';">Save to disk</button>
-						<button onclick="$('#user-keys').hide();$('#user-new-pk').show();$('#newprivatekey').focus()">Import other key</button>
+						<button class="hide-for-kaikas" onclick="window.location.href = '/save-user-info';">Save to disk</button>
+						<button class="hide-for-kaikas" onclick="$('#user-keys').hide();$('#user-new-pk').show();$('#newprivatekey').focus()">Import other key</button>
 						<button onclick="$('#user-keys').hide();$('#user-change-name').show();$('#newname').focus()">Change name</button>
+						<button class="show-for-kaikas" onclick="disconnectKaikas()">Disconnect Kaikas</button>
+						<span class="show-for-kaikas">Kaikas is connected</span>
 					</div>
 			
 					<div id="user-new-pk">
@@ -59,6 +61,12 @@
 							<button type="button" onclick="$('#user-keys').show();$('#user-change-name').hide()">Cancel</button>
 						</form>
 					</div>
+
+					
+					<p id="connect-kaikas" style="display:none;">
+						<span id="kaikas-text">Kaikas Wallet is detected</span>
+						<button type="button" onclick="connectKaikas()">Connect Kaikas</button>
+					</p>
 
 					CryptoCarto 2021 - Contract <a target="_blank" href="https://scope.klaytn.com/account/0xe3656452c8238334efdfc811d6f98e5962fe4461">0xe365...4461</a>
 					(rev <a target="_blank" href="https://github.com/cryptocarto/cryptocarto/blob/8de892dd04f0349d5296bb4520b7b45a9f78a90a/contracts/CryptoCartoPinTokenContract.sol">8de892d</a>)

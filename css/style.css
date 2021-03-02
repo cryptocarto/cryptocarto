@@ -385,6 +385,6 @@ input, textarea {
     color: #333;
 }
 
-.hide {
+.hide, .show-for-kaikas {
     display: none;
 }

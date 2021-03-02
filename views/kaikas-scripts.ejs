@@ -1,0 +1,96 @@
+<script>
+    // Check if kaikas is present before proceeding
+    // (network IDs : 1010 for baobab, 8217 for cypress)
+    // && klaytn.networkVersion == "8217";
+    kaikasDetected = typeof window.klaytn !== 'undefined' && klaytn.isKaikas;
+
+    // Check if Kaisas was previously connected
+    isKaikasInUse = $('#kaikasinuse').text() == "true";
+
+    if (kaikasDetected) {
+
+        // Show connect button if Kaikas is detected but not connected
+        if (!isKaikasInUse) {
+            $('#connect-kaikas').show();
+        }
+
+        // If kaikas in use, show kaikas data and activate event listeners
+        if (isKaikasInUse) {
+            $('.hide-for-kaikas').hide();
+            $('.show-for-kaikas').show();
+
+            // Reload on account change
+            klaytn.on('accountsChanged', function(accounts) {
+                setKaikasAddress(klaytn.selectedAddress);
+            })
+
+            // Reload on network change
+            
+            // klaytn.on('networkChanged', function() {
+            //     alert('Network changed on Kaikas, page will reload');
+            //     window.location.reload(true);
+            // })
+        }
+        
+    }
+
+    // Function to send Kaikas address to server
+    setKaikasAddress = async function(address) {
+        jQuery.ajax({ method: "POST", url: "/connect-kaikas", data: {
+                kaikasaddress: address
+            }
+        }).done(function(response) {
+            $('#kaikas-text').text("Kaikas address " + address.substring(0,8) + "... now in use");
+            alert('Kaikas account loaded, page will reload');
+            window.location.reload(true);
+        }).fail(function() { 
+            $('#kaikas-text').text("Connection error with partial state. Please reload Kaikas");
+        });
+    };
+
+    // Function to connect Kaikas
+    connectKaikas = async function() {
+        $('#kaikas-text').text("Connecting to kaikas...");
+
+        // Request connection to Kaikas
+        if (typeof klaytn.selectedAddress == 'undefined' || klaytn.selectedAddress == '') {
+            accounts = await klaytn.enable();
+            kaikasAddress = accounts[0];
+        } else {
+            kaikasAddress = klaytn.selectedAddress
+        }
+
+        // Check if connected
+        if (typeof kaikasAddress == 'undefined') {
+            $('#kaikas-text').text("Connection failed... Retry?");
+        } else {
+            $('#kaikas-text').text("Confirming connection");
+            setKaikasAddress(kaikasAddress);
+        } 
+    };
+
+    // Function to disconnect Kaikas and restore CC address
+    disconnectKaikas = async function(address) {
+        jQuery.ajax({ method: "GET", url: "/disconnect-kaikas"}).done(function(response) {
+            $('#kaikas-text').text("Kaikas disconnected.");
+            alert('Kaikas disconnected, page will reload');
+            window.location.reload(true);
+        }).fail(function() { 
+            $('#kaikas-text').text("Kaikas error with partial state. Please reload Kaikas");
+        });
+    };
+    
+    // If Kaikas previously connected, but address is different, reconnect with new address
+    isDifferentAddress = typeof window.klaytn !== 'undefined' 
+                         && typeof window.klaytn.selectedAddress !== 'undefined'
+                         && $('#address').val().toLowerCase() != klaytn.selectedAddress.toLowerCase();
+    if (kaikasDetected && isKaikasInUse && isDifferentAddress) {
+        setKaikasAddress(klaytn.selectedAddress);
+    }
+
+    // If Kaikas previously connected, but there is no address (disabled/locked), restore CC address
+    if ((!kaikasDetected && isKaikasInUse) || (kaikasDetected && isKaikasInUse && typeof klaytn.selectedAddress == 'undefined')) {
+        disconnectKaikas();
+    }
+
+</script>

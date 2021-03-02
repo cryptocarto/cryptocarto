@@ -20,8 +20,14 @@ module.exports = async function(req, res, next) {
       var CrawlerDetector = new Crawler();
       var isCrawler = CrawlerDetector.isCrawler(req.headers['user-agent']);
 
+      // Initializes Kaikas state
+      if (typeof req.session.kaikasInUse == 'undefined') {
+        req.session.kaikasInUse = false;
+        res.locals.kaikasInUse = false;
+      }
+
       // Create a new account on the fly if not in session
-      if ((typeof req.session.address == 'undefined') || (typeof req.session.privatekey == 'undefined')) {
+      if ((typeof req.session.address == 'undefined') && (typeof req.session.privatekey == 'undefined')) {
         const newAccount = caver.klay.accounts.create();
         req.session.address = newAccount.address;
         res.locals.address = newAccount.address;
