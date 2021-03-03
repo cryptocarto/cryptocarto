@@ -211,8 +211,8 @@
             $('.leaflet-popup').find(".submit-transaction").attr('disabled', true);
             $('.leaflet-popup').find('.loader').show();
 
-                // Special ajax treatment for Kaikas
-                if ($('#kaikasinuse').text() == "true") {
+            // Special ajax treatment for Kaikas
+            if ($('#kaikasinuse').text() == "true") {
                 jQuery.ajax({
                     method: "POST",
                     url: "/new-transaction",
@@ -261,18 +261,104 @@
     // Transfer form validator
     checkTransferForm = function() {
         if ($('.leaflet-popup').find(".transfer-pin-form").valid()) {
-            $('.leaflet-popup').find(".transfer-pin-form").submit();
+            
             $('.leaflet-popup').find(".submit-transfer").attr('disabled', true);
             $('.leaflet-popup').find('.loader').show();
+
+            // Special ajax treatment for Kaikas
+            if ($('#kaikasinuse').text() == "true") {
+                jQuery.ajax({
+                    method: "POST",
+                    url: "/transfer-pin",
+                    data: {
+                        transferaddress: $('.leaflet-popup').find('.transferaddress').val(), 
+                        tokenidtotransfer: $('.leaflet-popup').find('.tokenidtotransfer').val()
+                    }
+                })
+                .done(async function(response) {
+
+                    // Awaits signing from Kaikas
+                    console.log("Signing tx with Kaikas")
+                    signedTx = await window.caver.klay.signTransaction(response);
+
+                    // Send signedTx to server for fee delegated send 
+                    jQuery.ajax({
+                        method: "POST",
+                        url: "/transfer-pin",
+                        data: {
+                            signedtx: signedTx.rawTransaction,
+                            transferaddress: $('.leaflet-popup').find('.transferaddress').val(), 
+                            tokenidtotransfer: $('.leaflet-popup').find('.tokenidtotransfer').val()
+                        }
+                    }).done(function(response) {
+                        // When done, trigger page reload
+                        $('.leaflet-popup').find('.loader').hide();
+                        window.location.reload(true);
+                    }).fail( function() {
+                        $('.leaflet-popup').find('.loader').hide();
+                        alert("Error while executing signed transaction");
+                    });
+
+                })
+                .fail(function() { 
+                    $('.leaflet-popup').find('.loader').hide();
+                    alert("Error while generating Klaytn transaction");
+                });
+            } else {
+                $('.leaflet-popup').find(".transfer-pin-form").submit();
+            }
         }
     };
 
     // Modification form validator
     checkModifyForm = function() {
         if ($('.leaflet-popup').find(".modify-pin-form").valid()) {
-            $('.leaflet-popup').find(".modify-pin-form").submit();
+            
             $('.leaflet-popup').find(".submit-modify").attr('disabled', true);
             $('.leaflet-popup').find('.loader').show();
+
+            // Special ajax treatment for Kaikas
+            if ($('#kaikasinuse').text() == "true") {
+                jQuery.ajax({
+                    method: "POST",
+                    url: "/modify-pin",
+                    data: {
+                        modifiedmessage: $('.leaflet-popup').find('.modifiedmessage').val(), 
+                        tokenidtomodify: $('.leaflet-popup').find('.tokenidtomodify').val()
+                    }
+                })
+                .done(async function(response) {
+
+                    // Awaits signing from Kaikas
+                    console.log("Signing tx with Kaikas")
+                    signedTx = await window.caver.klay.signTransaction(response);
+
+                    // Send signedTx to server for fee delegated send 
+                    jQuery.ajax({
+                        method: "POST",
+                        url: "/modify-pin",
+                        data: {
+                            signedtx: signedTx.rawTransaction,
+                            modifiedmessage: $('.leaflet-popup').find('.modifiedmessage').val(), 
+                            tokenidtomodify: $('.leaflet-popup').find('.tokenidtomodify').val()
+                        }
+                    }).done(function(response) {
+                        // When done, trigger page reload
+                        $('.leaflet-popup').find('.loader').hide();
+                        window.location.reload(true);
+                    }).fail( function() {
+                        $('.leaflet-popup').find('.loader').hide();
+                        alert("Error while executing signed transaction");
+                    });
+
+                })
+                .fail(function() { 
+                    $('.leaflet-popup').find('.loader').hide();
+                    alert("Error while generating Klaytn transaction");
+                });
+            } else {
+                $('.leaflet-popup').find(".modify-pin-form").submit();
+            }
         }
     };
 

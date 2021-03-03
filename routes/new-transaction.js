@@ -33,22 +33,23 @@ module.exports = async function(req, res, next) {
     req.session.currentlat = parseFloat(req.body.latitude);
     req.session.currentlng = parseFloat(req.body.longitude);
 
-    // Launch token creation process
+    // Generate TX to sign
+    const txToSign = {
+      type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
+      from: req.session.address,
+      to: process.env.SMART_CONTRACT_ADDRESS, //Contract on mainnet
+      gas: '50000000',
+      data: CryptoCartoContract.methods.mintPinToken(message, latitude, longitude).encodeABI(),
+      value: caver.utils.toPeb('0', 'KLAY'), //0.00001
+    };
+
+    // If Kaikas is in use, send tx to sign to browser, and stop process
     if (req.session.kaikasInUse && typeof req.body.signedtx == 'undefined') {
-      // If Kaikas is in use, send tx to sign to browser
-      txToSign = {
-        type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
-        from: req.session.address,
-        to: process.env.SMART_CONTRACT_ADDRESS, //Contract on mainnet
-        gas: '50000000',
-        data: CryptoCartoContract.methods.mintPinToken(message, latitude, longitude).encodeABI(),
-        value: caver.utils.toPeb('0', 'KLAY'), //0.00001
-      };
       res.send(txToSign); return;
-    } else {
-      // Else, or if req.body.signedtx exists, proceed to token creation
-      newPinToken = await createNewToken(latitude, longitude, message, req);
     }
+
+    // If Kaikas is off, or req.body.signedtx exists, proceed to token creation
+    newPinToken = await createNewToken(latitude, longitude, message, req);
 
     req.session.generalMessage = 'Token #' + newPinToken.tokenId + ' created.';
     req.session.openPinId = newPinToken.tokenId;

@@ -15,15 +15,32 @@ module.exports = async function(req, res, next) {
     const newAddress  = req.body.transferaddress;
     const tokenId     = req.body.tokenidtotransfer;
 
-    // sign transaction
-    const { rawTransaction: senderRawTransaction } = await caver.klay.accounts.signTransaction({
+    // Generate TX to sign
+    const txToSign = {
       type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
       from: req.session.address,
       to: process.env.SMART_CONTRACT_ADDRESS, //Contract on mainnet
       gas: '50000000',
       data: CryptoCartoContract.methods.transferFrom(req.session.address, newAddress, tokenId).encodeABI(),
       value: caver.utils.toPeb('0', 'KLAY'),
-    }, req.session.privatekey);
+    };
+
+    // If Kaikas is in use, send tx to sign to browser, and stop process
+    if (req.session.kaikasInUse && typeof req.body.signedtx == 'undefined') {
+      res.send(txToSign); return;
+    }
+
+     // If Kaikas is off, or req.body.signedtx exists, proceed to token modification
+     var senderRawTransaction;
+
+     // If there is a signed tx in req, use instead of autosigning
+     if (typeof req.body.signedtx == "undefined") {
+        // sign transaction
+        signedTransaction = await caver.klay.accounts.signTransaction(txToSign, req.session.privatekey);
+        senderRawTransaction = signedTransaction.rawTransaction;
+     } else {
+       senderRawTransaction = req.body.signedtx;
+     }
     
     // Uses 1 consumption right
     await updateConsumptionRights(req, -1);
@@ -52,7 +69,12 @@ module.exports = async function(req, res, next) {
     console.log("Updating token ID #" + tokenId);
     await PinToken.updateMany({ tokenId: tokenId }, { $set: { owner: newAddress } })
 
-    res.redirect('/');
+    // Reload only if CC tx
+    if (typeof req.body.signedtx == 'undefined') {
+      res.redirect('/');
+    } else {
+      res.send('Done');
+    }
 
   } catch (error) { next(error) }
 };

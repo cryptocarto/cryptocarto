@@ -14,7 +14,7 @@ module.exports = async function(latitude, longitude, message, req) {
   try {
     var senderRawTransaction;
 
-    // If there is a signed tx in res, use instead of autosigning
+    // If there is a signed tx in req, use instead of autosigning
     if (typeof req.body.signedtx == "undefined") {
       // sign transaction
       signedTransaction = await caver.klay.accounts.signTransaction({
