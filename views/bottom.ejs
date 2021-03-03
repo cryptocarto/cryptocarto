@@ -57,7 +57,7 @@
 						<form class="change-name-form" action="/change-name" method="post">
 							<label for="new-name">New name: </label>
 							<input type="text" autocomplete="off" class="form-control" placeholder="name..." name="newname" id="newname" />
-							<br /><button type="submit">Change your display name</button>
+							<br /><button type="button" onclick="checkChangeNameForm();">Change your display name</button>
 							<button type="button" onclick="$('#user-keys').show();$('#user-change-name').hide()">Cancel</button>
 						</form>
 					</div>

@@ -417,6 +417,38 @@
 
     };
 
+    // ChangeName form validator; request a message sign to kaikas to change name
+    checkChangeNameForm = async function() {
+    if ($('#user-change-name').find(".change-name-form").valid()) {
+        // Special ajax treatment for Kaikas
+        if ($('#kaikasinuse').text() == "true") {
+            // Prepare message to sign and request signature
+            const signedMessage = await caver.klay.sign(
+                "Change name to: '" + $('#newname').val() + "'", 
+                $('#address').val()
+            );
+
+            // Send request to server
+            jQuery.ajax({
+                method: "POST",
+                url: "/change-name",
+                data: {
+                    newname: $('#newname').val(),
+                    signedmsg: signedMessage
+                }
+            }).done(function(response) {
+                // When done, trigger page reload
+                window.location.reload(true);
+            }).fail( function() {
+                alert("Error while changing display name");
+            });
+
+            } else {
+                $('#user-change-name').find(".change-name-form").submit();
+            }
+        }
+    };
+
     // Load PinTokens around current position
     explorePinTokens = function(params) {
         //Display loader and scroll to top

@@ -33,7 +33,6 @@ module.exports = async function(req, res, next) {
 
     // If Kaikas is in use, send tx to sign to browser, and stop process
     if (req.session.kaikasInUse && typeof req.body.signedtx == 'undefined') {
-      
       res.send(txToSign); return;
     }
 
