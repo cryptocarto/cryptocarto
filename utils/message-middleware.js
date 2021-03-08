@@ -48,5 +48,10 @@ module.exports = function (req, res, next) {
         res.locals.openPinId = req.session.openPinId;
         req.session.openPinId = "";
     }
+
+    if (typeof req.session.kaikasInUse != 'undefined') {
+        res.locals.kaikasInUse = req.session.kaikasInUse;
+    }
+
     next()
 }

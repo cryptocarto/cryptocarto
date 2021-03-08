@@ -1,5 +1,5 @@
 /*
-* Import an existing private key
+* Restore previous account when kaikas disconnects
 */
 
 // Get required interfaces
@@ -7,10 +7,8 @@ const caver = require('../utils/caver')
 
 module.exports = async function(req, res, next) {
   try {
-    const privatekey    = req.body.newprivatekey;
-
-    // Retrieve account for this private key
-    retrievedAccount = await caver.klay.accounts.privateKeyToAccount(privatekey);
+    // Retrieve account for stored private key
+    retrievedAccount = await caver.klay.accounts.privateKeyToAccount(req.session.privatekey);
 
     // Set session variables
     req.session.address = retrievedAccount.address;
@@ -20,7 +18,8 @@ module.exports = async function(req, res, next) {
     req.session.consumptionrights = undefined;
     req.session.consumptionrightslastrefill = undefined;
 
-    req.session.generalMessage = 'Account with address ' + retrievedAccount.address.substring(0,10) + '... was succesfully retrieved.';
-    res.redirect('/');
+    req.session.generalMessage = 'Kaikas account disconnected.';
+    res.send('Done');
+
   } catch (error) { next(error) }
 };

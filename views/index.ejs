@@ -33,6 +33,7 @@
         <% if (typeof currentlng != 'undefined' && currentlng) { %>
             <p>Last known longitude: <span id="currentlng"><%= currentlng %></span></p>
         <% } %>
+            <p>Kaikas in use: <span id="kaikasinuse"><%= kaikasInUse %></span></p>
             <p>Current zoom: <span id="currentzoom">18</span></p>
             Pin ID requested: 
             <span id="viewPinId"><% if (typeof openPinId != 'undefined' && openPinId) { %><%= openPinId %><% } %></span>
@@ -47,3 +48,4 @@
 <%- include('leaderboard') -%>
 
 <%- include('bottom') -%>
+<%- include('kaikas-scripts') -%>

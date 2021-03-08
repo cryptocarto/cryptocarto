@@ -21,6 +21,8 @@ router.get('/img/pin-token/:tokenaddress', require('./token-image-retrieval'));
 router.get('/metadata/pin-token/:tokenid', require('./token-metadata'));
 router.get('/view-random-pin', require('./view-random-pin'));
 router.get('/get-leaderboard', require('./get-leaderboard'));
+router.post('/connect-kaikas', require('./connect-kaikas'));
+router.get('/disconnect-kaikas', require('./disconnect-kaikas'));
 
 // Legacy routes
 router.get('/token-metadata/:tokenid', require('./token-metadata-legacy'));

@@ -7,6 +7,7 @@ module.exports = async function(req, res, next) {
     // Set session variables
     req.session.address = undefined;
     req.session.privatekey = undefined;
+    req.session.kaikasInUse = false;
     req.session.displayname = undefined;
     req.session.consumptionrights = undefined;
     req.session.consumptionrightslastrefill = undefined;

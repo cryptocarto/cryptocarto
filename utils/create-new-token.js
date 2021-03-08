@@ -12,15 +12,23 @@ updateConsumptionRightsFromBlockchain = require('./update-consumption-rights-fro
 
 module.exports = async function(latitude, longitude, message, req) {
   try {
-    // sign transaction
-    const { rawTransaction: senderRawTransaction } = await caver.klay.accounts.signTransaction({
-      type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
-      from: req.session.address,
-      to: process.env.SMART_CONTRACT_ADDRESS, //Contract on mainnet
-      gas: '50000000',
-      data: CryptoCartoContract.methods.mintPinToken(message, latitude, longitude).encodeABI(),
-      value: caver.utils.toPeb('0', 'KLAY'), //0.00001
-    }, req.session.privatekey);
+    var senderRawTransaction;
+
+    // If there is a signed tx in req, use instead of autosigning
+    if (typeof req.body.signedtx == "undefined") {
+      // sign transaction
+      signedTransaction = await caver.klay.accounts.signTransaction({
+        type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
+        from: req.session.address,
+        to: process.env.SMART_CONTRACT_ADDRESS, //Contract on mainnet
+        gas: '50000000',
+        data: CryptoCartoContract.methods.mintPinToken(message, latitude, longitude).encodeABI(),
+        value: caver.utils.toPeb('0', 'KLAY'), //0.00001
+      }, req.session.privatekey);
+      senderRawTransaction = signedTransaction.rawTransaction;
+    } else {
+      senderRawTransaction = req.body.signedtx;
+    }
 
     // Get new token ID by computing latitude and longitude for id format
     idFormattedLatitude = latitude;

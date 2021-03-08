@@ -20,16 +20,40 @@ module.exports = async function(req, res, next) {
       res.redirect('/');
       return;
     }
-
-    // sign transaction
-    const { rawTransaction: senderRawTransaction } = await caver.klay.accounts.signTransaction({
+    
+    // Generate TX to sign
+    const txToSign = {
       type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
       from: req.session.address,
       to: process.env.SMART_CONTRACT_ADDRESS, //Contract on mainnet
       gas: '50000000',
       data: CryptoCartoContract.methods.updatePinToken(tokenId, newMessage).encodeABI(),
       value: caver.utils.toPeb('0', 'KLAY'),
-    }, req.session.privatekey);
+    };
+
+    // If Kaikas is in use, send tx to sign to browser, and stop process
+    if (req.session.kaikasInUse && typeof req.body.signedtx == 'undefined') {
+      res.send(txToSign); return;
+    }
+
+    // If Kaikas is off, or req.body.signedtx exists, proceed to token modification
+    var senderRawTransaction;
+
+    // If there is a signed tx in req, use instead of autosigning
+    if (typeof req.body.signedtx == "undefined") {
+      // sign transaction
+      signedTransaction = await caver.klay.accounts.signTransaction({
+        type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
+        from: req.session.address,
+        to: process.env.SMART_CONTRACT_ADDRESS, //Contract on mainnet
+        gas: '50000000',
+        data: CryptoCartoContract.methods.updatePinToken(tokenId, newMessage).encodeABI(),
+        value: caver.utils.toPeb('0', 'KLAY'),
+      }, req.session.privatekey);
+      senderRawTransaction = signedTransaction.rawTransaction;
+    } else {
+      senderRawTransaction = req.body.signedtx;
+    }
 
     // Uses 1 consumption right
     await updateConsumptionRights(req, -1);
@@ -53,12 +77,18 @@ module.exports = async function(req, res, next) {
     });
 
     req.session.generalMessage = 'Message of Token #' + tokenId + ' changed to ' + newMessage;
+    req.session.openPinId = tokenId;
 
     // Updating token owner
     console.log("Updating token ID #" + tokenId);
     await PinToken.updateMany({ tokenId: tokenId }, { $set: { message: newMessage, modificationTimestamp: Math.round(Date.now() / 1000) } })
 
-    res.redirect('/');
+    // Reload only if CC tx
+    if (typeof req.body.signedtx == 'undefined') {
+      res.redirect('/');
+    } else {
+      res.send('Done');
+    }
 
   } catch (error) { next(error) }
 };
