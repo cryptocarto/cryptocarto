@@ -385,6 +385,11 @@ input, textarea {
     color: #333;
 }
 
-.hide, .show-for-kaikas {
+.hide, .show-for-kaikas, .connect-kaikas {
     display: none;
+}
+
+.kaikas-info {
+    font-size: 11px;
+    font-style: italic;
 }

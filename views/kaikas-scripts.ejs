@@ -11,7 +11,8 @@
 
         // Show connect button if Kaikas is detected but not connected
         if (!isKaikasInUse) {
-            $('#connect-kaikas').show();
+            $('.connect-kaikas').show();
+            $('.kaikas-info').hide();
         }
 
         // If kaikas in use, show kaikas data and activate event listeners
@@ -70,7 +71,7 @@
     };
 
     // Function to disconnect Kaikas and restore CC address
-    disconnectKaikas = async function(address) {
+    disconnectKaikas = async function() {
         jQuery.ajax({ method: "GET", url: "/disconnect-kaikas"}).done(function(response) {
             $('#kaikas-text').text("Kaikas disconnected.");
             alert('Kaikas disconnected, page will reload');
