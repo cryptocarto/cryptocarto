@@ -1,8 +1,10 @@
 <script>
     // Check if kaikas is present before proceeding
-    // (network IDs : 1010 for baobab, 8217 for cypress)
-    // && klaytn.networkVersion == "8217";
-    kaikasDetected = typeof window.klaytn !== 'undefined' && klaytn.isKaikas;
+    // (network IDs : 1001 for baobab, 8217 for cypress)
+    kaikasDetected = typeof window.klaytn !== 'undefined' && klaytn.isKaikas
+        // && klaytn.networkVersion == "8217"; // Cypress
+        && klaytn.networkVersion == "1001"; // Baobab
+
 
     // Check if Kaisas was previously connected
     isKaikasInUse = $('#kaikasinuse').text() == "true";
@@ -26,11 +28,9 @@
             })
 
             // Reload on network change
-            
-            // klaytn.on('networkChanged', function() {
-            //     alert('Network changed on Kaikas, page will reload');
-            //     window.location.reload(true);
-            // })
+            klaytn.on('networkChanged', function() {
+                window.location.reload(true);
+            })
         }
         
     }
@@ -87,10 +87,8 @@
                          && $('#address').val().toLowerCase() != klaytn.selectedAddress.toLowerCase();
     if (kaikasDetected && isKaikasInUse && isDifferentAddress) {
         setKaikasAddress(klaytn.selectedAddress);
-    }
-
-    // If Kaikas previously connected, but there is no address (disabled/locked), restore CC address
-    if ((!kaikasDetected && isKaikasInUse) || (kaikasDetected && isKaikasInUse && typeof klaytn.selectedAddress == 'undefined')) {
+    } else if ((!kaikasDetected && isKaikasInUse) || (kaikasDetected && isKaikasInUse && typeof klaytn.selectedAddress == 'undefined')) {
+        // If Kaikas previously connected, but there is no address (disabled/locked), restore CC address
         disconnectKaikas();
     }
 
