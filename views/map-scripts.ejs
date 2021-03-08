@@ -226,10 +226,14 @@
 
                     // Awaits signing from Kaikas
                     console.log("Signing tx with Kaikas")
-                    signedTx = await window.caver.klay.signTransaction(response);
+                    signedTx = await window.caver.klay.signTransaction(response).catch(function() {
+                        alert('Error while signing transaction');
+                        $('.leaflet-popup').find(".submit-transaction").attr('disabled', false);
+                        $('.leaflet-popup').find('.loader').hide();
+                    });
 
                     // Send signedTx to server for fee delegated send 
-                    jQuery.ajax({
+                    if (typeof signedTx !== "undefined") jQuery.ajax({
                         method: "POST",
                         url: "/new-transaction",
                         data: {
@@ -279,10 +283,14 @@
 
                     // Awaits signing from Kaikas
                     console.log("Signing tx with Kaikas")
-                    signedTx = await window.caver.klay.signTransaction(response);
+                    signedTx = await window.caver.klay.signTransaction(response).catch(function() {
+                        alert('Error while signing transfer transaction');
+                        $('.leaflet-popup').find(".submit-transfer").attr('disabled', false);
+                        $('.leaflet-popup').find('.loader').hide();
+                    });
 
                     // Send signedTx to server for fee delegated send 
-                    jQuery.ajax({
+                    if (typeof signedTx !== "undefined") jQuery.ajax({
                         method: "POST",
                         url: "/transfer-pin",
                         data: {
@@ -331,10 +339,14 @@
 
                     // Awaits signing from Kaikas
                     console.log("Signing tx with Kaikas")
-                    signedTx = await window.caver.klay.signTransaction(response);
+                    signedTx = await window.caver.klay.signTransaction(response).catch(function() {
+                        alert('Error while signing modification transaction');
+                        $('.leaflet-popup').find(".submit-modify").attr('disabled', false);
+                        $('.leaflet-popup').find('.loader').hide();
+                    });
 
                     // Send signedTx to server for fee delegated send 
-                    jQuery.ajax({
+                    if (typeof signedTx !== "undefined") jQuery.ajax({
                         method: "POST",
                         url: "/modify-pin",
                         data: {
@@ -426,10 +438,12 @@
             const signedMessage = await caver.klay.sign(
                 "Change name to: '" + $('#newname').val() + "'", 
                 $('#address').val()
-            );
+            ).catch(function() {
+                alert('Error while signing name change message');
+            });
 
             // Send request to server
-            jQuery.ajax({
+            if (typeof signedMessage !== "undefined") jQuery.ajax({
                 method: "POST",
                 url: "/change-name",
                 data: {
