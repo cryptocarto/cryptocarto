@@ -2,9 +2,8 @@
     // Check if kaikas is present before proceeding
     // (network IDs : 1001 for baobab, 8217 for cypress)
     kaikasDetected = typeof window.klaytn !== 'undefined' && klaytn.isKaikas
-        // && klaytn.networkVersion == "8217"; // Cypress
-        && klaytn.networkVersion == "1001"; // Baobab
-
+        && klaytn.networkVersion == "8217"; // Cypress
+        //&& klaytn.networkVersion == "1001"; // Baobab
 
     // Check if Kaisas was previously connected
     isKaikasInUse = $('#kaikasinuse').text() == "true";
