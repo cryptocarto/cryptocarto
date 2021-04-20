@@ -82,9 +82,6 @@ setInterval(async function () {
               tokenIdToRemove = event.returnValues.tokenId;
               console.log("Updating token ID #" + event.returnValues.tokenId + " (transfer detected)");
               await PinToken.updateMany({ tokenId: event.returnValues.tokenId }, { $set: { owner: event.returnValues.to } })
-              console.log(event);
-              console.log("token id: " + event.returnValues.tokenId)
-              console.log("to: " + event.returnValues.to)
             });
           } catch (error) { console.error("Error while crawling events.") }
         })
