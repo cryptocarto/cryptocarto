@@ -66,8 +66,14 @@ const CryptoCartoContract = require('./utils/cryptocarto-contract')
 // Watch ERC-721 transfers and update cache depending on BC_WATCHER_DELAY var
 var bcWatcherDelay = process.env.BC_WATCHER_DELAY || 30;
 var bcWatcherDelayWithMargin = parseInt(bcWatcherDelay) + Math.ceil(bcWatcherDelay / 10);
-console.log("Delays: " + bcWatcherDelay + " / " + bcWatcherDelayWithMargin);
-setInterval(async function () {
+
+if (bcWatcherDelay == 0) {
+  console.log("Warn: No blockchain sync from this instance, must be managed elsewhere");
+} else {
+  console.log("Delays: " + bcWatcherDelay + " / " + bcWatcherDelayWithMargin);
+}
+
+if (bcWatcherDelay != 0) setInterval(async function () {
   try {
     await caver.klay.getBlockNumber().then(function (latestBlockNumber) {
       console.log("Running transfer watcher at block " + latestBlockNumber);
