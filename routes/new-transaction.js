@@ -11,8 +11,8 @@ module.exports = async function(req, res, next) {
   try {
 
     const message    = req.body.message;
-    const latitude   = Math.floor(parseFloat(req.body.latitude) * 10000);
-    const longitude  = Math.floor(parseFloat(req.body.longitude) * 10000);
+    const latitude   = Math.round(parseFloat(req.body.latitude) * 10000);
+    const longitude  = Math.round(parseFloat(req.body.longitude) * 10000);
 
     // Check latitude and logitude are inbounds
     latitudeReq = latitude != 0 && (latitude >= -899999) && (latitude <= 900000);
