@@ -85,7 +85,8 @@
                 '</div>' +
                 '<div class="metadata">' +
                     '<br />Pin #' + jQuery('#token-'+tokenIteratorId+'-id').text() + '<br/>' +
-                    'Latitude: ' + lat + ' / Longitude: ' + lng + '<br/>' +
+                    'Latitude: ' + jQuery('#token-'+tokenIteratorId+'-latitude').text() +
+                    ' / Longitude: ' + jQuery('#token-'+tokenIteratorId+'-longitude').text() + '<br/>' +
                     'Created on ' + jQuery('#token-'+tokenIteratorId+'-creation-timestamp').text() + 
                     '<br/>Modified on ' + jQuery('#token-'+tokenIteratorId+'-modification-timestamp').text() +
                     '<br/>' +'Tile coordinates: x = ' + xtile + ' ; y = ' + ytile +
