@@ -10,6 +10,7 @@ const db = require('./utils/db')
 // Get required DB interfaces
 var PinToken = require('./utils/pintoken')
 var ConsumptionRight = require('./utils/consumptionright')
+getLastSyncedBlock = require('./utils/get-lastsyncedblock')
 
 // Configure view engine to render EJS templates.
 app.set('views', __dirname + '/views');
@@ -75,10 +76,14 @@ if (bcWatcherDelay == 0) {
 
 if (bcWatcherDelay != 0) setInterval(async function () {
   try {
-    await caver.klay.getBlockNumber().then(function (latestBlockNumber) {
-      console.log("Running transfer watcher at block " + latestBlockNumber);
+    await caver.klay.getBlockNumber().then(async function (latestBlockNumber) {
+      var getDataFromBlockNumber = await getLastSyncedBlock();
+      var blockWithDelay = latestBlockNumber - bcWatcherDelayWithMargin;
+      getDataFromBlockNumber = Math.min(getDataFromBlockNumber, blockWithDelay);
+
+      console.log("Running transfer watcher at block " + latestBlockNumber + " since block " + getDataFromBlockNumber);
       CryptoCartoContract.getPastEvents('Transfer', {
-        fromBlock: latestBlockNumber - bcWatcherDelayWithMargin, // Get events since last watch
+        fromBlock: getDataFromBlockNumber, // Get events since last watch
         toBlock: 'latest'
       }
         , function (error, events) {
@@ -93,7 +98,7 @@ if (bcWatcherDelay != 0) setInterval(async function () {
         })
 
       CryptoCartoContract.getPastEvents('PinTokenModified', {
-        fromBlock: latestBlockNumber - bcWatcherDelayWithMargin, // Get events since last watch
+        fromBlock: getDataFromBlockNumber, // Get events since last watch
         toBlock: 'latest'
       }
         , function (error, events) {
@@ -107,7 +112,7 @@ if (bcWatcherDelay != 0) setInterval(async function () {
         })
 
       CryptoCartoContract.getPastEvents('ConsumptionRightsChanged', {
-        fromBlock: latestBlockNumber - bcWatcherDelayWithMargin, // Get events since last watch
+        fromBlock: getDataFromBlockNumber, // Get events since last watch
         toBlock: 'latest'
       }
         , function (error, events) {
