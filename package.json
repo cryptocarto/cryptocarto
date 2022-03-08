@@ -21,12 +21,12 @@
   },
   "homepage": "https://github.com/cryptocarto/cryptocarto#readme",
   "dependencies": {
-    "caver-js": "^1.5.6",
+    "caver-js": "^1.8.0",
     "connect-mongo": "^3.2.0",
     "cookie-parser": "^1.4.5",
     "dotenv": "^8.2.0",
     "ejs": "^2.7.4",
-    "es6-crawler-detect": "^3.1.2",
+    "es6-crawler-detect": "^3.3.0",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "fs": "0.0.1-security",
@@ -37,7 +37,7 @@
     "leaflet.markercluster": "^1.4.1",
     "mongoose": "^5.11.16",
     "semver": "^6.3.0",
-    "truffle-hdwallet-provider-klaytn": "^1.0.13-a"
+    "truffle-hdwallet-provider-klaytn": "^1.4.2"
   },
   "engines": {
     "node": "11.6.0",
