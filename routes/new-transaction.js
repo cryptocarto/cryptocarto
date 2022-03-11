@@ -38,7 +38,7 @@ module.exports = async function(req, res, next) {
       type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
       from: req.session.address,
       to: process.env.SMART_CONTRACT_ADDRESS, //Contract on mainnet
-      gas: '50000000',
+      gas: '2000000',
       data: CryptoCartoContract.methods.mintPinToken(message, latitude, longitude).encodeABI(),
       value: caver.utils.toPeb('0', 'KLAY'), //0.00001
     };

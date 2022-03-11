@@ -17,7 +17,7 @@ module.exports = async function(address, nbRights) {
       type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
       from: publicKey,
       to: process.env.SMART_CONTRACT_ADDRESS, //Contract on mainnet
-      gas: '50000000',
+      gas: '2000000',
       data: CryptoCartoContract.methods.addConsumptionRightsForAddress(address, nbRights).encodeABI(),
       value: caver.utils.toPeb('0', 'KLAY'),
     }, privateKey);
