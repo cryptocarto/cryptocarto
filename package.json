@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/cryptocarto/cryptocarto#readme",
   "dependencies": {
-    "caver-js": "^1.5.6",
+    "caver-js": "^1.8.0",
     "connect-mongo": "^3.2.0",
     "cookie-parser": "^1.4.5",
     "dotenv": "^8.2.0",
@@ -40,7 +40,7 @@
     "truffle-hdwallet-provider-klaytn": "^1.0.13-a"
   },
   "engines": {
-    "node": "11.6.0",
-    "npm": "6.5.x"
+    "node": "16.14.0",
+    "npm": "8.5.4"
   }
 }
