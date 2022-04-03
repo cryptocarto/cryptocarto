@@ -125,10 +125,11 @@ module.exports = async function(req, res, next) {
         timestampDayBefore = timestampDayBefore.getTime();
         var globalDailyPins = await PinToken.countDocuments({ creationTimestamp: { '$gt': timestampDayBefore } });
 
-        hasEnoughRights = hasEnoughRights && (userDailyPins < 2) && (globalDailyPins < 30);
+        hasEnoughRights = hasEnoughRights && 
+        (req.session.kaikasInUse ? true : (userDailyPins < 2) && (globalDailyPins < 30));
 
         console.log("## Gas increase sadness check: Daily pins for " + req.session.address + ": " + userDailyPins + 
-          " / Global: " + globalDailyPins + " / Enough rights? " + hasEnoughRights);
+          " / Global: " + globalDailyPins + " / Kaikas? " + req.session.kaikasInUse + " / Enough rights? " + hasEnoughRights);
 
         // ------ end of custom consumption right limit for gas increase ------
         

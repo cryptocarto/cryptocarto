@@ -35,7 +35,7 @@ module.exports = async function(req, res, next) {
 
     // Generate TX to sign
     const txToSign = {
-      type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
+      type: 'SMART_CONTRACT_EXECUTION',
       from: req.session.address,
       to: process.env.SMART_CONTRACT_ADDRESS, //Contract on mainnet
       gas: '2000000',

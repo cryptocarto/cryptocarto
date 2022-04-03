@@ -13,6 +13,7 @@ updateConsumptionRightsFromBlockchain = require('./update-consumption-rights-fro
 module.exports = async function(latitude, longitude, message, req) {
   try {
     var senderRawTransaction;
+    var skipSending = false;
 
     // If there is a signed tx in req, use instead of autosigning
     if (typeof req.body.signedtx == "undefined") {
@@ -26,6 +27,8 @@ module.exports = async function(latitude, longitude, message, req) {
         value: caver.utils.toPeb('0', 'KLAY'), //0.00001
       }, req.session.privatekey);
       senderRawTransaction = signedTransaction.rawTransaction;
+    } else if (req.body.signedtx == "was-sent") {
+      skipSending = true;
     } else {
       senderRawTransaction = req.body.signedtx;
     }
@@ -61,7 +64,7 @@ module.exports = async function(latitude, longitude, message, req) {
     };
     
     // Send transaction through fee delegation (async)
-    caver.klay.sendTransaction({
+    if (!skipSending) caver.klay.sendTransaction({
       senderRawTransaction: senderRawTransaction,
       feePayer: process.env.FEE_PAYER_ADDRESS,
     })

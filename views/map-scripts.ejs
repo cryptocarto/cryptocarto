@@ -227,36 +227,33 @@
 
                     // Awaits signing from Kaikas
                     console.log("Signing tx with Kaikas")
-                    signedTx = await window.caver.klay.signTransaction(response).catch(function() {
+                    //signedTx = await window.caver.klay.signTransaction(response).catch(function() {
+                    await window.caver.klay.sendTransaction(response)
+                    .on('error', function() {
                         alert('Error while signing transaction');
                         $('.leaflet-popup').find(".submit-transaction").attr('disabled', false);
                         $('.leaflet-popup').find('.loader').hide();
+                    })
+                    .on('transactionHash', function(hash){
+                          jQuery.ajax({
+                          method: "POST",
+                          url: "/new-transaction",
+                          data: {
+                              signedtx: "was-sent",
+                              message: $('.leaflet-popup').find('.message').val(), 
+                              latitude: $('.leaflet-popup').find('.latitude').val(),
+                              longitude: $('.leaflet-popup').find('.longitude').val()
+                          }
+                      }).done(function(response) {
+                          // When done, trigger page reload
+                          $('.leaflet-popup').find('.loader').hide();
+                          window.location.reload(true);
+                      }).fail( function() {
+                          $('.leaflet-popup').find('.loader').hide();
+                          alert("Error while executing signed transaction");
+                      });
                     });
-
-                    // Send signedTx to server for fee delegated send 
-                    if (typeof signedTx !== "undefined") jQuery.ajax({
-                        method: "POST",
-                        url: "/new-transaction",
-                        data: {
-                            signedtx: signedTx.rawTransaction,
-                            message: $('.leaflet-popup').find('.message').val(), 
-                            latitude: $('.leaflet-popup').find('.latitude').val(),
-                            longitude: $('.leaflet-popup').find('.longitude').val()
-                        }
-                    }).done(function(response) {
-                        // When done, trigger page reload
-                        $('.leaflet-popup').find('.loader').hide();
-                        window.location.reload(true);
-                    }).fail( function() {
-                        $('.leaflet-popup').find('.loader').hide();
-                        alert("Error while executing signed transaction");
-                    });
-
-                })
-                .fail(function() { 
-                    $('.leaflet-popup').find('.loader').hide();
-                    alert("Error while generating Klaytn transaction");
-                });
+                  });
             } else {
                 $('.leaflet-popup').find(".new-transaction-form").submit();
             }
