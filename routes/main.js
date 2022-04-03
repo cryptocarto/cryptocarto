@@ -110,7 +110,28 @@ module.exports = async function(req, res, next) {
         timestampCurrent = new Date().getTime();
         timestampTimeBeforeNextRefill = new Date(timestampTimeRemaining - timestampCurrent).getTime();
         hasEnoughRights = (consumptionRights.rights > 0) || ((timestampTimeBeforeNextRefill) < 0);
-  
+
+        // ------ Start of custom consumption right limit for gas increase ------
+        // TODO: change behaviour
+
+        // Add limit on consumption rights due to gas increase (TODO: allow Kaikas payed fees)
+        var userDailyPins = await PinToken.countDocuments({
+          owner: { '$regex': new RegExp(req.session.address.toLowerCase(),"i") }, 
+          modificationTimestamp: { '$gt': consumptionRights.lastRefillTimestamp }
+        });
+        
+        timestampDayBefore = new Date();
+        timestampDayBefore.setHours(timestampDayBefore.getHours() - 22);
+        timestampDayBefore = timestampDayBefore.getTime();
+        var globalDailyPins = await PinToken.countDocuments({ creationTimestamp: { '$gt': timestampDayBefore } });
+
+        hasEnoughRights = hasEnoughRights && (userDailyPins < 2) && (globalDailyPins < 30);
+
+        console.log("## Gas increase sadness check: Daily pins for " + req.session.address + ": " + userDailyPins + 
+          " / Global: " + globalDailyPins + " / Enough rights? " + hasEnoughRights);
+
+        // ------ end of custom consumption right limit for gas increase ------
+        
         req.session.notEnoughRights = !hasEnoughRights;
         res.locals.notEnoughRights = !hasEnoughRights;
       }
