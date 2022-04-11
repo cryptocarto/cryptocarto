@@ -113,17 +113,18 @@ module.exports = async function(req, res, next) {
 
         // ------ Start of custom consumption right limit for gas increase ------
         // TODO: change behaviour
-
-        // Add limit on consumption rights due to gas increase (TODO: allow Kaikas payed fees)
-        var userDailyPins = await PinToken.countDocuments({
-          owner: { '$regex': new RegExp(req.session.address.toLowerCase(),"i") }, 
-          modificationTimestamp: { '$gt': consumptionRights.lastRefillTimestamp }
-        });
         
+        // Global pin limit
         timestampDayBefore = new Date();
         timestampDayBefore.setHours(timestampDayBefore.getHours() - 22);
         timestampDayBefore = timestampDayBefore.getTime();
         var globalDailyPins = await PinToken.countDocuments({ creationTimestamp: { '$gt': timestampDayBefore } });
+
+        // Add limit on consumption rights due to gas increase (TODO: allow Kaikas payed fees)
+        var userDailyPins = await PinToken.countDocuments({
+          owner: { '$regex': new RegExp(req.session.address.toLowerCase(),"i") }, 
+          modificationTimestamp: { '$gt': timestampDayBefore }
+        });
 
         // Retrieve global daily pin limit (default is 30)
         var globalDailyPinsLimit = process.env.GLOBAL_DAILY_PINS_LIMIT || 30;
