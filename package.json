@@ -32,7 +32,7 @@
     "fs": "0.0.1-security",
     "jquery": "^3.5.1",
     "jquery-ui-dist": "^1.12.1",
-    "jquery-validation": "^1.19.3",
+    "jquery-validation": "^1.19.4",
     "leaflet": "^1.7.1",
     "leaflet.markercluster": "^1.4.1",
     "mongoose": "^5.11.16",
