@@ -54,6 +54,8 @@ module.exports = async function(req, res, next) {
           if (isAllowedToMint) {
           message = "This is my first spot!";
             newPinToken = await createNewToken(latitude, longitude, message, req);
+            // Add 6 bonus consumption rights for new users
+            addConsumptionRights(newAccount.address, process.env.BONUS_RIGHTS_NEW_USERS);
           }
 
           // Sets user view to this first pin coordinates
@@ -62,8 +64,6 @@ module.exports = async function(req, res, next) {
           req.session.currentlng = longitude / 10000;
           res.locals.currentlng = longitude / 10000;
 
-          // Add 6 bonus consumption rights for new users
-          addConsumptionRights(newAccount.address, process.env.BONUS_RIGHTS_NEW_USERS);
           res.locals.welcome = true;
         } else {
           res.locals.welcome = false;
