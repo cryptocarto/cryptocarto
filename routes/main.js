@@ -43,8 +43,18 @@ module.exports = async function(req, res, next) {
             longitude = randomPinToken[0].longitude + (Math.round(Math.random() * 200) - 100);
             randomLocationNotFound = await PinToken.exists({"latitude" : latitude, "longitude" : longitude});
           }
+
+          // Checks for global pin limit before creating first token
+          timestampDayBefore = new Date();
+          timestampDayBefore.setHours(timestampDayBefore.getHours() - 22);
+          timestampDayBefore = timestampDayBefore.getTime();
+          var globalDailyPinsForNewUser = await PinToken.countDocuments({ creationTimestamp: { '$gt': timestampDayBefore } });
+          var isAllowedToMint = globalDailyPinsForNewUser < (process.env.GLOBAL_DAILY_PINS_LIMIT || 30);
+
+          if (isAllowedToMint) {
           message = "This is my first spot!";
-          newPinToken = await createNewToken(latitude, longitude, message, req);
+            newPinToken = await createNewToken(latitude, longitude, message, req);
+          }
 
           // Sets user view to this first pin coordinates
           req.session.currentlat = latitude / 10000;
